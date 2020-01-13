@@ -1,0 +1,23 @@
+{
+  "name": "wsapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch-ts": "tsc -w",
+    "watch-node": "nodemon dist/app.js",
+    "watch": "concurrently \"npm run watch-ts\" \"npm run watch-node\""
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "pug": "2.0.0-beta11",
+    "@types/express": "^4.16.1",
+    "@types/mongoose": "^5.5.3",
+    "concurrently": "^4.1.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.5.11"
+  }
+}

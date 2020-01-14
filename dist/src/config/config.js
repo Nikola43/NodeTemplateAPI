@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class Config {
-}
-exports.Config = Config;
+exports.default = {
+    jwtSecret: "@QEGTUI"
+};
 //# sourceMappingURL=config.js.map

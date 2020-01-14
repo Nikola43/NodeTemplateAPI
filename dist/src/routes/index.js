@@ -10,6 +10,14 @@ class IndexRoutes {
         this.router.get('/', function (req, res, next) {
             res.render('index', { title: 'Express' });
         });
+        /* GET home page. */
+        this.router.get('/login', function (req, res, next) {
+            res.status(200).send("login");
+        });
+        /* GET home page. */
+        this.router.get('/signup', function (req, res, next) {
+            res.status(200).send("login");
+        });
     }
 }
 exports.IndexRoutes = IndexRoutes;

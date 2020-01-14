@@ -3,15 +3,18 @@ import App from './app';
 import socketIo = require('socket.io');
 
 import {Emit} from './src/db/models/emit';
+import SocketIO from "socket.io";
 
 export class Server {
     public port: any;
     public server: any;
+    public io: SocketIO.Server;
 
     constructor() {
         this.port = this.normalizePort(process.env.PORT || 3000);
         App.set('port', this.port);
         this.server = http.createServer(App);
+        this.io = socketIo("http://localhost:3000");
         this.configSocket();
         this.server.listen(this.port, '0.0.0.0')
             .on('error', this.onError)
@@ -21,7 +24,7 @@ export class Server {
     }
 
     configSocket() {
-        const io = socketIo(this.server);
+        const io = this.io;
         io.on('connection', (socket: any) => {
             console.log('Socket ON');
             socket.on('eventDB', (emit: Emit) => {
@@ -84,4 +87,5 @@ export class Server {
     }
 }
 
-const srv = new Server();
+const server = new Server();
+export default server;

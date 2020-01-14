@@ -1,14 +1,13 @@
 import { Request, Response } from "express";
 import { User } from "../db/models/User";
 const Sequelize = require('sequelize');
-const Op = Sequelize.Op
-
+const Op = Sequelize.Op;
 
 export default class UsersController {
     static getAll = async (req: Request, res: Response, next: any) => {
         let users = null;
         try {
-            users = await User.findAll()
+            users = await User.findAll();
             if (users) {
                 res.status(200).send(users);
             } else {

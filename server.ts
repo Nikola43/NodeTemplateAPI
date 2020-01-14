@@ -1,19 +1,21 @@
 import * as http from 'http';
 import App from './app';
-import socketIo = require('socket.io');
+import socketIO from 'socket.io'
+import {Emit} from "./src/db/models/Emit";
 
-import {Emit} from './src/db/models/emit';
 
 export class Server {
     public port: any;
     public server: any;
+    public io: any;
 
     constructor() {
         this.port = this.normalizePort(process.env.PORT || 3000);
         App.set('port', this.port);
         this.server = http.createServer(App);
+        this.io = socketIO(this.server);
         this.configSocket();
-        this.server.listen(this.port, '0.0.0.0')
+        this.server.listen(this.port, '192.168.1.145')
             .on('error', this.onError)
             .on('listening', () => {
                 this.onListening(this.server);
@@ -21,35 +23,22 @@ export class Server {
     }
 
     configSocket() {
-        const io = socketIo(this.server);
+        const io = this.io;
+
         io.on('connection', (socket: any) => {
             console.log('Socket ON');
             socket.on('eventDB', (emit: Emit) => {
                 io.emit('eventDB', emit)
             });
 
-            /*
-             * Cada nueva conexión deberá estar a la escucha
-             * del evento 'nuevo mensaje', el cual se activa
-             * cada vez que un usuario envia un mensaje.
-             *
-             * @param  msj : Los datos enviados desde el cliente a
-             *               través del socket.
-             */
             socket.on('nuevo mensaje', function (msj: any) {
                 io.emit('nuevo mensaje', msj);
             });
 
-            /*
-             * Imprimimos en consola cada vez que un usuario
-             * se desconecte del sistema.
-             */
             socket.on('disconnect', function () {
                 console.log('Usuario desconectado');
             });
         });
-
-
     }
 
     normalizePort(val: number | string): number | string | boolean {
@@ -84,4 +73,5 @@ export class Server {
     }
 }
 
-const srv = new Server();
+const server = new Server();
+export default server;

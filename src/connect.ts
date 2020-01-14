@@ -4,7 +4,7 @@ export class DBConnection {
     private sequelize: any;
 
     constructor() {
-        this.sequelize = new Sequelize('signis', 'root', '123456', {
+        this.sequelize = new Sequelize('signis', 'root', '', {
             host: 'localhost',
             dialect: 'mysql',
         });

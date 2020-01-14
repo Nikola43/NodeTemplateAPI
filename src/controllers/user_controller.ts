@@ -3,7 +3,6 @@ import { User } from "../db/models/User";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
-
 export default class UsersController {
     static getAll = async (req: Request, res: Response, next: any) => {
         let users = null;

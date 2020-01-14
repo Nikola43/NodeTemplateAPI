@@ -1,21 +1,21 @@
 import * as http from 'http';
 import App from './app';
-import SocketIO from "socket.io";
+import socketIO from 'socket.io'
+import {Emit} from "./src/db/models/Emit";
 
 
 export class Server {
     public port: any;
     public server: any;
-    public io: SocketIO.Server;
+    public io: any;
 
     constructor() {
-
         this.port = this.normalizePort(process.env.PORT || 3000);
         App.set('port', this.port);
         this.server = http.createServer(App);
-        this.io = SocketIO("http://localhost:3000");
+        this.io = socketIO(this.server);
         this.configSocket();
-        this.server.listen(this.port, '0.0.0.0')
+        this.server.listen(this.port, '192.168.1.145')
             .on('error', this.onError)
             .on('listening', () => {
                 this.onListening(this.server);
@@ -23,8 +23,8 @@ export class Server {
     }
 
     configSocket() {
-        //const io = this.io;
-        /*
+        const io = this.io;
+
         io.on('connection', (socket: any) => {
             console.log('Socket ON');
             socket.on('eventDB', (emit: Emit) => {
@@ -39,9 +39,6 @@ export class Server {
                 console.log('Usuario desconectado');
             });
         });
-        */
-
-
     }
 
     normalizePort(val: number | string): number | string | boolean {

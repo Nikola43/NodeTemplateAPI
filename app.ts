@@ -6,6 +6,8 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import indexRouter from './src/routes';
 import usersRouter from './src/routes/users';
+import centersRouter from './src/routes/centers';
+import centersTypeRouter from './src/routes/centers_type';
 import express from 'express';
 import dbConnection from "./src/connect";
 
@@ -23,7 +25,7 @@ export class App {
 
     private routes(): void {
         this.express.use(bodyParser.json());
-        this.express.use(bodyParser.urlencoded({extended: true}));
+        this.express.use(bodyParser.urlencoded({ extended: true }));
         this.express.use(bodyParser.text());
         this.express.set('view engine', 'pug');
         this.express.set('views', path.join(__dirname, '../views'));
@@ -33,6 +35,8 @@ export class App {
 
         this.express.use('/', indexRouter);
         this.express.use('/users', usersRouter);
+        this.express.use('/centers', centersRouter);
+        this.express.use('/centers_type', centersTypeRouter);
 
         // catch 404 and forward to error handler
         this.express.use(function (req, res, next) {

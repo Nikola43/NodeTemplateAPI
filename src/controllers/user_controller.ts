@@ -36,18 +36,35 @@ export default class UsersController {
         let newUser = null;
         try {
             const newUser = await User.create({
+                center_id: req.body.center_id,
+                username: req.body.username,
+                password: req.body.password,
                 name: req.body.name,
-                preferredName: req.body.lastname
+                lastname: req.body.lastname,
+                status: req.body.status,
+                rank: req.body.rank,
+                role: req.body.role,
+                email: req.body.email,
+                phone: req.body.phone,
+                available: req.body.available,
+                gender: req.body.gender,
+                age: req.body.age,
+                weight: req.body.weight,
+                height: req.body.height,
+                blood_type: req.body.blood_type,
+                pulsations_max_rest: req.body.pulsations_max_rest,
+                vo2_max: req.body.vo2_max
             });
             res.status(200).send(newUser);
         } catch (e) {
-            res.status(500).send({ error: "Erro insertando" });
+            res.status(500).send({ error: "Error insertando" });
         }
     };
 
     static updateUser = async (req: Request, res: Response, next: any) => {
         let user: User = req.body;
         user.id = req.query.id;
+        user.updatedAt = new Date();
         try {
             user.update(user,
                 {
@@ -62,7 +79,7 @@ export default class UsersController {
                 });
             res.status(200).send(user);
         } catch (e) {
-            res.status(500).send({ error: "Erro actualizando" });
+            res.status(500).send({ error: "Error actualizando" });
         }
     };
 
@@ -83,7 +100,7 @@ export default class UsersController {
                         }
                     }
                 });
-            res.status(200).send(user);
+            res.status(200).send({ success: "Usuario eliminado" });
         } catch (e) {
             res.status(500).send({ error: "Error eliminando" });
         }

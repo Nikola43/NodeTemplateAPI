@@ -8,15 +8,14 @@ class UsersController {
     constructor() {
         this.getAll = (req, res, next) => {
             res.status(200).send({ test: "test" });
-            /*
-            const users = IUser.find((err: any, users: any) => {
+            const users = IUser_1.default.find((err, users) => {
                 if (err) {
                     res.send(err);
-                } else {
+                }
+                else {
                     res.send(users);
                 }
             });
-            */
         };
         this.getUserById = (req, res, next) => {
             const user = IUser_1.default.findById(req.params.id, (err, user) => {

@@ -9,7 +9,6 @@ export class UsersController {
 
     getAll = (req: Request, res: Response, next: any) => {
         res.status(200).send({test: "test"});
-        /*
         const users = IUser.find((err: any, users: any) => {
             if (err) {
                 res.send(err);
@@ -17,7 +16,6 @@ export class UsersController {
                 res.send(users);
             }
         });
-        */
     };
 
 

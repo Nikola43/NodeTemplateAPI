@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import * as jwt from "jsonwebtoken";
-import config from "../config/config";
-import { User } from "../db/models/User";
-import { Op } from "sequelize";
+import config from "../config/Config";
+import {User} from "../db/models/User";
+import {Op} from "sequelize";
 import bcrypt from "bcrypt"
 
 class AuthController {
@@ -12,7 +12,7 @@ class AuthController {
 
         //Check if username and password are set
         if (!(username && password)) {
-            res.status(400).send({ error: "username or password are empty" });
+            res.status(400).send({error: "username or password are empty"});
             return;
         }
 
@@ -30,27 +30,42 @@ class AuthController {
                     }
                 }
             });
-            console.log(user);
             if (user) {
                 const passwordMatch = await bcrypt.compare(password, user.password);
                 //Check if encrypted password match
                 if (passwordMatch) {
-                    res.status(401).send();
+                    res.status(404).send({error: "user not found"});
                     return;
                 }
                 //Sing JWT, valid for 1 hour
                 const token = jwt.sign(
-                    { userId: user.id, username: user.username },
+                    {userId: user.id, username: user.username},
                     config.jwtSecret,
-                    { expiresIn: "1h" }
+                    {expiresIn: "72h"}
                 );
                 //Send the jwt in the response
-                res.send(token);
+                user.password = "";
+                user.token = token;
+                user.update(
+                    {
+                        attributes: [
+                            'token',
+                        ],
+                        where: {
+                            username: {
+                                [Op.eq]: username
+                            },
+                            deleted_at: {
+                                [Op.is]: null
+                            }
+                        }
+                    });
+                res.send(user);
             } else {
-                res.status(404).send({ error: "user not found" });
+                res.status(404).send({error: "user not found"});
             }
         } catch (e) {
-            res.status(500).send({ error: "Error en la petición" });
+            res.status(500).send({error: "Error en la petición"});
         }
     };
 

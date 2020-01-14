@@ -1,11 +1,12 @@
 import { Model, DataTypes } from 'sequelize';
-import dbConnection from "../../connect";
+import dbConnection from "../../utils/DBUtil";
 
 export class User extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public center_id!: number | null;
     public username!: string;
     public password!: string;
+    public token!: string;
     public name!: string | null;
     public lastname!: string | null;
     public status!: boolean | null;
@@ -46,6 +47,10 @@ User.init({
     password: {
         type: new DataTypes.STRING(256),
         allowNull: false,
+    },
+    token: {
+        type: new DataTypes.STRING(256),
+        allowNull: true,
     },
     name: {
         type: new DataTypes.STRING(32),

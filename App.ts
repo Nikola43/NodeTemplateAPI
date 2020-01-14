@@ -5,13 +5,13 @@ import logger from 'morgan';
 import bodyParser from "body-parser";
 import cors from "cors";
 import indexRouter from './src/routes';
-import usersRouter from './src/routes/users';
-import centersRouter from './src/routes/centers';
-import coordinateRouter from './src/routes/coordinates';
-import centersTypesRouter from './src/routes/centers_types';
-import devicesTypesRouter from './src/routes/devices_types';
+import usersRouter from './src/routes/Users';
+import centersRouter from './src/routes/Centers';
+import coordinateRouter from './src/routes/Coordinates';
+import centersTypesRouter from './src/routes/CentersTypes';
+import devicesTypesRouter from './src/routes/DevicesTypes';
 import express from 'express';
-import dbConnection from "./src/connect";
+import dbConnection from "./src/utils/DBUtil";
 
 
 export class App {

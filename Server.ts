@@ -1,5 +1,5 @@
 import * as http from 'http';
-import App from './app';
+import App from './App';
 import socketIO from 'socket.io'
 import {Emit} from "./src/db/models/Emit";
 

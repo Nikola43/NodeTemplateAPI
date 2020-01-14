@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 export class DBConnection {
-    private sequelize: any;
+    private readonly sequelize: any;
 
     constructor() {
         this.sequelize = new Sequelize('signis', 'root', '', {

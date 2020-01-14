@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import AuthController from "../controllers/AuthController";
+import AuthController from "../auth/AuthController";
 
 export class IndexRoutes {
     router: Router;

@@ -1,5 +1,5 @@
 import {Router} from "express";
-import UsersController from "../controllers/user_controller";
+import UsersController from "../controllers/UserController";
 import {checkJwt} from "../../middlewares/checkJwt";
 
 export class UsersRoutes {

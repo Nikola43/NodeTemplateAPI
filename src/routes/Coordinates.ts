@@ -1,5 +1,5 @@
 import { Router } from "express";
-import CoordinatesController from "../controllers/coordinate_controller";
+import CoordinatesController from "../controllers/CoordinateController";
 
 export class CoordinatesRoutes {
     router: Router;

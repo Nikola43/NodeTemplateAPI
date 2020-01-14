@@ -7,7 +7,9 @@ import cors from "cors";
 import indexRouter from './src/routes';
 import usersRouter from './src/routes/users';
 import centersRouter from './src/routes/centers';
-import centersTypeRouter from './src/routes/centers_type';
+import coordinateRouter from './src/routes/coordinates';
+import centersTypesRouter from './src/routes/centers_types';
+import devicesTypesRouter from './src/routes/devices_types';
 import express from 'express';
 import dbConnection from "./src/connect";
 
@@ -36,7 +38,9 @@ export class App {
         this.express.use('/', indexRouter);
         this.express.use('/users', usersRouter);
         this.express.use('/centers', centersRouter);
-        this.express.use('/centers_type', centersTypeRouter);
+        this.express.use('/centers_types', centersTypesRouter);
+        this.express.use('/coordinates', coordinateRouter);
+        this.express.use('/devices_types', devicesTypesRouter);
 
         // catch 404 and forward to error handler
         this.express.use(function (req, res, next) {

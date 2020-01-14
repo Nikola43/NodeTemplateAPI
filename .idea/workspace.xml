@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ecf7feb5-b9d3-48ec-bfbb-792baf415e39" name="Default Changelist" comment="" />
+    <list default="true" id="ecf7feb5-b9d3-48ec-bfbb-792baf415e39" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/emit.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/connect.ts" beforeDir="false" afterPath="$PROJECT_DIR$/connect.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/user_controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/user_controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/IUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/models/IUser.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/@types/body-parser/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/@types/body-parser/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/@types/express/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/@types/express/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users.ts" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,10 +30,14 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="KonanWorkspace">
     <executables />
   </component>
   <component name="ProjectId" id="1W5b0Io3vNBQRq8cz75svUw3jRR" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -25,6 +45,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="go.import.settings.migrated" value="true" />
@@ -42,7 +63,27 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.watch-node">
+  <component name="RunManager" selected="npm.watch">
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="watch-node" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -63,10 +104,23 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="watch" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="watch" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.watch" />
+        <item itemvalue="npm.start" />
         <item itemvalue="npm.watch-node" />
         <item itemvalue="npm.watch-ts" />
+        <item itemvalue="npm.build" />
       </list>
     </recent_temporary>
   </component>
@@ -94,34 +148,52 @@
       <updated>1578442178902</updated>
       <workItem from="1578442183155" duration="188000" />
       <workItem from="1578442394757" duration="3536000" />
-      <workItem from="1578946361443" duration="1685000" />
+      <workItem from="1578946361443" duration="5680000" />
+      <workItem from="1578960338430" duration="3794000" />
+      <workItem from="1578964199770" duration="47000" />
+      <workItem from="1578964327196" duration="34000" />
+      <workItem from="1578964371570" duration="888000" />
+      <workItem from="1578965315798" duration="1529000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/config/config.js" />
+        <option value="$PROJECT_DIR$/server.js" />
+        <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/connect.js" />
+        <option value="$PROJECT_DIR$/models/emit.js" />
+        <option value="$PROJECT_DIR$/routes/users.js" />
+        <option value="$PROJECT_DIR$/routes/index.js" />
+        <option value="$PROJECT_DIR$/models/IUser.js" />
+        <option value="$PROJECT_DIR$/controllers/user_controller.js" />
+      </list>
+    </option>
   </component>
   <component name="WindowStateProjectService">
-    <state width="1398" height="211" key="GridCell.Tab.0.bottom" timestamp="1578947881436">
+    <state width="1398" height="278" key="GridCell.Tab.0.bottom" timestamp="1578966748644">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="211" key="GridCell.Tab.0.bottom/0.23.1440.877/-1920.-66.1920.1057@0.23.1440.877" timestamp="1578947881436" />
-    <state width="1398" height="211" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1578445908256" />
-    <state width="1398" height="211" key="GridCell.Tab.0.center" timestamp="1578947881435">
+    <state width="1398" height="386" key="GridCell.Tab.0.bottom/0.23.1440.877/-1920.-66.1920.1057@0.23.1440.877" timestamp="1578951701334" />
+    <state width="1398" height="278" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1578966748644" />
+    <state width="1398" height="278" key="GridCell.Tab.0.center" timestamp="1578966748644">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="211" key="GridCell.Tab.0.center/0.23.1440.877/-1920.-66.1920.1057@0.23.1440.877" timestamp="1578947881435" />
-    <state width="1398" height="211" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1578445908256" />
-    <state width="1398" height="211" key="GridCell.Tab.0.left" timestamp="1578947881434">
+    <state width="1398" height="386" key="GridCell.Tab.0.center/0.23.1440.877/-1920.-66.1920.1057@0.23.1440.877" timestamp="1578951701333" />
+    <state width="1398" height="278" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1578966748644" />
+    <state width="1398" height="278" key="GridCell.Tab.0.left" timestamp="1578966748643">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="211" key="GridCell.Tab.0.left/0.23.1440.877/-1920.-66.1920.1057@0.23.1440.877" timestamp="1578947881434" />
-    <state width="1398" height="211" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1578445908255" />
-    <state width="1398" height="211" key="GridCell.Tab.0.right" timestamp="1578947881435">
+    <state width="1398" height="386" key="GridCell.Tab.0.left/0.23.1440.877/-1920.-66.1920.1057@0.23.1440.877" timestamp="1578951701332" />
+    <state width="1398" height="278" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1578966748643" />
+    <state width="1398" height="278" key="GridCell.Tab.0.right" timestamp="1578966748644">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="211" key="GridCell.Tab.0.right/0.23.1440.877/-1920.-66.1920.1057@0.23.1440.877" timestamp="1578947881435" />
-    <state width="1398" height="211" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1578445908256" />
+    <state width="1398" height="386" key="GridCell.Tab.0.right/0.23.1440.877/-1920.-66.1920.1057@0.23.1440.877" timestamp="1578951701333" />
+    <state width="1398" height="278" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1578966748644" />
     <state x="221" y="100" key="SettingsEditor" timestamp="1578948018054">
       <screen x="0" y="23" width="1440" height="877" />
     </state>

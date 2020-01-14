@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document } from "mongoose";
+import {Schema, Document} from "mongoose";
+import * as mongoose from "mongoose";
 
 export interface UserInterface extends Document {
   username: string;
@@ -11,4 +12,4 @@ const UserSchema: Schema = new Schema({
 });
 
 const IUser = mongoose.model<UserInterface>("IUser", UserSchema);
-export default Ibook;
+export default IUser;

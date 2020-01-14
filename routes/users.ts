@@ -1,20 +1,36 @@
-import express from "express";
-import * as UserController from "../controllers/user_controller";
-const router = express.Router();
+import {Request, Response, Router} from "express";
+import usersController from "../controllers/user_controller";
 
-/* GET ALL USERS */
-router.get("/users", UserController.getAll);
 
-/* GET USER BY ID */
-router.get("/users/:id", UserController.getUserById);
+export class UsersRoutes {
+    router: Router;
 
-/* INSERT USER */
-router.post("/users", UserController.insertUser);
+    constructor() {
+        this.router = Router();
+    }
 
-/* UPDATE USER BY ID*/
-router.patch("/users/:id", UserController.updateUser);
+    init() {
+        /* GET ALL USERS */
+        this.router.get("/", usersController.getAll);
 
-/* DELETE USER BY ID*/
-router.delete("/users/:id", UserController.deleteUser);
+        /* GET USER BY ID */
+        this.router.get("/:id", usersController.getAll);
 
-module.exports = router;
+        /* INSERT USER */
+        this.router.post("/", usersController.getAll);
+
+        /* UPDATE USER BY ID*/
+        this.router.patch("/:id", usersController.getAll);
+
+        /* DELETE USER BY ID*/
+        this.router.delete("/:id", usersController.getAll);
+
+        this.router.get('/test', function (req: Request, res: Response, next: any) {
+            res.status(200).send("Hello");
+        });
+    }
+}
+
+let usersRoutes = new UsersRoutes();
+usersRoutes.init();
+export default usersRoutes.router;

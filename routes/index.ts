@@ -1,10 +1,21 @@
-import express, {Request, Response} from "express";
-const router = express.Router();
+import {Request, Response, Router} from "express";
 
-/* GET home page. */
-router.get('/', function(req:Request, res: Response, next:any) {
-  res.render('index', { title: 'Express' });
-  // res.status(200).send("Hello");
-});
+export class IndexRoutes {
+    router: Router;
 
-module.exports = router;
+    constructor() {
+        this.router = Router();
+    }
+
+    init() {
+        /* GET home page. */
+        this.router.get('/', function (req: Request, res: Response, next: any) {
+            res.render('index', {title: 'Express'});
+            // res.status(200).send("Hello");
+        });
+    }
+}
+
+let indexRoutes = new IndexRoutes();
+indexRoutes.init();
+export default indexRoutes.router;

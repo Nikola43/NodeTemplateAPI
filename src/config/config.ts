@@ -1,2 +1,3 @@
-export class Config {
-}
+export default {
+    jwtSecret: "@QEGTUI"
+};

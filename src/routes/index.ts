@@ -12,6 +12,17 @@ export class IndexRoutes {
         this.router.get('/', function (req: Request, res: Response, next: any) {
             res.render('index', {title: 'Express'});
         });
+
+        /* GET home page. */
+        this.router.get('/login', function (req: Request, res: Response, next: any) {
+                res.status(200).send("login");
+            }
+        );
+
+        /* GET home page. */
+        this.router.get('/signup', function (req: Request, res: Response, next: any) {
+            res.status(200).send("login");
+        });
     }
 }
 

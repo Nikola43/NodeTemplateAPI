@@ -1,6 +1,5 @@
 import {Request, Response} from "express";
 import {User} from "../db/models/User";
-import server from "../../server";
 
 export default class UsersController {
     static getAll = (req: Request, res: Response, next: any) => {
@@ -25,6 +24,5 @@ export default class UsersController {
 
     static deleteUser = async (req: Request, res: Response, next: any) => {
         res.status(200).send({test: "test"});
-        server.
     };
 }

@@ -15,7 +15,7 @@ export class Server {
         this.server = http.createServer(App);
         this.io = socketIO(this.server);
         this.configSocket();
-        this.server.listen(this.port, '192.168.1.145')
+        this.server.listen(this.port, '0.0.0.0')
             .on('error', this.onError)
             .on('listening', () => {
                 this.onListening(this.server);

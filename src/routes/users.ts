@@ -1,5 +1,6 @@
 import {Router} from "express";
 import UsersController from "../controllers/user_controller";
+import {checkJwt} from "../../middlewares/checkJwt";
 
 export class UsersRoutes {
     router: Router;
@@ -10,7 +11,7 @@ export class UsersRoutes {
 
     init() {
         /* GET ALL USERS */
-        this.router.get("/", UsersController.getAll);
+        this.router.get("/", [checkJwt], UsersController.getAll);
 
         /* GET USER BY ID */
         this.router.get("/:id", UsersController.getUserById);

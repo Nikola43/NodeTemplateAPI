@@ -21,7 +21,7 @@ export default class UsersController {
     static getUserById = async (req: Request, res: Response, next: any) => {
         let user = null;
         try {
-            const user = await User.findByPk(req.query.id)
+            const user = await User.findByPk(req.query.id);
             if (user) {
                 res.status(200).send(user);
             } else {

@@ -1,4 +1,5 @@
 import {Request, Response, Router} from "express";
+import AuthController from "../controllers/AuthController";
 
 export class IndexRoutes {
     router: Router;
@@ -14,10 +15,7 @@ export class IndexRoutes {
         });
 
         /* GET home page. */
-        this.router.get('/login', function (req: Request, res: Response, next: any) {
-                res.status(200).send("login");
-            }
-        );
+        this.router.post('/login', AuthController.login);
 
         /* GET home page. */
         this.router.get('/signup', function (req: Request, res: Response, next: any) {

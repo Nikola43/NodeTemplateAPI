@@ -19,6 +19,7 @@ var Server = /** @class */ (function () {
     Server.prototype.configSocket = function () {
         var io = socketIo(this.server);
         io.on('connection', function (socket) {
+            console.log('Socket ON');
             socket.on('eventDB', function (emit) {
                 io.emit('eventDB', emit);
             });

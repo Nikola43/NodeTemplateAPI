@@ -9,17 +9,16 @@ const path_1 = __importDefault(require("path"));
 const morgan_1 = __importDefault(require("morgan"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
-const routes_1 = __importDefault(require("./routes"));
-const users_1 = __importDefault(require("./routes/users"));
+const routes_1 = __importDefault(require("./src/routes"));
+const users_1 = __importDefault(require("./src/routes/users"));
 const express_1 = __importDefault(require("express"));
-const connect_1 = __importDefault(require("./connect"));
-const config_1 = require("./config/config");
+const connect_1 = __importDefault(require("./src/connect"));
 class App {
     constructor() {
         this.express = express_1.default();
         this.middleware();
         this.routes();
-        connect_1.default(config_1.db);
+        this.db = connect_1.default;
     }
     routes() {
         this.express.use(body_parser_1.default.json());

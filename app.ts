@@ -4,20 +4,21 @@ import path from 'path';
 import logger from 'morgan';
 import bodyParser from "body-parser";
 import cors from "cors";
-import indexRouter from './routes';
-import usersRouter from './routes/users';
+import indexRouter from './src/routes';
+import usersRouter from './src/routes/users';
 import express from 'express';
-import connect from "./connect";
-import {db} from "./config/config";
+import dbConnection from "./src/connect";
+
 
 export class App {
     public express: express.Application;
+    public db: any;
 
     constructor() {
         this.express = express();
         this.middleware();
         this.routes();
-        connect(db);
+        this.db = dbConnection
     }
 
     private routes(): void {

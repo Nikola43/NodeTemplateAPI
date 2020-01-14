@@ -2,7 +2,7 @@ import * as http from 'http';
 import App from './app';
 import socketIo = require('socket.io');
 
-import {Emit} from './models/emit';
+import {Emit} from './src/db/models/emit';
 
 export class Server {
     public port: any;
@@ -27,7 +27,29 @@ export class Server {
             socket.on('eventDB', (emit: Emit) => {
                 io.emit('eventDB', emit)
             });
+
+            /*
+             * Cada nueva conexión deberá estar a la escucha
+             * del evento 'nuevo mensaje', el cual se activa
+             * cada vez que un usuario envia un mensaje.
+             *
+             * @param  msj : Los datos enviados desde el cliente a
+             *               través del socket.
+             */
+            socket.on('nuevo mensaje', function (msj: any) {
+                io.emit('nuevo mensaje', msj);
+            });
+
+            /*
+             * Imprimimos en consola cada vez que un usuario
+             * se desconecte del sistema.
+             */
+            socket.on('disconnect', function () {
+                console.log('Usuario desconectado');
+            });
         });
+
+
     }
 
     normalizePort(val: number | string): number | string | boolean {

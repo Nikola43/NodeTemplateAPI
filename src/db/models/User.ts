@@ -56,7 +56,7 @@ User.init({
         allowNull: true
     },
     status: {
-        type: new DataTypes.TINYINT(),
+        type: DataTypes.BOOLEAN,
         allowNull: true
     },
     rank: {
@@ -76,7 +76,7 @@ User.init({
         allowNull: true
     },
     available: {
-        type: new DataTypes.TINYINT(),
+        type: DataTypes.BOOLEAN,
         allowNull: true
     },
     gender: {

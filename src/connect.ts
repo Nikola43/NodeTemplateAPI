@@ -4,7 +4,7 @@ export class DBConnection {
     private sequelize: any;
 
     constructor() {
-        this.sequelize = new Sequelize('wsdb', 'root', '', {
+        this.sequelize = new Sequelize('signis', 'root', '123456', {
             host: 'localhost',
             dialect: 'mysql',
         });

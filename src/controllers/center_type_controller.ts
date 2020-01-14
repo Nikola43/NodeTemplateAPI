@@ -49,7 +49,7 @@ export default class CentersTypesController {
     static updateCenterType = async (req: Request, res: Response, next: any) => {
         let center_type: CenterType = req.body;
         center_type.id = req.query.id;
-        center_type.updatedAt = new Date();
+        center_type.updated_at = new Date();
         try {
             center_type.update(center_type,
                 {
@@ -57,7 +57,7 @@ export default class CentersTypesController {
                         id: {
                             [Op.eq]: center_type.id
                         },
-                        deletedAt: {
+                        deleted_at: {
                             [Op.is]: null
                         }
                     }
@@ -73,14 +73,14 @@ export default class CentersTypesController {
         center_type.id = req.query.id;
         try {
             center_type.update({
-                deletedAt: new Date()
+                deleted_at: new Date()
             },
                 {
                     where: {
                         id: {
                             [Op.eq]: center_type.id
                         },
-                        deletedAt: {
+                        deleted_at: {
                             [Op.is]: null
                         }
                     }

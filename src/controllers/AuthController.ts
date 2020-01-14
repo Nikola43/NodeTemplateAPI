@@ -1,8 +1,8 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import config from "../config/config";
-import {User} from "../db/models/User";
-import {Op} from "sequelize";
+import { User } from "../db/models/User";
+import { Op } from "sequelize";
 import bcrypt from "bcrypt"
 
 class AuthController {
@@ -12,7 +12,7 @@ class AuthController {
 
         //Check if username and password are set
         if (!(username && password)) {
-            res.status(400).send({error: "username or password are empty"});
+            res.status(400).send({ error: "username or password are empty" });
             return;
         }
 
@@ -25,7 +25,7 @@ class AuthController {
                     username: {
                         [Op.eq]: username
                     },
-                    deletedAt: {
+                    deleted_at: {
                         [Op.is]: null
                     }
                 }
@@ -40,17 +40,17 @@ class AuthController {
                 }
                 //Sing JWT, valid for 1 hour
                 const token = jwt.sign(
-                    {userId: user.id, username: user.username},
+                    { userId: user.id, username: user.username },
                     config.jwtSecret,
-                    {expiresIn: "1h"}
+                    { expiresIn: "1h" }
                 );
                 //Send the jwt in the response
                 res.send(token);
             } else {
-                res.status(404).send({error: "user not found"});
+                res.status(404).send({ error: "user not found" });
             }
         } catch (e) {
-            res.status(500).send({error: "Error en la petición"});
+            res.status(500).send({ error: "Error en la petición" });
         }
     };
 

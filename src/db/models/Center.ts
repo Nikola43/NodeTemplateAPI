@@ -14,9 +14,9 @@ export class Center extends Model {
     public end_at!: Date | null;
 
     // timestamps!
-    public readonly createdAt!: Date;
-    public updatedAt!: Date | null;
-    public deletedAt!: Date | null;
+    public readonly created_at!: Date;
+    public updated_at!: Date | null;
+    public deleted_at!: Date | null;
 }
 
 Center.init({

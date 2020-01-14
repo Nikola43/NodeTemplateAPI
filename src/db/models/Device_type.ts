@@ -1,10 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../connect";
 
-export class CenterType extends Model {
+export class DeviceType extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public type!: string;
-    public temporary!: number;
 
     // timestamps!
     public readonly created_at!: Date;
@@ -12,7 +11,7 @@ export class CenterType extends Model {
     public deleted_at!: Date | null;
 }
 
-CenterType.init({
+DeviceType.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
@@ -20,12 +19,8 @@ CenterType.init({
         allowNull: false,
     },
     type: {
-        type: new DataTypes.STRING(32),
-        allowNull: false,
-    },
-    temporary: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
+        type: new DataTypes.DOUBLE,
+        allowNull: true,
     },
     updated_at: {
         type: new DataTypes.DATE,
@@ -36,6 +31,6 @@ CenterType.init({
         allowNull: true
     },
 }, {
-    tableName: 'centers_types',
+    tableName: 'devices_types',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

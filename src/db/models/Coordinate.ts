@@ -1,10 +1,10 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../connect";
 
-export class CenterType extends Model {
+export class Coordinate extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public type!: string;
-    public temporary!: number;
+    public lat!: number;
+    public lon!: number;
 
     // timestamps!
     public readonly created_at!: Date;
@@ -12,20 +12,20 @@ export class CenterType extends Model {
     public deleted_at!: Date | null;
 }
 
-CenterType.init({
+Coordinate.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
-    type: {
-        type: new DataTypes.STRING(32),
-        allowNull: false,
+    lat: {
+        type: new DataTypes.DOUBLE,
+        allowNull: true,
     },
-    temporary: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
+    lon: {
+        type: new DataTypes.DOUBLE,
+        allowNull: false,
     },
     updated_at: {
         type: new DataTypes.DATE,
@@ -36,6 +36,6 @@ CenterType.init({
         allowNull: true
     },
 }, {
-    tableName: 'centers_types',
+    tableName: 'coordinates',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

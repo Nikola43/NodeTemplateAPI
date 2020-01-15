@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken";
 import config from "../src/config/Config";
 import {User} from "../src/db/models/User";
 
-export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
+export const checkJwt = async (req: Request, res: Response, next: NextFunction) => {
     //Get the jwt token from the head
     let token = <string>req.headers['authorization'];
     token = token.replace('Bearer ', '');
@@ -25,14 +25,16 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     const newToken = jwt.sign({userId, username}, config.jwtSecret, {
         expiresIn: "24h"
     });
+
+
     //Update user token
-    User.update({token: newToken}, {
+    await User.update({token: newToken}, {
         where: {
             username: username
         }
     });
-    res.setHeader("token", newToken);
 
+    res.setHeader("token", newToken);
     //Call the next middleware or controller
     next();
 };

@@ -19,7 +19,6 @@ export default class UsersController {
     };
 
     static getUserById = async (req: Request, res: Response, next: any) => {
-        let user = null;
         try {
             const user = await User.findByPk(req.query.id);
             if (user) {
@@ -33,7 +32,6 @@ export default class UsersController {
     };
 
     static insertUser = async (req: Request, res: Response, next: any) => {
-        let newUser = null;
         try {
             const newUser = await User.create({
                 center_id: req.body.center_id,
@@ -66,7 +64,7 @@ export default class UsersController {
         user.id = req.query.id;
         user.updatedAt = new Date();
         try {
-            user.update(user,
+            User.update(user,
                 {
                     where: {
                         id: {
@@ -86,10 +84,9 @@ export default class UsersController {
     static deleteUser = async (req: Request, res: Response, next: any) => {
         let user: User = req.body;
         user.id = req.query.id;
+        user.updatedAt = new Date();
         try {
-            user.update({
-                deletedAt: new Date()
-            },
+            User.update(user,
                 {
                     where: {
                         id: {
@@ -100,9 +97,9 @@ export default class UsersController {
                         }
                     }
                 });
-            res.status(200).send({ success: "Usuario eliminado" });
+            res.status(200).send(user);
         } catch (e) {
-            res.status(500).send({ error: "Error eliminando" });
+            res.status(500).send({ error: "Error actualizando" });
         }
     };
 }

@@ -1,5 +1,6 @@
 import {Request, Response, Router} from "express";
 import AuthController from "../auth/AuthController";
+import {checkJwt} from "../../middlewares/checkJwt";
 
 export class IndexRoutes {
     router: Router;
@@ -16,6 +17,7 @@ export class IndexRoutes {
 
         /* GET home page. */
         this.router.post('/login', AuthController.login);
+        this.router.post('/change-password',[checkJwt], AuthController.changePassword);
 
         /* GET home page. */
         this.router.get('/signup', function (req: Request, res: Response, next: any) {

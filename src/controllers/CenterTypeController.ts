@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CenterType } from "../db/models/Center_type";
+import { CenterType } from "../db/models/CenterType";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 

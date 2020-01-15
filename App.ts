@@ -4,12 +4,16 @@ import path from 'path';
 import logger from 'morgan';
 import bodyParser from "body-parser";
 import cors from "cors";
-import indexRouter from './src/routes';
+import indexRouter from './src/routes/Index';
 import usersRouter from './src/routes/Users';
 import centersRouter from './src/routes/Centers';
 import coordinateRouter from './src/routes/Coordinates';
 import centersTypesRouter from './src/routes/CentersTypes';
 import devicesTypesRouter from './src/routes/DevicesTypes';
+import documentsRouter from './src/routes/Documents';
+import documentsTypesRouter from './src/routes/DocumentsTypes';
+import incidencesRouter from './src/routes/Incidences';
+import incidencesTypesRouter from './src/routes/IncidencesType';
 import express from 'express';
 import dbConnection from "./src/utils/DBUtil";
 
@@ -41,6 +45,10 @@ export class App {
         this.express.use('/centers_types', centersTypesRouter);
         this.express.use('/coordinates', coordinateRouter);
         this.express.use('/devices_types', devicesTypesRouter);
+        this.express.use('/documents', documentsRouter);
+        this.express.use('/documents_types', documentsTypesRouter);
+        this.express.use('/incidences', incidencesRouter);
+        this.express.use('/incidences_types', incidencesTypesRouter);
 
         // catch 404 and forward to error handler
         this.express.use(function (req, res, next) {

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { DeviceType } from "../db/models/Device_type";
+import { DeviceType } from "../db/models/DeviceType";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 

@@ -62,7 +62,7 @@ export default class UsersController {
     static updateUser = async (req: Request, res: Response, next: any) => {
         let user: User = req.body;
         user.id = req.query.id;
-        user.updatedAt = new Date();
+        user.updated_at = new Date();
         try {
             User.update(user,
                 {
@@ -70,7 +70,7 @@ export default class UsersController {
                         id: {
                             [Op.eq]: user.id
                         },
-                        deletedAt: {
+                        deleted_at: {
                             [Op.is]: null
                         }
                     }
@@ -92,7 +92,7 @@ export default class UsersController {
                         id: {
                             [Op.eq]: user.id
                         },
-                        deletedAt: {
+                        deleted_at: {
                             [Op.is]: null
                         }
                     }

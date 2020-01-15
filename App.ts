@@ -4,12 +4,15 @@ import path from 'path';
 import logger from 'morgan';
 import bodyParser from "body-parser";
 import cors from "cors";
-import indexRouter from './src/routes';
+import indexRouter from './src/routes/Index';
 import usersRouter from './src/routes/Users';
 import centersRouter from './src/routes/Centers';
 import coordinateRouter from './src/routes/Coordinates';
 import centersTypesRouter from './src/routes/CentersTypes';
 import devicesTypesRouter from './src/routes/DevicesTypes';
+import documentsRouter from './src/routes/documents';
+import documentsTypesRouter from './src/routes/documents_types';
+import incidencesRouter from './src/routes/incidences';
 import express from 'express';
 import dbConnection from "./src/utils/DBUtil";
 
@@ -41,6 +44,10 @@ export class App {
         this.express.use('/centers_types', centersTypesRouter);
         this.express.use('/coordinates', coordinateRouter);
         this.express.use('/devices_types', devicesTypesRouter);
+        this.express.use('/documents', documentsRouter);
+        this.express.use('/documents_types', documentsTypesRouter);
+        this.express.use('/incidences', incidencesRouter);
+
 
         // catch 404 and forward to error handler
         this.express.use(function (req, res, next) {

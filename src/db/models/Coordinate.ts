@@ -27,10 +27,6 @@ Coordinate.init({
         type: new DataTypes.DOUBLE,
         allowNull: false,
     },
-    updated_at: {
-        type: new DataTypes.DATE,
-        allowNull: true
-    },
     deleted_at: {
         type: new DataTypes.DATE,
         allowNull: true

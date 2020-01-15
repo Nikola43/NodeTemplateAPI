@@ -1,20 +1,19 @@
-import { Model, DataTypes } from 'sequelize';
+import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class CenterType extends Model {
+export class MultimediaContentType extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public type!: string;
-    public temporary!: number;
 
     // timestamps!
-    public readonly created_at!: Date;
-    public updated_at!: Date | null;
-    public deleted_at!: Date | null;
+    public createdAt!: Date;
+    public updatedAt!: Date | null;
+    public deletedAt!: Date | null;
 }
 
-CenterType.init({
+MultimediaContentType.init({
     id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: new DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
@@ -23,15 +22,12 @@ CenterType.init({
         type: new DataTypes.STRING(32),
         allowNull: false,
     },
-    temporary: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
-    },
-    deleted_at: {
+
+    deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },
 }, {
-    tableName: 'centers_types',
+    tableName: 'multimedia_contents_types',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

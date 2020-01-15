@@ -22,10 +22,6 @@ IncidenceType.init({
         type: new DataTypes.STRING(32),
         allowNull: false,
     },
-    updated_at: {
-        type: new DataTypes.DATE,
-        allowNull: true
-    },
     deleted_at: {
         type: new DataTypes.DATE,
         allowNull: true

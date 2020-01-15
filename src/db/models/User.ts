@@ -24,20 +24,20 @@ export class User extends Model {
     public vo2_max!: number | null;
 
     // timestamps!
-    public deletedAt!: Date | null;
-    public createdAt!: Date | null;
+    public createdAt!: Date;
     public updatedAt!: Date | null;
+    public deletedAt!: Date | null;
 }
 
 User.init({
     id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: new DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
     center_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: new DataTypes.INTEGER.UNSIGNED,
         allowNull: true,
     },
     username: {
@@ -61,7 +61,7 @@ User.init({
         allowNull: true
     },
     status: {
-        type: DataTypes.BOOLEAN,
+        type: new DataTypes.TINYINT(4),
         allowNull: true
     },
     rank: {
@@ -81,7 +81,7 @@ User.init({
         allowNull: true
     },
     available: {
-        type: DataTypes.BOOLEAN,
+        type: new DataTypes.TINYINT(1),
         allowNull: true
     },
     gender: {
@@ -89,7 +89,7 @@ User.init({
         allowNull: true
     },
     age: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: new DataTypes.INTEGER.UNSIGNED,
         allowNull: true
     },
     weight: {
@@ -105,11 +105,11 @@ User.init({
         allowNull: true
     },
     pulsations_max_rest: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: new DataTypes.INTEGER.UNSIGNED,
         allowNull: true
     },
     vo2_max: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: new DataTypes.INTEGER.UNSIGNED,
         allowNull: true
     },
     deletedAt: {

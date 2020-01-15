@@ -1,5 +1,5 @@
 import { Router } from "express";
-import IncidenceController from "../controllers/incidence_controller";
+import IncidenceController from "../controllers/IncidenceController";
 
 export class IncidenceRoutes {
     router: Router;

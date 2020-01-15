@@ -10,9 +10,10 @@ import centersRouter from './src/routes/Centers';
 import coordinateRouter from './src/routes/Coordinates';
 import centersTypesRouter from './src/routes/CentersTypes';
 import devicesTypesRouter from './src/routes/DevicesTypes';
-import documentsRouter from './src/routes/documents';
-import documentsTypesRouter from './src/routes/documents_types';
-import incidencesRouter from './src/routes/incidences';
+import documentsRouter from './src/routes/Documents';
+import documentsTypesRouter from './src/routes/DocumentsTypes';
+import incidencesRouter from './src/routes/Incidences';
+import incidencesTypesRouter from './src/routes/IncidencesType';
 import express from 'express';
 import dbConnection from "./src/utils/DBUtil";
 
@@ -47,7 +48,7 @@ export class App {
         this.express.use('/documents', documentsRouter);
         this.express.use('/documents_types', documentsTypesRouter);
         this.express.use('/incidences', incidencesRouter);
-
+        this.express.use('/incidences_types', incidencesTypesRouter);
 
         // catch 404 and forward to error handler
         this.express.use(function (req, res, next) {

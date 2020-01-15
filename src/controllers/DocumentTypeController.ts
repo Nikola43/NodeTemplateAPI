@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { DocumentType } from "../db/models/Document_type";
+import { DocumentType } from "../db/models/DocumentType";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 

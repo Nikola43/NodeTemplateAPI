@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
 import * as jwt from "jsonwebtoken";
-import config from "../src/config/Config";
-import {User} from "../src/db/models/User";
+import config from "../config/Config";
+import {User} from "../db/models/User";
 
 export const checkJwt = async (req: Request, res: Response, next: NextFunction) => {
     //Get the jwt token from the head
@@ -34,7 +34,9 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
         }
     });
 
+    // set new token in header
     res.setHeader("token", newToken);
+
     //Call the next middleware or controller
     next();
 };

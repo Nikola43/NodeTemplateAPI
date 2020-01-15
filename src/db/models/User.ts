@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
 export class User extends Model {
@@ -25,8 +25,8 @@ export class User extends Model {
 
     // timestamps!
     public deletedAt!: Date | null;
-    public updatedAt!: Date | null;
     public createdAt!: Date | null;
+    public updatedAt!: Date | null;
 }
 
 User.init({

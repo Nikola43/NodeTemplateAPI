@@ -20,6 +20,7 @@ class AuthController {
         try {
             user = await User.findOne({
                 attributes: [
+                    'id',
                     'username',
                     'password'
                 ], where: {

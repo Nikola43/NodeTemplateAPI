@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import dbConnection from "../../connect";
+import dbConnection from "../../utils/DBUtil";
 
 export class Document extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
@@ -11,9 +11,9 @@ export class Document extends Model {
     public end_at!: string;
 
     // timestamps!
-    public readonly created_at!: Date;
-    public updated_at!: Date | null;
-    public deleted_at!: Date | null;
+    public deletedAt!: Date | null;
+    public readonly createdAt!: Date;
+    public updatedAt!: Date | null;
 }
 
 Document.init({

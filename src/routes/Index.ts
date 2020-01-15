@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import AuthController from "../auth/AuthController";
-import {checkJwt} from "../../middlewares/checkJwt";
+import {checkJwt} from "../middlewares/CheckJwt";
 
 export class IndexRoutes {
     router: Router;

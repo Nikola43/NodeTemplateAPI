@@ -9,6 +9,7 @@ class AuthController {
     static login = async (req: Request, res: Response) => {
         const username = req.body.username;
         const password = req.body.username;
+        let user: User | null;
 
         //Check if username and password are set
         if (!(username && password)) {
@@ -17,7 +18,7 @@ class AuthController {
         }
 
         try {
-            const user = await User.findOne({
+            user = await User.findOne({
                 attributes: [
                     'username',
                     'password'
@@ -25,48 +26,47 @@ class AuthController {
                     username: {
                         [Op.eq]: username
                     },
-                    deleted_at: {
+                    deletedAt: {
                         [Op.is]: null
                     }
                 }
             });
+
             if (user) {
-                const passwordMatch = await bcrypt.compare(password, user.password);
+
                 //Check if encrypted password match
-                if (passwordMatch) {
+                if (await bcrypt.compare(password, user.password)) {
                     res.status(404).send({error: "user not found"});
                     return;
                 }
+
                 //Sing JWT, valid for 1 hour
                 const token = jwt.sign(
                     {userId: user.id, username: user.username},
                     config.jwtSecret,
-                    {expiresIn: "72h"}
+                    {expiresIn: "24h"}
                 );
-                //Send the jwt in the response
+
+                //Send the jwt in the user
                 user.password = "";
                 user.token = token;
-                user.update(
-                    {
-                        attributes: [
-                            'token',
-                        ],
-                        where: {
-                            username: {
-                                [Op.eq]: username
-                            },
-                            deleted_at: {
-                                [Op.is]: null
-                            }
-                        }
-                    });
+
+                //Update user token
+                User.update({token: token}, {
+                    where: {
+                        username: username
+                    }
+                });
+
                 res.send(user);
             } else {
                 res.status(404).send({error: "user not found"});
             }
         } catch (e) {
-            res.status(500).send({error: "Error en la petición"});
+            res.status(500).send({error: "error accessing db data"});
         }
+
+
     };
 
     static changePassword = async (req: Request, res: Response) => {

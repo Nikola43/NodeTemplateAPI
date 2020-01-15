@@ -24,9 +24,9 @@ export class User extends Model {
     public vo2_max!: number | null;
 
     // timestamps!
-    public readonly created_at!: Date;
-    public updated_at!: Date | null;
-    public deleted_at!: Date | null;
+    public deletedAt!: Date | null;
+    public updatedAt!: Date | null;
+    public createdAt!: Date | null;
 }
 
 User.init({
@@ -112,11 +112,7 @@ User.init({
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
     },
-    updated_at: {
-        type: new DataTypes.DATE,
-        allowNull: true
-    },
-    deleted_at: {
+    deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },

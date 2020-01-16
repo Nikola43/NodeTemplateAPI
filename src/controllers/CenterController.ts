@@ -8,7 +8,7 @@ export default class CentersController {
     static getAll = async (req: Request, res: Response, next: any) => {
         let centers = null;
         try {
-            centers = await Center.findAll()
+            centers = await Center.findAll();
             if (centers) {
                 res.status(200).send(centers);
             } else {
@@ -22,7 +22,7 @@ export default class CentersController {
     static getCenterById = async (req: Request, res: Response, next: any) => {
         let center = null;
         try {
-            const center = await Center.findByPk(req.query.id)
+            const center = await Center.findByPk(req.query.id);
             if (center) {
                 res.status(200).send(center);
             } else {

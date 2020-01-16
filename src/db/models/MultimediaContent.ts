@@ -44,7 +44,7 @@ MultimediaContent.init({
         allowNull: false,
     },
     size: {
-        type: new DataTypes.BIGINT(20),
+        type: new DataTypes.BIGINT(),
         allowNull: false,
     },
     deletedAt: {

@@ -39,7 +39,7 @@ PanicButton.init({
         allowNull: true,
     },
     endAt: {
-        type: new DataTypes.DATE
+        type: new DataTypes.DATE,
         allowNull: true,
     },
     deletedAt: {

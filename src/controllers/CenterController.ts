@@ -56,7 +56,7 @@ export default class CentersController {
     static updateCenter = async (req: Request, res: Response, next: any) => {
         let center: Center = req.body;
         center.id = req.query.id;
-        center.updated_at = new Date();
+        center.updatedAt = new Date();
         try {
             center.update(center,
                 {

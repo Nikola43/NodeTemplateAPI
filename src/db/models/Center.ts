@@ -58,11 +58,11 @@ Center.init({
         type: new DataTypes.STRING(32),
         allowNull: true
     },
-    end_at: {
+    endAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },
-    deleted_at: {
+    deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },

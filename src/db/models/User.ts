@@ -31,13 +31,13 @@ export class User extends Model {
 
 User.init({
     id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
     center_id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true,
     },
     username: {
@@ -61,12 +61,12 @@ User.init({
         allowNull: true
     },
     status: {
-        type: new DataTypes.TINYINT(4),
+        type: DataTypes.TINYINT,
         allowNull: true
     },
     rank: {
         type: new DataTypes.STRING(32),
-        allowNull: false
+        allowNull: true
     },
     role: {
         type: new DataTypes.STRING(32),
@@ -81,7 +81,7 @@ User.init({
         allowNull: true
     },
     available: {
-        type: new DataTypes.TINYINT(1),
+        type: DataTypes.TINYINT,
         allowNull: true
     },
     gender: {
@@ -89,7 +89,7 @@ User.init({
         allowNull: true
     },
     age: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
     },
     weight: {
@@ -105,15 +105,15 @@ User.init({
         allowNull: true
     },
     pulsations_max_rest: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
     },
     vo2_max: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
     },
     deletedAt: {
-        type: new DataTypes.DATE,
+        type: DataTypes.DATE,
         allowNull: true
     },
 }, {

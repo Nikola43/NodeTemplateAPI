@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 import AuthController from "../auth/AuthController";
 import {checkJwt} from "../middlewares/CheckJwt";
+import UserController from "../controllers/UserController";
 
 export class IndexRoutes {
     router: Router;
@@ -15,14 +16,12 @@ export class IndexRoutes {
             res.render('index', {title: 'Express'});
         });
 
-        /* GET home page. */
+        /* AUTH */
         this.router.post('/login', AuthController.login);
+        this.router.post('/signup', UserController.insertUser);
         this.router.post('/change-password',[checkJwt], AuthController.changePassword);
 
-        /* GET home page. */
-        this.router.get('/signup', function (req: Request, res: Response, next: any) {
-            res.status(200).send("login");
-        });
+
     }
 }
 

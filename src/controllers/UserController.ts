@@ -1,70 +1,101 @@
-import { Request, Response } from "express";
-import { User } from "../db/models/User";
+import {Request, Response} from "express";
+import {User} from "../db/models/User";
+import ServerErrors from "../errors/ServerErrors";
+import Messages from "../messages/Messages";
+import UserErrors from "../errors/UserErrors";
+
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 export default class UsersController {
     static getAll = async (req: Request, res: Response, next: any) => {
-        let users = null;
         try {
-            users = await User.findAll();
-            if (users) {
-                res.status(200).send(users);
-            } else {
-                res.status(200).send([]);
-            }
+            const users = await User.findAll();
+            res.status(200).send(users);
         } catch (e) {
-            res.status(500).send({ error: "Error en la petición" });
+            console.log(e);
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
 
     static getUserById = async (req: Request, res: Response, next: any) => {
         try {
-            const user = await User.findByPk(req.query.id);
+            const user = await User.findByPk(req.params.id);
             if (user) {
+                user.password = "";
+                user.token = "";
                 res.status(200).send(user);
             } else {
-                res.status(200).send({ error: "user not found" });
+                res.status(404).send({error: "user not found"});
             }
         } catch (e) {
-            res.status(500).send({ error: "Error en la petición" });
+            console.log(e);
+            res.status(500).send({error: "internal error"});
         }
     };
 
     static insertUser = async (req: Request, res: Response, next: any) => {
+
+        // get user data from request
+        const username = req.body.username;
+        const password = req.body.password;
+        const email = req.body.email;
+
+        // check if username, email and password are set
+        // if not are set, break execution
+        if (!(username && password && email)) {
+            res.status(400).send({error: "username, email or password or email are empty"});
+            return;
+        }
+
+        // find user in db for check if already exists
         try {
-            const newUser = await User.create({
-                center_id: req.body.center_id,
-                username: req.body.username,
-                password: req.body.password,
-                name: req.body.name,
-                lastname: req.body.lastname,
-                status: req.body.status,
-                rank: req.body.rank,
-                role: req.body.role,
-                email: req.body.email,
-                phone: req.body.phone,
-                available: req.body.available,
-                gender: req.body.gender,
-                age: req.body.age,
-                weight: req.body.weight,
-                height: req.body.height,
-                blood_type: req.body.blood_type,
-                pulsations_max_rest: req.body.pulsations_max_rest,
-                vo2_max: req.body.vo2_max
+            const tempUser = await User.findOne({
+                attributes: [
+                    'email',
+                ], where: {
+                    email: {
+                        [Op.eq]: email
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
             });
-            res.status(200).send(newUser);
+
+            // check if user already exists on db
+            // if exists, break execution
+            if (tempUser) {
+                res.status(400).send(UserErrors.USER_ALREADY_EXISTS_ERROR);
+                return;
+            } else {
+                try {
+                    // Create user from request data
+                    const newUser = await User.create({
+                        username: username,
+                        password: password,
+                        email: email,
+                    });
+
+                    res.status(200).send(newUser);
+                } catch (e) {
+                    console.log(e);
+                    res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+                }
+            }
         } catch (e) {
-            res.status(500).send({ error: "Error insertando" });
+            console.log(e);
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
 
     static updateUser = async (req: Request, res: Response, next: any) => {
-        let user: User = req.body;
-        user.id = req.query.id;
-        user.updatedAt = new Date();
         try {
-            User.update(user,
+            // create user from request data
+            let user: User = req.body;
+            user.updatedAt = new Date();
+
+            const updatedUser = await User.update(user,
                 {
                     where: {
                         id: {
@@ -75,31 +106,44 @@ export default class UsersController {
                         }
                     }
                 });
-            res.status(200).send(user);
+
+            // check if user are updated
+            if (updatedUser[0] === 1) {
+                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(404).send(UserErrors.USER_NOT_FOUND_ERROR);
+            }
         } catch (e) {
-            res.status(500).send({ error: "Error actualizando" });
+            console.log(e);
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
 
     static deleteUser = async (req: Request, res: Response, next: any) => {
-        let user: User = req.body;
-        user.id = req.query.id;
-        user.updatedAt = new Date();
         try {
-            User.update(user,
+            const userID = req.params.id;
+
+            const user = await User.update({deletedAt: new Date()},
                 {
                     where: {
                         id: {
-                            [Op.eq]: user.id
+                            [Op.eq]: userID
                         },
-                        deletedAt: {
-                            [Op.is]: null
+                        updatedAt: {
+                            [Op.eq]: null
                         }
                     }
                 });
-            res.status(200).send(user);
+
+            // check if user are deletd
+            if (user[0] === 1) {
+                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(404).send(UserErrors.USER_NOT_FOUND_ERROR);
+            }
         } catch (e) {
-            res.status(500).send({ error: "Error actualizando" });
+            console.log(e);
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
 }

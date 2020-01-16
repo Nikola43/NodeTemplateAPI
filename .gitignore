@@ -114,3 +114,7 @@ dist/**/**
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+.idea/workspace.xml
+.idea/
+.idea/*
+.idea/**

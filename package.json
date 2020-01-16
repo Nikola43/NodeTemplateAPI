@@ -2,7 +2,7 @@
   "name": "wsapi",
   "version": "1.0.0",
   "description": "",
-  "main": "Server.js",
+  "main": "server.js",
   "scripts": {
     "start": "tsc && nodemon dist/server.js",
     "watch-ts": "tsc -w",

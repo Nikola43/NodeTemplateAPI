@@ -14,9 +14,9 @@ export class Center extends Model {
     public end_at!: Date | null;
 
     // timestamps!
-    public readonly created_at!: Date;
-    public updated_at!: Date | null;
-    public deleted_at!: Date | null;
+    public createdAt!: Date;
+    public updatedAt!: Date | null;
+    public deletedAt!: Date | null;
 }
 
 Center.init({
@@ -59,10 +59,6 @@ Center.init({
         allowNull: true
     },
     end_at: {
-        type: new DataTypes.DATE,
-        allowNull: true
-    },
-    updated_at: {
         type: new DataTypes.DATE,
         allowNull: true
     },

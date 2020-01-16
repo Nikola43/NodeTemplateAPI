@@ -1,13 +1,10 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class Coordinate extends Model {
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public user_id!: number;
-    public type_id!: number;
-    public name!: string;
-    public description!: string;
-    public url!: string;
+export class UserResource extends Model {
+    public user_id!: number; // Note that the `null assertion` `!` is required in strict mode.
+    public resource_id!: number;
+    public endAt!: Date | null;
 
     // timestamps!
     public readonly created_at!: Date;
@@ -15,22 +12,18 @@ export class Coordinate extends Model {
     public deleted_at!: Date | null;
 }
 
-Coordinate.init({
-    id: {
+UserResource.init({
+    user_id: {
         type: DataTypes.INTEGER.UNSIGNED,
-        autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
-    lat: {
-        type: new DataTypes.DOUBLE,
-        allowNull: true,
-    },
-    lon: {
-        type: new DataTypes.DOUBLE,
+    resource_id: {
+        type: new DataTypes.INTEGER.UNSIGNED,
+        primaryKey: true,
         allowNull: false,
     },
-    updated_at: {
+    end_at: {
         type: new DataTypes.DATE,
         allowNull: true
     },
@@ -39,6 +32,6 @@ Coordinate.init({
         allowNull: true
     },
 }, {
-    tableName: 'coordinates',
+    tableName: 'users_resources',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

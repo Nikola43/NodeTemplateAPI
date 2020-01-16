@@ -26,18 +26,18 @@ Device.init({
         allowNull: false,
     },
     name: {
-        type: new DataTypes.DOUBLE,
+        type: new DataTypes.STRING(64),
         allowNull: false,
     },
     description: {
-        type: new DataTypes.DATE,
+        type: new DataTypes.STRING(256),
         allowNull: true
     },
     phone: {
-        type: new DataTypes.DATE,
+        type: new DataTypes.STRING(32),
         allowNull: true
     },
 }, {
-    tableName: 'coordinates',
+    tableName: 'devices',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

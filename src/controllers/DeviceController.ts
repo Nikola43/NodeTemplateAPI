@@ -88,6 +88,7 @@ export default class DeviceController {
         // get deviceID from request
         const deviceId = req.params.id;
 
+
         // check if deviceId are set
         // if not are set, break execution
         if (!deviceId) {

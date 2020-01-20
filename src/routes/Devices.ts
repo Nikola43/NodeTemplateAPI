@@ -13,16 +13,16 @@ export class DeviceRoutes {
         /* GET ALL DEVICES */
         this.router.get("/", [checkJwt], DeviceController.getAll);
 
-        /* GET DEVICEBY ID */
+        /* GET DEVICE BY ID */
         this.router.get("/:id", [checkJwt], DeviceController.getDeviceById);
 
         /* INSERT DEVICE*/
         this.router.post("/", [checkJwt], DeviceController.insertDevice);
 
-        /* UPDATE DEVICEBY ID*/
+        /* UPDATE DEVICE BY ID*/
         this.router.patch("/:id", [checkJwt], DeviceController.updateDevice);
 
-        /* DELETE DEVICEBY ID*/
+        /* DELETE DEVICE BY ID*/
         this.router.delete("/:id", [checkJwt], DeviceController.deleteDevice);
     }
 }

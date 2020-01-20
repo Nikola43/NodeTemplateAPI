@@ -1,0 +1,176 @@
+import {Request, Response} from "express";
+import {Resource} from "../db/models/Resource";
+import ServerErrors from "../errors/ServerErrors";
+import Messages from "../messages/Messages";
+import ResourceErrors from "../errors/ResourceErrors";
+
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
+export default class ResourceController {
+    static getAll = async (req: Request, res: Response, next: any) => {
+        try {
+            const resources = await Resource.findAll();
+            res.status(200).send(resources);
+        } catch (e) {
+            console.log(e);
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+        }
+    };
+
+    static getResourceById = async (req: Request, res: Response, next: any) => {
+        try {
+            const resource = await Resource.findByPk(req.params.id);
+
+            if (resource) {
+                res.status(200).send(resource);
+            } else {
+                res.status(404).send(ResourceErrors.RESOURCE_NOT_FOUND_ERROR);
+            }
+        } catch (e) {
+            console.log(e);
+            res.status(500).send({error: "internal error"});
+        }
+    };
+
+    static insertResource = async (req: Request, res: Response, next: any) => {
+
+        // get resource data from request
+        const centerId = req.body.center_id;
+        const typeId = req.body.type_id;
+        const name = req.body.name;
+
+        // check if centerID are set
+        // if not are set, break execution
+        if (!centerId) {
+            res.status(400).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
+            return;
+        }
+
+        if (!typeId) {
+            res.status(400).send(ResourceErrors.TYPE_ID_EMPTY_ERROR);
+            return;
+        }
+
+        if (!name) {
+            res.status(400).send(ResourceErrors.NAME_EMPTY_ERROR);
+            return;
+        }
+
+        // find resource in db for check if already exists
+        try {
+            const tempResource = await Resource.findOne({
+                attributes: [
+                    'resource_id',
+                ], where: {
+                    endAt: {
+                        [Op.is]: null
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // check if resource already have center
+            // break execution
+            if (tempResource) {
+                res.status(400).send(ResourceErrors.RESOURCE_ALREADY_HAS_ASIGNED_CENTER_ERROR);
+                return;
+            } else {
+                try {
+                    // Create resource from request data
+                    const newResource = await Resource.create({
+                        resource_id:resourceId
+                    });
+
+                    res.status(200).send(newResource);
+                } catch (e) {
+                    console.log(e);
+                    res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+                }
+            }
+        } catch (e) {
+            console.log(e);
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+        }
+    };
+
+    static updateResource = async (req: Request, res: Response, next: any) => {
+        // get resourceID from request
+        const resourceId = req.params.id;
+
+        // check if resourceId are set
+        // if not are set, break execution
+        if (!resourceId) {
+            res.status(400).send(ResourceErrors.PANIC_BUTTON_ID_EMPTY_ERROR);
+            return;
+        }
+
+        try {
+            // create resource from request data
+            let resource: Resource = req.body;
+            resource.updatedAt = new Date();
+
+            const updatedResource = await Resource.update(resource,
+                {
+                    where: {
+                        id: {
+                            [Op.eq]: resourceId
+                        },
+                        deletedAt: {
+                            [Op.is]: null
+                        }
+                    }
+                });
+
+            // check if resource are updated
+            if (updatedResource[0] === 1) {
+               res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+               //res.status(200).send(updatedResource);
+
+            } else {
+                res.status(404).send(ResourceErrors.PANIC_BUTTON_NOT_FOUND_ERROR);
+            }
+        } catch (e) {
+            console.log(e);
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+        }
+    };
+
+    static deleteResource = async (req: Request, res: Response, next: any) => {
+        // get resourceID from request
+        const resourceId = req.params.id;
+
+        // check if resourceId are set
+        // if not are set, break execution
+        if (!resourceId) {
+            res.status(400).send(ResourceErrors.PANIC_BUTTON_ID_EMPTY_ERROR);
+            return;
+        }
+
+        try {
+            const resource = await Resource.update({deletedAt: new Date()},
+                {
+                    where: {
+                        id: {
+                            [Op.eq]: resourceId
+                        },
+                        deletedAt: {
+                            [Op.eq]: null
+                        }
+                    }
+                });
+
+            // check if resource are deletd
+            if (resource[0] === 1) {
+                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(404).send(ResourceErrors.PANIC_BUTTON_NOT_FOUND_ERROR);
+            }
+        } catch (e) {
+            console.log(e);
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+        }
+    };
+}

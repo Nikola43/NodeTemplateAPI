@@ -1,8 +1,10 @@
 import {Request, Response} from "express";
-import {Resource} from "../db/models/Resource";
-import ServerErrors from "../errors/ServerErrors";
-import Messages from "../messages/Messages";
 import ResourceErrors from "../errors/ResourceErrors";
+import {Resource} from "../../db/models/Resource";
+import ServerErrors from "../../errors/ServerErrors";
+import Messages from "../../messages/Messages";
+
+
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -81,7 +83,7 @@ export default class ResourceController {
                 try {
                     // Create resource from request data
                     const newResource = await Resource.create({
-                        resource_id:resourceId
+
                     });
 
                     res.status(200).send(newResource);
@@ -103,7 +105,7 @@ export default class ResourceController {
         // check if resourceId are set
         // if not are set, break execution
         if (!resourceId) {
-            res.status(400).send(ResourceErrors.PANIC_BUTTON_ID_EMPTY_ERROR);
+            res.status(400).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
             return;
         }
 
@@ -130,7 +132,7 @@ export default class ResourceController {
                //res.status(200).send(updatedResource);
 
             } else {
-                res.status(404).send(ResourceErrors.PANIC_BUTTON_NOT_FOUND_ERROR);
+                res.status(404).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
             }
         } catch (e) {
             console.log(e);
@@ -145,7 +147,7 @@ export default class ResourceController {
         // check if resourceId are set
         // if not are set, break execution
         if (!resourceId) {
-            res.status(400).send(ResourceErrors.PANIC_BUTTON_ID_EMPTY_ERROR);
+            res.status(400).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
             return;
         }
 
@@ -166,7 +168,7 @@ export default class ResourceController {
             if (resource[0] === 1) {
                 res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
-                res.status(404).send(ResourceErrors.PANIC_BUTTON_NOT_FOUND_ERROR);
+                res.status(404).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
             }
         } catch (e) {
             console.log(e);

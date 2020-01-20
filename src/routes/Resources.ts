@@ -1,6 +1,7 @@
 import {Router} from "express";
 import ResourcesController from "../controllers/ResourceController";
-import {checkJwt} from "../middlewares/CheckJwt";
+import {checkJwt} from "../../middlewares/CheckJwt";
+
 
 export class ResourcesRoutes {
     router: Router;

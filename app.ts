@@ -21,6 +21,7 @@ import dbConnection from "./src/utils/DBUtil";
 export class App {
     public express: express.Application;
     public db: any;
+    private apiBaseUrl = "/api/v1";
 
     constructor() {
         this.express = express();
@@ -31,7 +32,7 @@ export class App {
 
     private routes(): void {
         this.express.use(bodyParser.json());
-        this.express.use(bodyParser.urlencoded({ extended: true }));
+        this.express.use(bodyParser.urlencoded({extended: true}));
         this.express.use(bodyParser.text());
         this.express.set('view engine', 'pug');
         this.express.set('views', path.join(__dirname, '../views'));
@@ -39,16 +40,16 @@ export class App {
         this.express.use(cookieParser());
         this.express.use(express.static(path.join(__dirname, '../public')));
 
-        this.express.use('/', indexRouter);
-        this.express.use('/users', usersRouter);
-        this.express.use('/centers', centersRouter);
-        this.express.use('/centers_types', centersTypesRouter);
-        this.express.use('/coordinates', coordinateRouter);
-        this.express.use('/devices_types', devicesTypesRouter);
-        this.express.use('/documents', documentsRouter);
-        this.express.use('/documents_types', documentsTypesRouter);
-        this.express.use('/incidences', incidencesRouter);
-        this.express.use('/incidences_types', incidencesTypesRouter);
+        this.express.use(this.apiBaseUrl + "/", indexRouter);
+        this.express.use(this.apiBaseUrl + "/users", usersRouter);
+        this.express.use(this.apiBaseUrl + '/centers', centersRouter);
+        this.express.use(this.apiBaseUrl + '/centers_types', centersTypesRouter);
+        this.express.use(this.apiBaseUrl + '/coordinates', coordinateRouter);
+        this.express.use(this.apiBaseUrl + '/devices_types', devicesTypesRouter);
+        this.express.use(this.apiBaseUrl + '/documents', documentsRouter);
+        this.express.use(this.apiBaseUrl + '/documents_types', documentsTypesRouter);
+        this.express.use(this.apiBaseUrl + '/incidences', incidencesRouter);
+        this.express.use(this.apiBaseUrl + '/incidences_types', incidencesTypesRouter);
 
         // catch 404 and forward to error handler
         this.express.use(function (req, res, next) {

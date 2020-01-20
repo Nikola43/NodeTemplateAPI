@@ -1,23 +1,24 @@
+
 import createError from 'http-errors';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import logger from 'morgan';
 import bodyParser from "body-parser";
 import cors from "cors";
-import indexRouter from './src/routes/Index';
-import usersRouter from './src/routes/Users';
-import panicButtonRouter from './src/routes/PanicButton';
-import centersRouter from './src/routes/Centers';
-import coordinateRouter from './src/routes/Coordinates';
-import centersTypesRouter from './src/routes/CentersTypes';
-import devicesTypesRouter from './src/routes/DevicesTypes';
-import devicesRouter from './src/routes/Devices';
-import documentsRouter from './src/routes/Documents';
-import documentsTypesRouter from './src/routes/DocumentsTypes';
-import incidencesRouter from './src/routes/Incidences';
-import incidencesTypesRouter from './src/routes/IncidencesType';
+import indexRouter from './routes';
+import usersRouter from './routes/Users';
+import panicButtonRouter from './routes/PanicButton';
+import centersRouter from './routes/Centers';
+import coordinateRouter from './routes/Coordinates';
+import centersTypesRouter from './routes/CentersTypes';
+import devicesTypesRouter from './routes/DevicesTypes';
+import devicesRouter from './routes/Devices';
+import documentsRouter from './routes/Documents';
+import documentsTypesRouter from './routes/DocumentsTypes';
+import incidencesRouter from './routes/Incidences';
+import incidencesTypesRouter from './routes/IncidencesType';
 import express from 'express';
-import dbConnection from "./src/utils/DBUtil";
+import dbConnection from "./utils/DBUtil";
 
 
 export class App {
@@ -42,7 +43,7 @@ export class App {
         this.express.use(cookieParser());
         this.express.use(express.static(path.join(__dirname, '../public')));
 
-        this.express.use(this.apiBaseUrl + "/", indexRouter);
+        this.express.use(this.apiBaseUrl, indexRouter);
         this.express.use(this.apiBaseUrl + "/users", usersRouter);
         this.express.use(this.apiBaseUrl + "/panic_buttons", panicButtonRouter);
         this.express.use(this.apiBaseUrl + '/centers', centersRouter);

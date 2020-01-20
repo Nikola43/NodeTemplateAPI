@@ -12,16 +12,14 @@ export class IndexRoutes {
 
     init() {
         /* GET home page. */
-        this.router.get('/', function (req: Request, res: Response, next: any) {
-            res.render('index', {title: 'Express'});
+        this.router.get('', function(req:Request, res: Response, next:any) {
+            res.render('index', { title: 'Express' });
         });
 
         /* AUTH */
         this.router.post('/login', AuthController.login);
         this.router.post('/signup', UserController.insertUser);
         this.router.post('/change-password',[checkJwt], AuthController.changePassword);
-
-
     }
 }
 

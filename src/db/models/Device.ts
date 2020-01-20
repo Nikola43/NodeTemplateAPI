@@ -10,7 +10,7 @@ export class Device extends Model {
 
     // timestamps!
     public readonly created_at!: Date;
-    public updated_at!: Date | null;
+    public updatedAt!: Date | null;
     public deleted_at!: Date | null;
 }
 

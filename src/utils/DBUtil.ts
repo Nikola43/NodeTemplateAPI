@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+ const Sequelize = require('sequelize');
 
 export class DBConnection {
     private readonly sequelize: any;

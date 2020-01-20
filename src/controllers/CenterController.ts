@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Center } from "../db/models/Center";
 const Sequelize = require('sequelize');
-const Op = Sequelize.Op
+const Op = Sequelize.Op;
 
 
 export default class CentersController {

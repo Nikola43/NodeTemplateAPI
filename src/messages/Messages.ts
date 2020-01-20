@@ -1,3 +1,3 @@
 export default {
-    SUCCESS_REQUEST_MESSAGE: {error: "username are empty"}
+    SUCCESS_REQUEST_MESSAGE: {message: "success"}
 };

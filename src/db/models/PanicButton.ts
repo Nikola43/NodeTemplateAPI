@@ -17,13 +17,13 @@ export class PanicButton extends Model {
 
 PanicButton.init({
     id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
     user_id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
     description: {
@@ -32,10 +32,10 @@ PanicButton.init({
     },
     cause: {
         type: new DataTypes.STRING(64),
-        allowNull: false,
+        allowNull: true,
     },
     number: {
-        type: new DataTypes.STRING(32),
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true,
     },
     endAt: {

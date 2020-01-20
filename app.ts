@@ -6,10 +6,12 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import indexRouter from './src/routes/Index';
 import usersRouter from './src/routes/Users';
+import panicButtonRouter from './src/routes/PanicButton';
 import centersRouter from './src/routes/Centers';
 import coordinateRouter from './src/routes/Coordinates';
 import centersTypesRouter from './src/routes/CentersTypes';
 import devicesTypesRouter from './src/routes/DevicesTypes';
+import devicesRouter from './src/routes/Devices';
 import documentsRouter from './src/routes/Documents';
 import documentsTypesRouter from './src/routes/DocumentsTypes';
 import incidencesRouter from './src/routes/Incidences';
@@ -42,9 +44,11 @@ export class App {
 
         this.express.use(this.apiBaseUrl + "/", indexRouter);
         this.express.use(this.apiBaseUrl + "/users", usersRouter);
+        this.express.use(this.apiBaseUrl + "/panic_buttons", panicButtonRouter);
         this.express.use(this.apiBaseUrl + '/centers', centersRouter);
         this.express.use(this.apiBaseUrl + '/centers_types', centersTypesRouter);
         this.express.use(this.apiBaseUrl + '/coordinates', coordinateRouter);
+        this.express.use(this.apiBaseUrl + '/devices', devicesRouter);
         this.express.use(this.apiBaseUrl + '/devices_types', devicesTypesRouter);
         this.express.use(this.apiBaseUrl + '/documents', documentsRouter);
         this.express.use(this.apiBaseUrl + '/documents_types', documentsTypesRouter);

@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
 import ResourceErrors from "../errors/ResourceErrors";
-import {Resource} from "../../db/models/Resource";
-import ServerErrors from "../../errors/ServerErrors";
-import Messages from "../../messages/Messages";
+import {Resource} from "../db/models/Resource";
+import ServerErrors from "../errors/ServerErrors";
+import Messages from "../messages/Messages";
 
 
 

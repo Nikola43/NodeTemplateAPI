@@ -6,15 +6,15 @@ export class User extends Model {
     public center_id!: number | null;
     public username!: string;
     public password!: string;
-    public token!: string;
+    public token!: string | null;
     public name!: string | null;
     public lastname!: string | null;
-    public status!: boolean | null;
-    public rank!: string;
+    public status!: boolean;
+    public rank!: string | null;
     public role!: string | null;
     public email!: string;
     public phone!: string | null;
-    public available!: boolean | null;
+    public available!: boolean;
     public gender!: string | null;
     public age!: number | null;
     public weight!: number | null;
@@ -62,7 +62,7 @@ User.init({
     },
     status: {
         type: DataTypes.TINYINT,
-        allowNull: true
+        allowNull: false
     },
     rank: {
         type: new DataTypes.STRING(32),
@@ -82,7 +82,7 @@ User.init({
     },
     available: {
         type: DataTypes.TINYINT,
-        allowNull: true
+        allowNull: false
     },
     gender: {
         type: new DataTypes.STRING(32),

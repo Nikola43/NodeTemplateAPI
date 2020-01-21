@@ -7,8 +7,8 @@ export class DeviceType extends Model {
 
     // timestamps!
     public readonly createdAt!: Date;
-    public updated_at!: Date | null;
-    public deleted_at!: Date | null;
+    public updatedAt!: Date | null;
+    public deletedAt!: Date | null;
 }
 
 DeviceType.init({
@@ -20,7 +20,7 @@ DeviceType.init({
     },
     type: {
         type: new DataTypes.DOUBLE,
-        allowNull: true,
+        allowNull: false,
     },
     deleted_at: {
         type: new DataTypes.DATE,

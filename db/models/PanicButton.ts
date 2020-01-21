@@ -5,8 +5,8 @@ export class PanicButton extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public user_id!: number;
     public description!: string | null;
-    public cause!: string;
-    public number!: number;
+    public cause!: string | null;
+    public number!: number | null;
     public endAt!: Date | null;
 
     // timestamps!

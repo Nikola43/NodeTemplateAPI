@@ -53,7 +53,7 @@ export default class DocumentsController {
     static updateDocument = async (req: Request, res: Response, next: any) => {
         let document: Document = req.body;
         document.id = req.query.id;
-        document.updatedAt = new Date();
+        document.updated_at = new Date();
         try {
             document.update(document,
                 {

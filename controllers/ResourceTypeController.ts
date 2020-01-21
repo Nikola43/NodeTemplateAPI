@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import ResourceErrors from "../errors/ResourceErrors";
-import {Resource} from "../db/models/Resource";
+import {ResourceType} from "../db/models/ResourceType";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 
@@ -12,23 +12,23 @@ const Op = Sequelize.Op;
 export default class ResourceController {
     static getAll = async (req: Request, res: Response, next: any) => {
         try {
-            const resources = await Resource.findAll();
-            res.status(200).send(resources);
+            const resourcesType = await ResourceType.findAll();
+            res.status(200).send(resourcesType);
         } catch (e) {
             console.log(e);
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
 
-    static getResourceById = async (req: Request, res: Response, next: any) => {
+    static getResourceTypeById = async (req: Request, res: Response, next: any) => {
         try {
-            const resource = await Resource.findByPk(req.params.id);
+            const resourceType = await ResourceType.findByPk(req.params.id);
             console.log(req.params.id);
 
-            if (resource) {
-                res.status(200).send(resource);
+            if (resourceType) {
+                res.status(200).send(resourceType);
             } else {
-                res.status(404).send(ResourceErrors.RESOURCE_NOT_FOUND_ERROR);
+                res.status(404).send(ResourceErrors.RESOURCE_TYPE_NOT_FOUND_ERROR);
             }
         } catch (e) {
             console.log(e);
@@ -36,38 +36,25 @@ export default class ResourceController {
         }
     };
 
-    static insertResource = async (req: Request, res: Response, next: any) => {
+    static insertResourceType = async (req: Request, res: Response, next: any) => {
 
-        // get resource data from request
-        const centerId = req.body.center_id;
-        const typeId = req.body.type_id;
-        const name = req.body.name;
+        const type = req.body.type;
 
         // check if centerID are set
         // if not are set, break execution
-        if (!centerId) {
-            res.status(400).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
+        if (!type) {
+            res.status(400).send(ResourceErrors.RESOURCE_TYPE_NOT_FOUND_ERROR);
             return;
         }
 
-        if (!typeId) {
-            res.status(400).send(ResourceErrors.TYPE_ID_EMPTY_ERROR);
-            return;
-        }
-
-        if (!name) {
-            res.status(400).send(ResourceErrors.NAME_EMPTY_ERROR);
-            return;
-        }
-
-        // find resource in db for check if already exists
+        // find resourceType in db for check if already exists
         try {
-            const tempResource = await Resource.findOne({
+            const tempResource = await ResourceType.findOne({
                 attributes: [
-                    'name',
+                    'type',
                 ], where: {
-                    name: {
-                        [Op.eq]: name
+                    type: {
+                        [Op.eq]: type
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -75,21 +62,20 @@ export default class ResourceController {
                 }
             });
 
-            // check if resource already have center
+            // check if resourceType already have center
             // break execution
             if (tempResource) {
-                res.status(400).send(ResourceErrors.RESOURCE_ALREADY_EXIST_ERROR);
+                res.status(400).send(ResourceErrors.RESOURCE_TYPE_ALREADY_EXIST_ERROR);
                 return;
             } else {
 
-                const newResourceData: Resource = req.body;
-                newResourceData.status=1;
-
+                const newResourceTypeData: ResourceType = req.body;
+                
                 try {
-                    // Create resource from request data
-                    const newResource = await Resource.create(newResourceData);
+                    // Create resourceType from request data
+                    const newResourceType = await ResourceType.create(newResourceTypeData);
 
-                    res.status(200).send(newResource);
+                    res.status(200).send(newResourceType);
                 } catch (e) {
                     console.log(e);
                     res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
@@ -101,27 +87,27 @@ export default class ResourceController {
         }
     };
 
-    static updateResource = async (req: Request, res: Response, next: any) => {
+    static updateResourceType = async (req: Request, res: Response, next: any) => {
         // get resourceID from request
-        const resourceId = req.params.id;
+        const resourceTypeId = req.params.id;
 
         // check if resourceId are set
         // if not are set, break execution
-        if (!resourceId) {
-            res.status(400).send(ResourceErrors.RESOURCE_ID_EMPTY_ERROR);
+        if (!resourceTypeId) {
+            res.status(400).send(ResourceErrors.RESOURCE_TYPE_ID_EMPTY_ERROR);
             return;
         }
 
         try {
-            // create resource from request data
-            let resource: Resource = req.body;
-            resource.updated_at = new Date();
+            // create resourceType from request data
+            let resourceType: ResourceType = req.body;
+            resourceType.updated_at = new Date();
 
-            const updatedResource = await Resource.update(resource,
+            const updatedResourceType = await ResourceType.update(resourceType,
                 {
                     where: {
                         id: {
-                            [Op.eq]: resourceId
+                            [Op.eq]: resourceTypeId
                         },
                         deletedAt: {
                             [Op.is]: null
@@ -129,13 +115,13 @@ export default class ResourceController {
                     }
                 });
 
-            // check if resource are updated
-            if (updatedResource[0] === 1) {
+            // check if resourceType are updated
+            if (updatedResourceType[0] === 1) {
                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
                //res.status(200).send(updatedResource);
 
             } else {
-                res.status(404).send(ResourceErrors.RESOURCE_NOT_FOUND_ERROR);
+                res.status(404).send(ResourceErrors.RESOURCE_TYPE_NOT_FOUND_ERROR);
             }
         } catch (e) {
             console.log(e);
@@ -143,23 +129,23 @@ export default class ResourceController {
         }
     };
 
-    static deleteResource = async (req: Request, res: Response, next: any) => {
+    static deleteResourceType = async (req: Request, res: Response, next: any) => {
         // get resourceID from request
-        const resourceId = req.params.id;
+        const resourceTypeId = req.params.id;
 
         // check if resourceId are set
         // if not are set, break execution
-        if (!resourceId) {
+        if (!resourceTypeId) {
             res.status(400).send(ResourceErrors.RESOURCE_ID_EMPTY_ERROR);
             return;
         }
 
         try {
-            const resource = await Resource.update({deletedAt: new Date()},
+            const resourceType = await ResourceType.update({deletedAt: new Date()},
                 {
                     where: {
                         id: {
-                            [Op.eq]: resourceId
+                            [Op.eq]: resourceTypeId
                         },
                         deletedAt: {
                             [Op.eq]: null
@@ -167,8 +153,8 @@ export default class ResourceController {
                     }
                 });
 
-            // check if resource are deleted
-            if (resource[0] === 1) {
+            // check if resourceType are deleted
+            if (resourceType[0] === 1) {
                 res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
                 res.status(404).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);

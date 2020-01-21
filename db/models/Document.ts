@@ -12,7 +12,7 @@ export class Document extends Model {
 
     // timestamps!
     public createdAt!: Date;
-    public updatedAt!: Date | null;
+    public updated_at!: Date | null;
     public deletedAt!: Date | null;
 }
 

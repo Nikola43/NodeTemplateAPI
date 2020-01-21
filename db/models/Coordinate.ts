@@ -7,7 +7,7 @@ export class Coordinate extends Model {
     public lon!: number;
 
     // timestamps!
-    public readonly created_at!: Date;
+    public readonly createdAt!: Date;
     public updated_at!: Date | null;
     public deleted_at!: Date | null;
 }

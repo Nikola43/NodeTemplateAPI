@@ -2,7 +2,7 @@ import {Router} from "express";
 import PanicButtonController from "../controllers/PanicButtonController";
 import {checkJwt} from "../middlewares/CheckJwt";
 
-export class PanicButtonRoutes {
+export class PanicButtonsRoutes {
     router: Router;
 
     constructor() {
@@ -27,6 +27,6 @@ export class PanicButtonRoutes {
     }
 }
 
-let panicButtonRoutes = new PanicButtonRoutes();
-panicButtonRoutes.init();
-export default panicButtonRoutes.router;
+let panicButtonsRoutes = new PanicButtonsRoutes();
+panicButtonsRoutes.init();
+export default panicButtonsRoutes.router;

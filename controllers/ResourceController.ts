@@ -23,6 +23,7 @@ export default class ResourceController {
     static getResourceById = async (req: Request, res: Response, next: any) => {
         try {
             const resource = await Resource.findByPk(req.params.id);
+            console.log(req.params.id);
 
             if (resource) {
                 res.status(200).send(resource);
@@ -63,10 +64,10 @@ export default class ResourceController {
         try {
             const tempResource = await Resource.findOne({
                 attributes: [
-                    'resource_id',
+                    'name',
                 ], where: {
-                    endAt: {
-                        [Op.is]: null
+                    name: {
+                        [Op.eq]: name
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -77,14 +78,16 @@ export default class ResourceController {
             // check if resource already have center
             // break execution
             if (tempResource) {
-                res.status(400).send(ResourceErrors.RESOURCE_ALREADY_HAS_ASIGNED_CENTER_ERROR);
+                res.status(400).send(ResourceErrors.RESOURCE_ALREADY_EXIST_ERROR);
                 return;
             } else {
+
+                const newResourceData: Resource = req.body;
+                newResourceData.status=1;
+
                 try {
                     // Create resource from request data
-                    const newResource = await Resource.create({
-
-                    });
+                    const newResource = await Resource.create(newResourceData);
 
                     res.status(200).send(newResource);
                 } catch (e) {
@@ -105,7 +108,7 @@ export default class ResourceController {
         // check if resourceId are set
         // if not are set, break execution
         if (!resourceId) {
-            res.status(400).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
+            res.status(400).send(ResourceErrors.RESOURCE_ID_EMPTY_ERROR);
             return;
         }
 
@@ -132,7 +135,7 @@ export default class ResourceController {
                //res.status(200).send(updatedResource);
 
             } else {
-                res.status(404).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
+                res.status(404).send(ResourceErrors.RESOURCE_NOT_FOUND_ERROR);
             }
         } catch (e) {
             console.log(e);
@@ -147,7 +150,7 @@ export default class ResourceController {
         // check if resourceId are set
         // if not are set, break execution
         if (!resourceId) {
-            res.status(400).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
+            res.status(400).send(ResourceErrors.RESOURCE_ID_EMPTY_ERROR);
             return;
         }
 
@@ -164,7 +167,7 @@ export default class ResourceController {
                     }
                 });
 
-            // check if resource are deletd
+            // check if resource are deleted
             if (resource[0] === 1) {
                 res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {

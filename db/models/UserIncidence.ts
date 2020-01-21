@@ -7,7 +7,7 @@ export class UserIncidence extends Model {
     public endAt!: Date | null;
 
     // timestamps!
-    public readonly created_at!: Date;
+    public readonly createdAt!: Date;
     public updated_at!: Date | null;
     public deleted_at!: Date | null;
 }

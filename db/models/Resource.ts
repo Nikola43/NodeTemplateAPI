@@ -16,17 +16,17 @@ export class Resource extends Model {
 
 Resource.init({
     id: {
-        type: DataTypes.INTEGER.UNSIGNED(),
+        type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
     center_id: {
-        type: DataTypes.INTEGER.UNSIGNED(),
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
     type_id: {
-        type: DataTypes.INTEGER.UNSIGNED(),
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
     name: {
@@ -37,11 +37,7 @@ Resource.init({
         type: new DataTypes.TINYINT(),
         allowNull: false
     },
-    end_at: {
-        type: new DataTypes.DATE(),
-        allowNull: true
-    },
-    deleted_at: {
+    deletedAt: {
         type: new DataTypes.DATE(),
         allowNull: true
     },

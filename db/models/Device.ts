@@ -9,7 +9,7 @@ export class Device extends Model {
     public phone!: string;
 
     // timestamps!
-    public readonly created_at!: Date;
+    public readonly createdAt!: Date;
     public updatedAt!: Date | null;
     public deleted_at!: Date | null;
 }

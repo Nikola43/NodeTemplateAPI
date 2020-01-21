@@ -7,7 +7,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import indexRouter from './routes';
 import usersRouter from './routes/Users';
-import panicButtonRouter from './routes/PanicButton';
+import panicButtonsRouter from './routes/PanicButtons';
 import centersRouter from './routes/Centers';
 import coordinateRouter from './routes/Coordinates';
 import centersTypesRouter from './routes/CentersTypes';
@@ -17,6 +17,12 @@ import documentsRouter from './routes/Documents';
 import documentsTypesRouter from './routes/DocumentsTypes';
 import incidencesRouter from './routes/Incidences';
 import incidencesTypesRouter from './routes/IncidencesType';
+import locationsRouter from './routes/Locations';
+import locationsTypesRouter from './routes/LocationsType';
+import multimediaContentsRouter from './routes/MultimediaContents';
+import multimediaContentsTypesRouter from './routes/MultimediaContentsType';
+import resourcesRouter from './routes/Resources';
+import resourcesTypesRouter from './routes/ResourcesType';
 import express from 'express';
 import dbConnection from "./utils/DBUtil";
 
@@ -45,7 +51,7 @@ export class App {
 
         this.express.use(this.apiBaseUrl, indexRouter);
         this.express.use(this.apiBaseUrl + "/users", usersRouter);
-        this.express.use(this.apiBaseUrl + "/panic_buttons", panicButtonRouter);
+        this.express.use(this.apiBaseUrl + "/panic_buttons", panicButtonsRouter);
         this.express.use(this.apiBaseUrl + '/centers', centersRouter);
         this.express.use(this.apiBaseUrl + '/centers_types', centersTypesRouter);
         this.express.use(this.apiBaseUrl + '/coordinates', coordinateRouter);
@@ -55,6 +61,12 @@ export class App {
         this.express.use(this.apiBaseUrl + '/documents_types', documentsTypesRouter);
         this.express.use(this.apiBaseUrl + '/incidences', incidencesRouter);
         this.express.use(this.apiBaseUrl + '/incidences_types', incidencesTypesRouter);
+        this.express.use(this.apiBaseUrl + '/locations', locationsRouter);
+        this.express.use(this.apiBaseUrl + '/locations_types', locationsTypesRouter);
+        this.express.use(this.apiBaseUrl + '/multimedia_contents', multimediaContentsRouter);
+        this.express.use(this.apiBaseUrl + '/multimedia_contents_types', multimediaContentsTypesRouter);
+        this.express.use(this.apiBaseUrl + '/resources',resourcesRouter);
+        this.express.use(this.apiBaseUrl + '/resources_types', resourcesTypesRouter);
 
         // catch 404 and forward to error handler
         this.express.use(function (req, res, next) {

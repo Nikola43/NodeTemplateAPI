@@ -7,7 +7,7 @@ export class Incidence extends Model {
     public location_id!: number;
     public type_id!: number;
     public name!: string;
-    public description!: string;
+    public description!: string | null;
     public subtype!: number;
     public status!: boolean;
     public level!: boolean;
@@ -16,12 +16,12 @@ export class Incidence extends Model {
     public strategy!: string | null;
     public tactic!: string | null;
     public maneuver!: string | null;
-    public end_date!: Date | null;
+    public endAt!: Date | null;
 
     // timestamps!
     public readonly createdAt!: Date;
-    public updated_at!: Date | null;
-    public deleted_at!: Date | null;
+    public updatedAt!: Date | null;
+    public deletedAt!: Date | null;
 }
 
 Incidence.init({
@@ -49,7 +49,7 @@ Incidence.init({
     },
     description: {
         type: new DataTypes.STRING(32),
-        allowNull: false,
+        allowNull: true,
     },
     subtype: {
         type: new DataTypes.STRING(32),
@@ -65,27 +65,27 @@ Incidence.init({
     },
     perimeter: {
         type: new DataTypes.DOUBLE,
-        allowNull: false,
+        allowNull: true,
     },
     area: {
         type: new DataTypes.DOUBLE,
-        allowNull: false,
+        allowNull: true,
     },
     strategy: {
         type: new DataTypes.STRING(32),
-        allowNull: false,
+        allowNull: true,
     },
     tactic: {
         type: new DataTypes.STRING(32),
-        allowNull: false,
+        allowNull: true,
     },
     maneuver: {
         type: new DataTypes.STRING(32),
-        allowNull: false,
+        allowNull: true,
     },
-    end_date: {
+    endAt: {
         type: new DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
     },
     deleted_at: {
         type: new DataTypes.DATE,

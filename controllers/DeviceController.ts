@@ -3,6 +3,7 @@ import {Device} from "../db/models/Device";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 import DeviceErrors from "../errors/DeviceErrors";
+import {User} from "../db/models/User";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -36,12 +37,17 @@ export default class DeviceController {
     static insertDevice = async (req: Request, res: Response, next: any) => {
 
         // get deviceID from request
-        const deviceId = req.body.device_id;
+        let device: Device = req.body;
 
         // check if deviceID are set
         // if not are set, break execution
-        if (!deviceId) {
+        if (!device.type_id) {
             res.status(400).send(DeviceErrors.DEVICE_TYPEID_EMPTY_ERROR);
+            return;
+        }
+
+        if (!device.name) {
+            res.status(400).send(DeviceErrors.DEVICE_NAME_EMPTY_ERROR);
             return;
         }
 
@@ -49,10 +55,13 @@ export default class DeviceController {
         try {
             const tempDevice = await Device.findOne({
                 attributes: [
-                    'device_id',
+                    'name','type_id'
                 ], where: {
-                    endAt: {
+                    type_id: {
                         [Op.is]: null
+                    },
+                    name: {
+                        [Op.eq]: device.name
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -68,9 +77,7 @@ export default class DeviceController {
             } else {
                 try {
                     // Create user from request data
-                    const newDevice = await Device.create({
-                        device_id:deviceId
-                    });
+                    const newDevice = await Device.create(device);
 
                     res.status(200).send(newDevice);
                 } catch (e) {

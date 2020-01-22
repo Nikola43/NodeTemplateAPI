@@ -8,7 +8,7 @@ export class Document extends Model {
     public name!: string;
     public description!: string | null;
     public url!: string;
-    public end_at!: string;
+    public end_at!: string | null;
 
     // timestamps!
     public createdAt!: Date;
@@ -45,7 +45,7 @@ Document.init({
     },
     end_at: {
         type: new DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
     },
     deleted_at: {
         type: new DataTypes.DATE,

@@ -5,8 +5,8 @@ export class Device extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public type_id!: number;
     public name!: string;
-    public description!: string;
-    public phone!: string;
+    public description!: string | null;
+    public phone!: string | null;
 
     // timestamps!
     public readonly createdAt!: Date;
@@ -35,6 +35,10 @@ Device.init({
     },
     phone: {
         type: new DataTypes.STRING(32),
+        allowNull: true
+    },
+    deletedAt: {
+        type: new DataTypes.DATE,
         allowNull: true
     },
 }, {

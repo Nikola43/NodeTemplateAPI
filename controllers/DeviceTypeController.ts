@@ -47,7 +47,7 @@ export default class DeviceTypesController {
     static updateDeviceType = async (req: Request, res: Response, next: any) => {
         let deviceType: DeviceType = req.body;
         deviceType.id = req.query.id;
-        deviceType.updated_at = new Date();
+        deviceType.updatedAt = new Date();
         try {
             deviceType.update(deviceType,
                 {
@@ -55,7 +55,7 @@ export default class DeviceTypesController {
                         id: {
                             [Op.eq]: deviceType.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
@@ -71,14 +71,14 @@ export default class DeviceTypesController {
         deviceType.id = req.query.id;
         try {
             deviceType.update({
-                deleted_at: new Date()
+                deletedAt: new Date()
             },
                 {
                     where: {
                         id: {
                             [Op.eq]: deviceType.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }

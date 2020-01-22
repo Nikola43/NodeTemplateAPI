@@ -21,7 +21,7 @@ Coordinate.init({
     },
     lat: {
         type: new DataTypes.DOUBLE,
-        allowNull: true,
+        allowNull: false,
     },
     lon: {
         type: new DataTypes.DOUBLE,

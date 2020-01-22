@@ -6,12 +6,12 @@ export class Center extends Model {
     public location_id!: number;
     public type_id!: number;
     public name!: string;
-    public description!: string;
-    public phone!: string;
-    public email!: string;
+    public description!: string | null;
+    public phone!: string | null;
+    public email!: string | null;
     public leader!: string | null;
     public schedule!: string | null;
-    public end_at!: Date | null;
+    public endAt!: Date | null;
 
     // timestamps!
     public createdAt!: Date;
@@ -40,19 +40,19 @@ Center.init({
     },
     description: {
         type: new DataTypes.STRING(150),
-        allowNull: false
+        allowNull: true
     },
     phone: {
         type: new DataTypes.STRING(15),
-        allowNull: false
+        allowNull: true
     },
     email: {
         type: new DataTypes.STRING(100),
-        allowNull: false
+        allowNull: true
     },
     leader: {
         type: new DataTypes.STRING(15),
-        allowNull: false
+        allowNull: true
     },
     schedule: {
         type: new DataTypes.STRING(32),

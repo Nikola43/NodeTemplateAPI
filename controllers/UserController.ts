@@ -44,7 +44,7 @@ export default class UsersController {
         // check if username, email and password are set
         // if not are set, break execution
         if (!(username && password && email)) {
-            res.status(400).send({error: "username, email or password or email are empty"});
+            res.status(400).send({error: "username, email or password are empty"});
             return;
         }
 
@@ -75,6 +75,8 @@ export default class UsersController {
                         username: username,
                         password: password,
                         email: email,
+                        available: 1,
+                        status: 1,
                     });
 
                     res.status(200).send(newUser);
@@ -99,7 +101,7 @@ export default class UsersController {
                 {
                     where: {
                         id: {
-                            [Op.eq]: user.id
+                            [Op.eq]: req.params.id
                         },
                         deletedAt: {
                             [Op.is]: null
@@ -122,20 +124,19 @@ export default class UsersController {
     static deleteUser = async (req: Request, res: Response, next: any) => {
         try {
             const userID = req.params.id;
-
             const user = await User.update({deletedAt: new Date()},
                 {
                     where: {
                         id: {
                             [Op.eq]: userID
                         },
-                        updated_at: {
+                        deleted_at: {
                             [Op.eq]: null
                         }
                     }
                 });
 
-            // check if user are deletd
+            // check if user are deleted
             if (user[0] === 1) {
                 res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {

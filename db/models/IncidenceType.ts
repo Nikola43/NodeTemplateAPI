@@ -7,8 +7,8 @@ export class IncidenceType extends Model {
 
     // timestamps!
     public readonly createdAt!: Date;
-    public updated_at!: Date | null;
-    public deleted_at!: Date | null;
+    public updatedAt!: Date | null;
+    public deletedAt!: Date | null;
 }
 
 IncidenceType.init({

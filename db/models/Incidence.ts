@@ -87,7 +87,7 @@ Incidence.init({
         type: new DataTypes.DATE,
         allowNull: true,
     },
-    deleted_at: {
+    deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },

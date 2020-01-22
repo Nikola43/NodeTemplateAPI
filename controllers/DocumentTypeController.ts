@@ -48,7 +48,7 @@ export default class DocumentsTypesController {
     static updateDocumentType = async (req: Request, res: Response, next: any) => {
         let documentType: DocumentType = req.body;
         documentType.id = req.query.id;
-        documentType.updated_at = new Date();
+        documentType.updatedAt = new Date();
         try {
             documentType.update(documentType,
                 {

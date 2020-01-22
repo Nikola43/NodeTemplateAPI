@@ -48,7 +48,7 @@ export default class IncidencesTypesController {
     static updateIncidenceType = async (req: Request, res: Response, next: any) => {
         let incidencesTypes: IncidenceType = req.body;
         incidencesTypes.id = req.query.id;
-        incidencesTypes.updated_at = new Date();
+        incidencesTypes.updatedAt = new Date();
         try {
             incidencesTypes.update(incidencesTypes,
                 {

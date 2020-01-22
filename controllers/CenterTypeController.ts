@@ -49,7 +49,7 @@ export default class CentersTypesController {
     static updateCenterType = async (req: Request, res: Response, next: any) => {
         let center_type: CenterType = req.body;
         center_type.id = req.query.id;
-        center_type.updated_at = new Date();
+        center_type.updatedAt = new Date();
         try {
             center_type.update(center_type,
                 {

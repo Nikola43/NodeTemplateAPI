@@ -7,8 +7,8 @@ export class ResourceType extends Model {
 
     // timestamps!
     public readonly createdAt!: Date;
-    public updated_at!: Date | null;
-    public deleted_at!: Date | null;
+    public updatedAt!: Date | null;
+    public deletedAt!: Date | null;
 }
 
 ResourceType.init({
@@ -22,7 +22,7 @@ ResourceType.init({
         type: new DataTypes.STRING(64),
         allowNull: false,
     },
-    deleted_at: {
+    deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },

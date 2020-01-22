@@ -48,7 +48,7 @@ export default class CoordinatesController {
     static updateCoordinate = async (req: Request, res: Response, next: any) => {
         let coordinate: Coordinate = req.body;
         coordinate.id = req.query.id;
-        coordinate.updated_at = new Date();
+        coordinate.updatedAt = new Date();
         try {
             coordinate.update(coordinate,
                 {

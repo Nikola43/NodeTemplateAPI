@@ -8,8 +8,8 @@ export class CenterType extends Model {
 
     // timestamps!
     public readonly createdAt!: Date;
-    public updated_at!: Date | null;
-    public deleted_at!: Date | null;
+    public updatedAt!: Date | null;
+    public deletedAt!: Date | null;
 }
 
 CenterType.init({
@@ -27,7 +27,7 @@ CenterType.init({
         type: DataTypes.BOOLEAN,
         allowNull: false
     },
-    deleted_at: {
+    deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },

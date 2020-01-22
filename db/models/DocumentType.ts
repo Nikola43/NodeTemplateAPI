@@ -22,7 +22,7 @@ DocumentType.init({
         type: new DataTypes.STRING(32),
         allowNull: false,
     },
-    deleted_at: {
+    deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },

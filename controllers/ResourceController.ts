@@ -46,7 +46,8 @@ export default class ResourceController {
         // check if centerID are set
         // if not are set, break execution
         if (!centerId) {
-            res.status(400).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
+            // todo cambiar tipo de error
+            res.status(400).send(ResourceErrors.RESOURCE_ALREADY_HAS_ASIGNED_CENTER_ERROR);
             return;
         }
 
@@ -171,7 +172,7 @@ export default class ResourceController {
             if (resource[0] === 1) {
                 res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
-                res.status(404).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
+                res.status(404).send(ResourceErrors.RESOURCE_NOT_FOUND_ERROR);
             }
         } catch (e) {
             console.log(e);

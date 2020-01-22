@@ -8,8 +8,8 @@ export class UserDevice extends Model {
 
     // timestamps!
     public readonly createdAt!: Date;
-    public updated_at!: Date | null;
-    public deleted_at!: Date | null;
+    public updatedAt!: Date | null;
+    public deletedAt!: Date | null;
 }
 
 UserDevice.init({
@@ -27,7 +27,7 @@ UserDevice.init({
         type: new DataTypes.DATE,
         allowNull: true
     },
-    deleted_at: {
+    deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },

@@ -22,7 +22,7 @@ DeviceType.init({
         type: new DataTypes.DOUBLE,
         allowNull: false,
     },
-    deleted_at: {
+    deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },

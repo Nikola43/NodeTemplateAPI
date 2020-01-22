@@ -98,7 +98,7 @@ export default class PanicButtonController {
         try {
             // create user from request data
             let panicButton: PanicButton = req.body;
-            panicButton.updated_at = new Date();
+            panicButton.updatedAt = new Date();
 
             const updatedPanicButton = await PanicButton.update(panicButton,
                 {

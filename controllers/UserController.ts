@@ -95,7 +95,7 @@ export default class UsersController {
         try {
             // create user from request data
             let user: User = req.body;
-            user.updated_at = new Date();
+            user.updatedAt = new Date();
 
             const updatedUser = await User.update(user,
                 {
@@ -130,7 +130,7 @@ export default class UsersController {
                         id: {
                             [Op.eq]: userID
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.eq]: null
                         }
                     }

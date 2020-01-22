@@ -11,7 +11,7 @@ export class PanicButton extends Model {
 
     // timestamps!
     public createdAt!: Date;
-    public updated_at!: Date | null;
+    public updatedAt!: Date | null;
     public deletedAt!: Date | null;
 }
 

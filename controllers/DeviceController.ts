@@ -106,7 +106,7 @@ export default class DeviceController {
         try {
             // created device from request data
             let device: Device = req.body;
-            device.updated_at = new Date();
+            device.updatedAt = new Date();
 
             const updatedDevice = await Device.update(device,
                 {

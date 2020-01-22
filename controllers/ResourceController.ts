@@ -115,7 +115,7 @@ export default class ResourceController {
         try {
             // create resource from request data
             let resource: Resource = req.body;
-            resource.updated_at = new Date();
+            resource.updatedAt = new Date();
 
             const updatedResource = await Resource.update(resource,
                 {

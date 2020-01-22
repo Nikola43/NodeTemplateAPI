@@ -157,7 +157,7 @@ export default class ResourceController {
             if (resourceType[0] === 1) {
                 res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
-                res.status(404).send(ResourceErrors.CENTER_ID_EMPTY_ERROR);
+                res.status(404).send(ResourceErrors.USED_RESOURCE_TYPE_ERROR);
             }
         } catch (e) {
             console.log(e);

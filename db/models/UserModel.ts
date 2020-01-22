@@ -1,7 +1,7 @@
 import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class User extends Model {
+export class UserModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public center_id!: number | null;
     public username!: string;
@@ -29,7 +29,7 @@ export class User extends Model {
     public deletedAt!: Date | null;
 }
 
-User.init({
+UserModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,

@@ -1,9 +1,10 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class DeviceType extends Model {
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public type!: string;
+export class UserResourceModel extends Model {
+    public user_id!: number; // Note that the `null assertion` `!` is required in strict mode.
+    public resource_id!: number;
+    public endAt!: Date | null;
 
     // timestamps!
     public readonly createdAt!: Date;
@@ -11,22 +12,26 @@ export class DeviceType extends Model {
     public deletedAt!: Date | null;
 }
 
-DeviceType.init({
-    id: {
+UserResourceModel.init({
+    user_id: {
         type: DataTypes.INTEGER.UNSIGNED,
-        autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
-    type: {
-        type: new DataTypes.DOUBLE,
+    resource_id: {
+        type: new DataTypes.INTEGER.UNSIGNED,
+        primaryKey: true,
         allowNull: false,
+    },
+    end_at: {
+        type: new DataTypes.DATE,
+        allowNull: true
     },
     deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },
 }, {
-    tableName: 'devices_types',
+    tableName: 'users_resources',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class Device extends Model {
+export class DeviceModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public type_id!: number;
     public name!: string;
@@ -14,7 +14,7 @@ export class Device extends Model {
     public deletedAt!: Date | null;
 }
 
-Device.init({
+DeviceModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,

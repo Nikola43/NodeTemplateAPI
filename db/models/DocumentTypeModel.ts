@@ -1,17 +1,11 @@
-import { Model, DataTypes } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
+import {BaseTypeModel} from "./BaseTypeModel";
 
-export class DocumentType extends Model {
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public type!: number;
-
-    // timestamps!
-    public readonly createdAt!: Date;
-    public updatedAt!: Date | null;
-    public deletedAt!: Date | null;
+export class DocumentTypeModel extends BaseTypeModel {
 }
 
-DocumentType.init({
+DocumentTypeModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
@@ -19,7 +13,7 @@ DocumentType.init({
         allowNull: false,
     },
     type: {
-        type: new DataTypes.STRING(32),
+        type: new DataTypes.STRING(8),
         allowNull: false,
     },
     deletedAt: {

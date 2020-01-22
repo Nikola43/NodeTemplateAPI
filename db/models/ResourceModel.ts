@@ -1,17 +1,12 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class Center extends Model {
+export class ResourceModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public location_id!: number;
+    public center_id!: number;
     public type_id!: number;
     public name!: string;
-    public description!: string | null;
-    public phone!: string | null;
-    public email!: string | null;
-    public leader!: string | null;
-    public schedule!: string | null;
-    public endAt!: Date | null;
+    public status!: number;
 
     // timestamps!
     public createdAt!: Date;
@@ -19,14 +14,14 @@ export class Center extends Model {
     public deletedAt!: Date | null;
 }
 
-Center.init({
+ResourceModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
-    location_id: {
+    center_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
@@ -38,35 +33,15 @@ Center.init({
         type: new DataTypes.STRING(64),
         allowNull: false,
     },
-    description: {
-        type: new DataTypes.STRING(150),
-        allowNull: true
-    },
-    phone: {
-        type: new DataTypes.STRING(15),
-        allowNull: true
-    },
-    email: {
-        type: new DataTypes.STRING(100),
-        allowNull: true
-    },
-    leader: {
-        type: new DataTypes.STRING(15),
-        allowNull: true
-    },
-    schedule: {
-        type: new DataTypes.STRING(32),
-        allowNull: true
-    },
-    endAt: {
-        type: new DataTypes.DATE,
-        allowNull: true
+    status: {
+        type: new DataTypes.TINYINT(),
+        allowNull: false
     },
     deletedAt: {
-        type: new DataTypes.DATE,
+        type: new DataTypes.DATE(),
         allowNull: true
     },
 }, {
-    tableName: 'centers',
+    tableName: 'resources',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

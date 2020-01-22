@@ -1,7 +1,7 @@
 import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class MultimediaContent extends Model {
+export class MultimediaContentModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public user_id!: number;
     public location_id!: number | null;
@@ -16,7 +16,7 @@ export class MultimediaContent extends Model {
     public deletedAt!: Date | null;
 }
 
-MultimediaContent.init({
+MultimediaContentModel.init({
     id: {
         type: new DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,

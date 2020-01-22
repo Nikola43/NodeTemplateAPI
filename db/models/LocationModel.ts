@@ -1,7 +1,7 @@
 import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class Location extends Model {
+export class LocationModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public user_id!: number | null;
     public type_id!: number;
@@ -26,7 +26,7 @@ export class Location extends Model {
     public deletedAt!: Date | null;
 }
 
-Location.init({
+LocationModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,

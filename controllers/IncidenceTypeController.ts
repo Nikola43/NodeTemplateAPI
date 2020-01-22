@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IncidenceType } from "../db/models/IncidenceType";
+import { IncidenceTypeModel } from "../db/models/IncidenceTypeModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
@@ -8,7 +8,7 @@ export default class IncidencesTypesController {
     static getAll = async (req: Request, res: Response, next: any) => {
         let incidencesTypess = null;
         try {
-            incidencesTypess = await IncidenceType.findAll()
+            incidencesTypess = await IncidenceTypeModel.findAll()
             if (incidencesTypess) {
                 res.status(200).send(incidencesTypess);
             } else {
@@ -22,7 +22,7 @@ export default class IncidencesTypesController {
     static getIncidenceTypeById = async (req: Request, res: Response, next: any) => {
         let incidencesTypes = null;
         try {
-            const incidencesTypes = await IncidenceType.findByPk(req.query.id)
+            const incidencesTypes = await IncidenceTypeModel.findByPk(req.query.id)
             if (incidencesTypes) {
                 res.status(200).send(incidencesTypes);
             } else {
@@ -36,7 +36,7 @@ export default class IncidencesTypesController {
     static insertIncidenceType = async (req: Request, res: Response, next: any) => {
         let newIncidenceTypes = null;
         try {
-            const newIncidenceTypes = await IncidenceType.create({
+            const newIncidenceTypes = await IncidenceTypeModel.create({
                 type: req.body.type
             });
             res.status(200).send(newIncidenceTypes);
@@ -46,7 +46,7 @@ export default class IncidencesTypesController {
     };
 
     static updateIncidenceType = async (req: Request, res: Response, next: any) => {
-        let incidencesTypes: IncidenceType = req.body;
+        let incidencesTypes: IncidenceTypeModel = req.body;
         incidencesTypes.id = req.query.id;
         incidencesTypes.updatedAt = new Date();
         try {
@@ -68,7 +68,7 @@ export default class IncidencesTypesController {
     };
 
     static deleteIncidenceType = async (req: Request, res: Response, next: any) => {
-        let incidencesTypes: IncidenceType = req.body;
+        let incidencesTypes: IncidenceTypeModel = req.body;
         incidencesTypes.id = req.query.id;
         try {
             incidencesTypes.update({

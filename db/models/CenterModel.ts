@@ -1,14 +1,17 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class Document extends Model {
+export class CenterModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public user_id!: number;
+    public location_id!: number;
     public type_id!: number;
     public name!: string;
     public description!: string | null;
-    public url!: string;
-    public end_at!: string | null;
+    public phone!: string | null;
+    public email!: string | null;
+    public leader!: string | null;
+    public schedule!: string | null;
+    public endAt!: Date | null;
 
     // timestamps!
     public createdAt!: Date;
@@ -16,14 +19,14 @@ export class Document extends Model {
     public deletedAt!: Date | null;
 }
 
-Document.init({
+CenterModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
-    user_id: {
+    location_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
@@ -32,26 +35,38 @@ Document.init({
         allowNull: false,
     },
     name: {
-        type: new DataTypes.STRING(32),
+        type: new DataTypes.STRING(64),
         allowNull: false,
     },
     description: {
-        type: new DataTypes.STRING(255),
-        allowNull: true,
+        type: new DataTypes.STRING(150),
+        allowNull: true
     },
-    url: {
-        type: new DataTypes.STRING(255),
-        allowNull: false,
+    phone: {
+        type: new DataTypes.STRING(15),
+        allowNull: true
     },
-    end_at: {
+    email: {
+        type: new DataTypes.STRING(100),
+        allowNull: true
+    },
+    leader: {
+        type: new DataTypes.STRING(15),
+        allowNull: true
+    },
+    schedule: {
+        type: new DataTypes.STRING(32),
+        allowNull: true
+    },
+    endAt: {
         type: new DataTypes.DATE,
-        allowNull: true,
+        allowNull: true
     },
     deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },
 }, {
-    tableName: 'documents',
+    tableName: 'centers',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

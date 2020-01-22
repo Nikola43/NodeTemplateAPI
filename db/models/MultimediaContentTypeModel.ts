@@ -1,17 +1,11 @@
-import {Model, DataTypes} from 'sequelize';
+import { DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
+import {BaseTypeModel} from "./BaseTypeModel";
 
-export class MultimediaContentType extends Model {
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public type!: string;
-
-    // timestamps!
-    public createdAt!: Date;
-    public updatedAt!: Date | null;
-    public deletedAt!: Date | null;
+export class MultimediaContentTypeModel extends BaseTypeModel {
 }
 
-MultimediaContentType.init({
+MultimediaContentTypeModel.init({
     id: {
         type: new DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,

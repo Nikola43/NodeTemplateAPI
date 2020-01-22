@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {User} from "../db/models/User";
+import {UserModel} from "../db/models/UserModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 import UserErrors from "../errors/UserErrors";
@@ -10,7 +10,7 @@ const Op = Sequelize.Op;
 export default class UsersController {
     static getAll = async (req: Request, res: Response, next: any) => {
         try {
-            const users = await User.findAll();
+            const users = await UserModel.findAll();
             res.status(200).send(users);
         } catch (e) {
             console.log(e);
@@ -20,7 +20,7 @@ export default class UsersController {
 
     static getUserById = async (req: Request, res: Response, next: any) => {
         try {
-            const user = await User.findByPk(req.params.id);
+            const user = await UserModel.findByPk(req.params.id);
             if (user) {
                 user.password = "";
                 user.token = "";
@@ -50,7 +50,7 @@ export default class UsersController {
 
         // find user in db for check if already exists
         try {
-            const tempUser = await User.findOne({
+            const tempUser = await UserModel.findOne({
                 attributes: [
                     'email',
                 ], where: {
@@ -71,7 +71,7 @@ export default class UsersController {
             } else {
                 try {
                     // Create user from request data
-                    const newUser = await User.create({
+                    const newUser = await UserModel.create({
                         username: username,
                         password: password,
                         email: email,
@@ -94,10 +94,10 @@ export default class UsersController {
     static updateUser = async (req: Request, res: Response, next: any) => {
         try {
             // create user from request data
-            let user: User = req.body;
+            let user: UserModel = req.body;
             user.updatedAt = new Date();
 
-            const updatedUser = await User.update(user,
+            const updatedUser = await UserModel.update(user,
                 {
                     where: {
                         id: {
@@ -124,7 +124,7 @@ export default class UsersController {
     static deleteUser = async (req: Request, res: Response, next: any) => {
         try {
             const userID = req.params.id;
-            const user = await User.update({deletedAt: new Date()},
+            const user = await UserModel.update({deletedAt: new Date()},
                 {
                     where: {
                         id: {

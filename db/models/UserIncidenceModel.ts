@@ -1,9 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class UserDevice extends Model {
+export class UserIncidenceModel extends Model {
     public user_id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public device_id!: number;
+    public incidence_id!: number;
     public endAt!: Date | null;
 
     // timestamps!
@@ -12,13 +12,13 @@ export class UserDevice extends Model {
     public deletedAt!: Date | null;
 }
 
-UserDevice.init({
+UserIncidenceModel.init({
     user_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
         allowNull: false,
     },
-    device_id: {
+    incidence_id: {
         type: new DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
         allowNull: false,
@@ -32,6 +32,6 @@ UserDevice.init({
         allowNull: true
     },
 }, {
-    tableName: 'users_devices',
+    tableName: 'users_incidences',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

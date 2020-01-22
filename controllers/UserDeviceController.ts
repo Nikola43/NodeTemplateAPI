@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import UserDeviceErrors from "../errors/UserErrors";
-import {UserDevice} from "../db/models/UserDevice";
+import {UserDeviceModel} from "../db/models/UserDeviceModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 
@@ -12,7 +12,7 @@ const Op = Sequelize.Op;
 export default class UserDeviceController {
     static getAll = async (req: Request, res: Response, next: any) => {
         try {
-            const userDevice = await UserDevice.findAll();
+            const userDevice = await UserDeviceModel.findAll();
             res.status(200).send(userDevice);
         } catch (e) {
             console.log(e);
@@ -22,7 +22,7 @@ export default class UserDeviceController {
 
     static getUserDeviceById = async (req: Request, res: Response, next: any) => {
         try {
-            const userDevice = await UserDevice.findByPk(req.params.id);
+            const userDevice = await UserDeviceModel.findByPk(req.params.id);
             console.log(req.params.id);
 
             if (userDevice) {
@@ -56,7 +56,7 @@ export default class UserDeviceController {
 
         // find userDevice in db for check if already exists
         try {
-            const tempResource = await UserDevice.findOne({
+            const tempResource = await UserDeviceModel.findOne({
                 attributes: [
                     'device_id',
                 ], where: {
@@ -76,11 +76,11 @@ export default class UserDeviceController {
                 return;
             } else {
 
-                const newUserDeviceData: UserDevice = req.body;
+                const newUserDeviceData: UserDeviceModel = req.body;
 
                 try {
                     // Create userDevice from request data
-                    const newUserDevice = await UserDevice.create(newUserDeviceData);
+                    const newUserDevice = await UserDeviceModel.create(newUserDeviceData);
 
                     res.status(200).send(newUserDevice);
                 } catch (e) {
@@ -107,10 +107,10 @@ export default class UserDeviceController {
 
         try {
             // create userDevice from request data
-            let userDevice: UserDevice = req.body;
+            let userDevice: UserDeviceModel = req.body;
             userDevice.updated_at = new Date();
 
-            const updatedUserDevice = await UserDevice.update(userDevice,
+            const updatedUserDevice = await UserDeviceModel.update(userDevice,
                 {
                     where: {
                         id: {
@@ -148,7 +148,7 @@ export default class UserDeviceController {
         }
 
         try {
-            const userDevice = await UserDevice.update({deletedAt: new Date()},
+            const userDevice = await UserDeviceModel.update({deletedAt: new Date()},
                 {
                     where: {
                         id: {

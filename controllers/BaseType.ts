@@ -14,7 +14,6 @@ export default class DeviceTypesController {
                 res.status(200).send([]);
             }
         } catch (e) {
-            console.log(e)
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -22,11 +21,11 @@ export default class DeviceTypesController {
     static getDeviceTypeById = async (req: Request, res: Response, next: any) => {
         let deviceType = null;
         try {
-            const deviceType = await DeviceTypeModel.findByPk(req.params.id);
+            const deviceType = await DeviceTypeModel.findByPk(req.query.id)
             if (deviceType) {
                 res.status(200).send(deviceType);
             } else {
-                res.status(404).send({ error: "deviceType not found" });
+                res.status(200).send({ error: "deviceType not found" });
             }
         } catch (e) {
             res.status(500).send({ error: "Error en la petición" });

@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
-import {Device} from "../db/models/Device";
+import {DeviceModel} from "../db/models/DeviceModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 import DeviceErrors from "../errors/DeviceErrors";
-import {User} from "../db/models/User";
+import {UserModel} from "../db/models/UserModel";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -11,7 +11,7 @@ const Op = Sequelize.Op;
 export default class DeviceController {
     static getAll = async (req: Request, res: Response, next: any) => {
         try {
-            const devices = await Device.findAll();
+            const devices = await DeviceModel.findAll();
             res.status(200).send(devices);
         } catch (e) {
             console.log(e);
@@ -21,7 +21,7 @@ export default class DeviceController {
 
     static getDeviceById = async (req: Request, res: Response, next: any) => {
         try {
-            const device = await Device.findByPk(req.params.id);
+            const device = await DeviceModel.findByPk(req.params.id);
 
             if (device) {
                 res.status(200).send(device);
@@ -37,7 +37,7 @@ export default class DeviceController {
     static insertDevice = async (req: Request, res: Response, next: any) => {
 
         // get deviceID from request
-        let device: Device = req.body;
+        let device: DeviceModel = req.body;
 
         // check if deviceID are set
         // if not are set, break execution
@@ -53,7 +53,7 @@ export default class DeviceController {
 
         // find device in db for check if already exists
         try {
-            const tempDevice = await Device.findOne({
+            const tempDevice = await DeviceModel.findOne({
                 attributes: [
                     'name','type_id'
                 ], where: {
@@ -77,7 +77,7 @@ export default class DeviceController {
             } else {
                 try {
                     // Create user from request data
-                    const newDevice = await Device.create(device);
+                    const newDevice = await DeviceModel.create(device);
 
                     res.status(200).send(newDevice);
                 } catch (e) {
@@ -105,10 +105,10 @@ export default class DeviceController {
 
         try {
             // created device from request data
-            let device: Device = req.body;
+            let device: DeviceModel = req.body;
             device.updatedAt = new Date();
 
-            const updatedDevice = await Device.update(device,
+            const updatedDevice = await DeviceModel.update(device,
                 {
                     where: {
                         id: {
@@ -146,7 +146,7 @@ export default class DeviceController {
         }
 
         try {
-            const device = await Device.update({deletedAt: new Date()},
+            const device = await DeviceModel.update({deletedAt: new Date()},
                 {
                     where: {
                         id: {

@@ -1,7 +1,7 @@
 import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class PanicButton extends Model {
+export class PanicButtonModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public user_id!: number;
     public description!: string | null;
@@ -15,7 +15,7 @@ export class PanicButton extends Model {
     public deletedAt!: Date | null;
 }
 
-PanicButton.init({
+PanicButtonModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,

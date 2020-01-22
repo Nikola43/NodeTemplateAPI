@@ -1,12 +1,14 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class Resource extends Model {
+export class DocumentModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public center_id!: number;
+    public user_id!: number;
     public type_id!: number;
     public name!: string;
-    public status!: number;
+    public description!: string | null;
+    public url!: string;
+    public endAt!: string | null;
 
     // timestamps!
     public createdAt!: Date;
@@ -14,14 +16,14 @@ export class Resource extends Model {
     public deletedAt!: Date | null;
 }
 
-Resource.init({
+DocumentModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
-    center_id: {
+    user_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
@@ -30,18 +32,26 @@ Resource.init({
         allowNull: false,
     },
     name: {
-        type: new DataTypes.STRING(64),
+        type: new DataTypes.STRING(32),
         allowNull: false,
     },
-    status: {
-        type: new DataTypes.TINYINT(),
-        allowNull: false
+    description: {
+        type: new DataTypes.STRING(255),
+        allowNull: true,
+    },
+    url: {
+        type: new DataTypes.STRING(255),
+        allowNull: false,
+    },
+    endAt: {
+        type: new DataTypes.DATE,
+        allowNull: true,
     },
     deletedAt: {
-        type: new DataTypes.DATE(),
+        type: new DataTypes.DATE,
         allowNull: true
     },
 }, {
-    tableName: 'resources',
+    tableName: 'documents',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import ResourceErrors from "../errors/ResourceErrors";
-import {Resource} from "../db/models/Resource";
+import {ResourceModel} from "../db/models/ResourceModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 
@@ -12,7 +12,7 @@ const Op = Sequelize.Op;
 export default class ResourceController {
     static getAll = async (req: Request, res: Response, next: any) => {
         try {
-            const resources = await Resource.findAll();
+            const resources = await ResourceModel.findAll();
             res.status(200).send(resources);
         } catch (e) {
             console.log(e);
@@ -22,7 +22,7 @@ export default class ResourceController {
 
     static getResourceById = async (req: Request, res: Response, next: any) => {
         try {
-            const resource = await Resource.findByPk(req.params.id);
+            const resource = await ResourceModel.findByPk(req.params.id);
             console.log(req.params.id);
 
             if (resource) {
@@ -63,7 +63,7 @@ export default class ResourceController {
 
         // find resource in db for check if already exists
         try {
-            const tempResource = await Resource.findOne({
+            const tempResource = await ResourceModel.findOne({
                 attributes: [
                     'name',
                 ], where: {
@@ -83,12 +83,12 @@ export default class ResourceController {
                 return;
             } else {
 
-                const newResourceData: Resource = req.body;
+                const newResourceData: ResourceModel = req.body;
                 newResourceData.status=1;
 
                 try {
                     // Create resource from request data
-                    const newResource = await Resource.create(newResourceData);
+                    const newResource = await ResourceModel.create(newResourceData);
 
                     res.status(200).send(newResource);
                 } catch (e) {
@@ -115,10 +115,10 @@ export default class ResourceController {
 
         try {
             // create resource from request data
-            let resource: Resource = req.body;
+            let resource: ResourceModel = req.body;
             resource.updatedAt = new Date();
 
-            const updatedResource = await Resource.update(resource,
+            const updatedResource = await ResourceModel.update(resource,
                 {
                     where: {
                         id: {
@@ -156,7 +156,7 @@ export default class ResourceController {
         }
 
         try {
-            const resource = await Resource.update({deletedAt: new Date()},
+            const resource = await ResourceModel.update({deletedAt: new Date()},
                 {
                     where: {
                         id: {

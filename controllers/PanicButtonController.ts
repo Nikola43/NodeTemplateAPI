@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {PanicButton} from "../db/models/PanicButton";
+import {PanicButtonModel} from "../db/models/PanicButtonModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 import PanicButtonErrors from "../errors/PanicButtonErrors";
@@ -10,7 +10,7 @@ const Op = Sequelize.Op;
 export default class PanicButtonController {
     static getAll = async (req: Request, res: Response, next: any) => {
         try {
-            const panicButtons = await PanicButton.findAll();
+            const panicButtons = await PanicButtonModel.findAll();
             res.status(200).send(panicButtons);
         } catch (e) {
             console.log(e);
@@ -20,7 +20,7 @@ export default class PanicButtonController {
 
     static getPanicButtonById = async (req: Request, res: Response, next: any) => {
         try {
-            const panicButton = await PanicButton.findByPk(req.params.id);
+            const panicButton = await PanicButtonModel.findByPk(req.params.id);
 
             if (panicButton) {
                 res.status(200).send(panicButton);
@@ -47,7 +47,7 @@ export default class PanicButtonController {
 
         // find user in db for check if already exists
         try {
-            const tempPanicButton = await PanicButton.findOne({
+            const tempPanicButton = await PanicButtonModel.findOne({
                 attributes: [
                     'user_id',
                 ], where: {
@@ -68,7 +68,7 @@ export default class PanicButtonController {
             } else {
                 try {
                     // Create user from request data
-                    const newPanicButton = await PanicButton.create({
+                    const newPanicButton = await PanicButtonModel.create({
                         user_id:userId
                     });
 
@@ -97,10 +97,10 @@ export default class PanicButtonController {
 
         try {
             // create user from request data
-            let panicButton: PanicButton = req.body;
+            let panicButton: PanicButtonModel = req.body;
             panicButton.updatedAt = new Date();
 
-            const updatedPanicButton = await PanicButton.update(panicButton,
+            const updatedPanicButton = await PanicButtonModel.update(panicButton,
                 {
                     where: {
                         id: {
@@ -138,7 +138,7 @@ export default class PanicButtonController {
         }
 
         try {
-            const panicButton = await PanicButton.update({deletedAt: new Date()},
+            const panicButton = await PanicButtonModel.update({deletedAt: new Date()},
                 {
                     where: {
                         id: {

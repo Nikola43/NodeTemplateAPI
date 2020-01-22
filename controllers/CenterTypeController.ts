@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CenterType } from "../db/models/CenterType";
+import { CenterTypeModel } from "../db/models/CenterTypeModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
@@ -8,7 +8,7 @@ export default class CentersTypesController {
     static getAll = async (req: Request, res: Response, next: any) => {
         let centers_type = null;
         try {
-            centers_type = await CenterType.findAll()
+            centers_type = await CenterTypeModel.findAll()
             if (centers_type) {
                 res.status(200).send(centers_type);
             } else {
@@ -22,7 +22,7 @@ export default class CentersTypesController {
     static getCenterTypeById = async (req: Request, res: Response, next: any) => {
         let center_type = null;
         try {
-            const center_type = await CenterType.findByPk(req.query.id)
+            const center_type = await CenterTypeModel.findByPk(req.query.id)
             if (center_type) {
                 res.status(200).send(center_type);
             } else {
@@ -36,7 +36,7 @@ export default class CentersTypesController {
     static insertCenterType = async (req: Request, res: Response, next: any) => {
         let newCenterType = null;
         try {
-            const newCenterType = await CenterType.create({
+            const newCenterType = await CenterTypeModel.create({
                 type: req.body.type,
                 temporary: req.body.temporary
             });
@@ -47,7 +47,7 @@ export default class CentersTypesController {
     };
 
     static updateCenterType = async (req: Request, res: Response, next: any) => {
-        let center_type: CenterType = req.body;
+        let center_type: CenterTypeModel = req.body;
         center_type.id = req.query.id;
         center_type.updatedAt = new Date();
         try {
@@ -69,7 +69,7 @@ export default class CentersTypesController {
     };
 
     static deleteCenterType = async (req: Request, res: Response, next: any) => {
-        let center_type: CenterType = req.body;
+        let center_type: CenterTypeModel = req.body;
         center_type.id = req.query.id;
         try {
             center_type.update({

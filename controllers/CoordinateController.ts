@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Coordinate } from "../db/models/Coordinate";
+import { CoordinateModel } from "../db/models/CoordinateModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -7,7 +7,7 @@ export default class CoordinatesController {
     static getAll = async (req: Request, res: Response, next: any) => {
         let coordinates = null;
         try {
-            coordinates = await Coordinate.findAll();
+            coordinates = await CoordinateModel.findAll();
             if (coordinates) {
                 res.status(200).send(coordinates);
             } else {
@@ -21,7 +21,7 @@ export default class CoordinatesController {
     static getCoordinateById = async (req: Request, res: Response, next: any) => {
         let coordinate = null;
         try {
-            const coordinate = await Coordinate.findByPk(req.query.id)
+            const coordinate = await CoordinateModel.findByPk(req.query.id)
             if (coordinate) {
                 res.status(200).send(coordinate);
             } else {
@@ -35,7 +35,7 @@ export default class CoordinatesController {
     static insertCoordinate = async (req: Request, res: Response, next: any) => {
         let newCoordinate = null;
         try {
-            const newCoordinate = await Coordinate.create({
+            const newCoordinate = await CoordinateModel.create({
                 lat: req.body.lat,
                 lon: req.body.lon
             });
@@ -46,7 +46,7 @@ export default class CoordinatesController {
     };
 
     static updateCoordinate = async (req: Request, res: Response, next: any) => {
-        let coordinate: Coordinate = req.body;
+        let coordinate: CoordinateModel = req.body;
         coordinate.id = req.query.id;
         coordinate.updatedAt = new Date();
         try {
@@ -68,7 +68,7 @@ export default class CoordinatesController {
     };
 
     static deleteCoordinate = async (req: Request, res: Response, next: any) => {
-        let coordinate: Coordinate = req.body;
+        let coordinate: CoordinateModel = req.body;
         coordinate.id = req.query.id;
         try {
             coordinate.update({

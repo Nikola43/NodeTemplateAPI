@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
-import ResourceErrors from "../errors/ResourceErrors";
-import {ResourceType} from "../db/models/ResourceType";
+import ResourceErrors from "../errors/ResourceTypeErrors";
+import {ResourceTypeModel} from "../db/models/ResourceTypeModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 
@@ -12,7 +12,7 @@ const Op = Sequelize.Op;
 export default class ResourceController {
     static getAll = async (req: Request, res: Response, next: any) => {
         try {
-            const resourcesType = await ResourceType.findAll();
+            const resourcesType = await ResourceTypeModel.findAll();
             res.status(200).send(resourcesType);
         } catch (e) {
             console.log(e);
@@ -22,7 +22,7 @@ export default class ResourceController {
 
     static getResourceTypeById = async (req: Request, res: Response, next: any) => {
         try {
-            const resourceType = await ResourceType.findByPk(req.params.id);
+            const resourceType = await ResourceTypeModel.findByPk(req.params.id);
             console.log(req.params.id);
 
             if (resourceType) {
@@ -49,7 +49,7 @@ export default class ResourceController {
 
         // find resourceType in db for check if already exists
         try {
-            const tempResource = await ResourceType.findOne({
+            const tempResource = await ResourceTypeModel.findOne({
                 attributes: [
                     'type',
                 ], where: {
@@ -69,11 +69,11 @@ export default class ResourceController {
                 return;
             } else {
 
-                const newResourceTypeData: ResourceType = req.body;
+                const newResourceTypeData: ResourceTypeModel = req.body;
                 
                 try {
                     // Create resourceType from request data
-                    const newResourceType = await ResourceType.create(newResourceTypeData);
+                    const newResourceType = await ResourceTypeModel.create(newResourceTypeData);
 
                     res.status(200).send(newResourceType);
                 } catch (e) {
@@ -100,10 +100,10 @@ export default class ResourceController {
 
         try {
             // create resourceType from request data
-            let resourceType: ResourceType = req.body;
-            resourceType.updated_at = new Date();
+            let resourceType: ResourceTypeModel = req.body;
+            resourceType.updatedAt = new Date();
 
-            const updatedResourceType = await ResourceType.update(resourceType,
+            const updatedResourceType = await ResourceTypeModel.update(resourceType,
                 {
                     where: {
                         id: {
@@ -136,12 +136,12 @@ export default class ResourceController {
         // check if resourceId are set
         // if not are set, break execution
         if (!resourceTypeId) {
-            res.status(400).send(ResourceErrors.RESOURCE_ID_EMPTY_ERROR);
+            res.status(400).send(ResourceErrors.RESOURCE_TYPE_ID_EMPTY_ERROR);
             return;
         }
 
         try {
-            const resourceType = await ResourceType.update({deletedAt: new Date()},
+            const resourceType = await ResourceTypeModel.update({deletedAt: new Date()},
                 {
                     where: {
                         id: {

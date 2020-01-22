@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import UserResourceErrors from "../errors/UserErrors";
-import {UserResource} from "../db/models/UserResource";
+import {UserResourceModel} from "../db/models/UserResourceModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 
@@ -12,7 +12,7 @@ const Op = Sequelize.Op;
 export default class UserResourceController {
     static getAll = async (req: Request, res: Response, next: any) => {
         try {
-            const userResource = await UserResource.findAll();
+            const userResource = await UserResourceModel.findAll();
             res.status(200).send(userResource);
         } catch (e) {
             console.log(e);
@@ -22,7 +22,7 @@ export default class UserResourceController {
 
     static getUserResourceById = async (req: Request, res: Response, next: any) => {
         try {
-            const userResource = await UserResource.findByPk(req.params.id);
+            const userResource = await UserResourceModel.findByPk(req.params.id);
             console.log(req.params.id);
 
             if (userResource) {
@@ -56,7 +56,7 @@ export default class UserResourceController {
 
         // find userResource in db for check if already exists
         try {
-            const tempResource = await UserResource.findOne({
+            const tempResource = await UserResourceModel.findOne({
                 attributes: [
                     'resource_id',
                 ], where: {
@@ -76,11 +76,11 @@ export default class UserResourceController {
                 return;
             } else {
 
-                const newUserResourceData: UserResource = req.body;
+                const newUserResourceData: UserResourceModel = req.body;
 
                 try {
                     // Create userResource from request data
-                    const newUserResource = await UserResource.create(newUserResourceData);
+                    const newUserResource = await UserResourceModel.create(newUserResourceData);
 
                     res.status(200).send(newUserResource);
                 } catch (e) {
@@ -107,10 +107,10 @@ export default class UserResourceController {
 
         try {
             // create userResource from request data
-            let userResource: UserResource = req.body;
+            let userResource: UserResourceModel = req.body;
             userResource.updated_at = new Date();
 
-            const updatedUserResource = await UserResource.update(userResource,
+            const updatedUserResource = await UserResourceModel.update(userResource,
                 {
                     where: {
                         id: {
@@ -148,7 +148,7 @@ export default class UserResourceController {
         }
 
         try {
-            const userResource = await UserResource.update({deletedAt: new Date()},
+            const userResource = await UserResourceModel.update({deletedAt: new Date()},
                 {
                     where: {
                         id: {

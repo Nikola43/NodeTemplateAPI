@@ -1,7 +1,7 @@
 import * as http from 'http';
 import App from './app';
 import socketIO from 'socket.io'
-import {Emit} from "./db/models/Emit";
+import {EmitModel} from "./db/models/EmitModel";
 
 
 export class Server {
@@ -27,7 +27,7 @@ export class Server {
 
         io.on('connection', (socket: any) => {
             console.log('Socket ON');
-            socket.on('eventDB', (emit: Emit) => {
+            socket.on('eventDB', (emit: EmitModel) => {
                 io.emit('eventDB', emit)
             });
 

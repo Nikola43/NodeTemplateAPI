@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import UserIncidenceErrors from "../errors/UserErrors";
-import {UserIncidence} from "../db/models/UserIncidence";
+import {UserIncidenceModel} from "../db/models/UserIncidenceModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 
@@ -12,7 +12,7 @@ const Op = Sequelize.Op;
 export default class UserIncidenceController {
     static getAll = async (req: Request, res: Response, next: any) => {
         try {
-            const userIncidence = await UserIncidence.findAll();
+            const userIncidence = await UserIncidenceModel.findAll();
             res.status(200).send(userIncidence);
         } catch (e) {
             console.log(e);
@@ -22,7 +22,7 @@ export default class UserIncidenceController {
 
     static getUserIncidenceById = async (req: Request, res: Response, next: any) => {
         try {
-            const userIncidence = await UserIncidence.findByPk(req.params.id);
+            const userIncidence = await UserIncidenceModel.findByPk(req.params.id);
             console.log(req.params.id);
 
             if (userIncidence) {
@@ -56,7 +56,7 @@ export default class UserIncidenceController {
 
         // find userIncidence in db for check if already exists
         try {
-            const tempResource = await UserIncidence.findOne({
+            const tempResource = await UserIncidenceModel.findOne({
                 attributes: [
                     'user_id',
                     'incidence_id',
@@ -80,11 +80,11 @@ export default class UserIncidenceController {
                 return;
             } else {
 
-                const newUserIncidenceData: UserIncidence = req.body;
+                const newUserIncidenceData: UserIncidenceModel = req.body;
 
                 try {
                     // Create userIncidence from request data
-                    const newUserIncidence = await UserIncidence.create(newUserIncidenceData);
+                    const newUserIncidence = await UserIncidenceModel.create(newUserIncidenceData);
 
                     res.status(200).send(newUserIncidence);
                 } catch (e) {
@@ -111,10 +111,10 @@ export default class UserIncidenceController {
 
         try {
             // create userIncidence from request data
-            let userIncidence: UserIncidence = req.body;
+            let userIncidence: UserIncidenceModel = req.body;
             userIncidence.updated_at = new Date();
 
-            const updatedUserIncidence = await UserIncidence.update(userIncidence,
+            const updatedUserIncidence = await UserIncidenceModel.update(userIncidence,
                 {
                     where: {
                         id: {
@@ -152,7 +152,7 @@ export default class UserIncidenceController {
         }
 
         try {
-            const userIncidence = await UserIncidence.update({deletedAt: new Date()},
+            const userIncidence = await UserIncidenceModel.update({deletedAt: new Date()},
                 {
                     where: {
                         id: {

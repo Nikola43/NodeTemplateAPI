@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Center } from "../db/models/Center";
+import { CenterModel } from "../db/models/CenterModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -8,7 +8,7 @@ export default class CentersController {
     static getAll = async (req: Request, res: Response, next: any) => {
         let centers = null;
         try {
-            centers = await Center.findAll();
+            centers = await CenterModel.findAll();
             if (centers) {
                 res.status(200).send(centers);
             } else {
@@ -22,7 +22,7 @@ export default class CentersController {
     static getCenterById = async (req: Request, res: Response, next: any) => {
         let center = null;
         try {
-            const center = await Center.findByPk(req.query.id);
+            const center = await CenterModel.findByPk(req.params.id);
             if (center) {
                 res.status(200).send(center);
             } else {
@@ -36,7 +36,7 @@ export default class CentersController {
     static insertCenter = async (req: Request, res: Response, next: any) => {
         let newCenter = null;
         try {
-            const newCenter = await Center.create({
+            const newCenter = await CenterModel.create({
                 location_id: req.body.location_id,
                 type_id: req.body.type_id,
                 name: req.body.name,
@@ -54,7 +54,7 @@ export default class CentersController {
     };
 
     static updateCenter = async (req: Request, res: Response, next: any) => {
-        let center: Center = req.body;
+        let center: CenterModel = req.body;
         center.id = req.query.id;
         center.updatedAt = new Date();
         try {
@@ -76,7 +76,7 @@ export default class CentersController {
     };
 
     static deleteCenter = async (req: Request, res: Response, next: any) => {
-        let center: Center = req.body;
+        let center: CenterModel = req.body;
         center.id = req.query.id;
         try {
             center.update({

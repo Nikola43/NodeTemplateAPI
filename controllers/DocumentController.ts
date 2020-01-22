@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Document } from "../db/models/Document";
+import { DocumentModel } from "../db/models/DocumentModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
@@ -8,7 +8,7 @@ export default class DocumentsController {
     static getAll = async (req: Request, res: Response, next: any) => {
         let documents = null;
         try {
-            documents = await Document.findAll()
+            documents = await DocumentModel.findAll()
             if (documents) {
                 res.status(200).send(documents);
             } else {
@@ -22,13 +22,14 @@ export default class DocumentsController {
     static getDocumentById = async (req: Request, res: Response, next: any) => {
         let document = null;
         try {
-            const document = await Document.findByPk(req.query.id)
+            const document = await DocumentModel.findByPk(req.params.id);
             if (document) {
                 res.status(200).send(document);
             } else {
                 res.status(200).send({ error: "document not found" });
             }
         } catch (e) {
+            console.log(e);
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -36,7 +37,7 @@ export default class DocumentsController {
     static insertDocument = async (req: Request, res: Response, next: any) => {
         let newDocument = null;
         try {
-            const newDocument = await Document.create({
+            const newDocument = await DocumentModel.create({
                 user_id: req.body.user_id,
                 type_id: req.body.type_id,
                 name: req.body.name,
@@ -51,7 +52,7 @@ export default class DocumentsController {
     };
 
     static updateDocument = async (req: Request, res: Response, next: any) => {
-        let document: Document = req.body;
+        let document: DocumentModel = req.body;
         document.id = req.query.id;
         document.updatedAt = new Date();
         try {
@@ -73,7 +74,7 @@ export default class DocumentsController {
     };
 
     static deleteDocument = async (req: Request, res: Response, next: any) => {
-        let document: Document = req.body;
+        let document: DocumentModel = req.body;
         document.id = req.query.id;
         try {
             document.update({

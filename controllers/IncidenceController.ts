@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Incidence } from "../db/models/Incidence";
+import { IncidenceModel } from "../db/models/IncidenceModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
@@ -8,7 +8,7 @@ export default class IncidencesController {
     static getAll = async (req: Request, res: Response, next: any) => {
         let incidencess = null;
         try {
-            incidencess = await Incidence.findAll()
+            incidencess = await IncidenceModel.findAll();
             if (incidencess) {
                 res.status(200).send(incidencess);
             } else {
@@ -22,7 +22,7 @@ export default class IncidencesController {
     static getIncidenceById = async (req: Request, res: Response, next: any) => {
         let incidences = null;
         try {
-            const incidences = await Incidence.findByPk(req.query.id)
+            const incidences = await IncidenceModel.findByPk(req.params.id);
             if (incidences) {
                 res.status(200).send(incidences);
             } else {
@@ -36,7 +36,7 @@ export default class IncidencesController {
     static insertIncidence = async (req: Request, res: Response, next: any) => {
         let newIncidence = null;
         try {
-            const newIncidence = await Incidence.create({
+            const newIncidence = await IncidenceModel.create({
                 user_id: req.body.user_id,
                 location_id: req.body.location_id,
                 type_id: req.body.type_id,
@@ -59,7 +59,7 @@ export default class IncidencesController {
     };
 
     static updateIncidence = async (req: Request, res: Response, next: any) => {
-        let incidences: Incidence = req.body;
+        let incidences: IncidenceModel = req.body;
         incidences.id = req.query.id;
         incidences.updatedAt = new Date();
         try {
@@ -81,7 +81,7 @@ export default class IncidencesController {
     };
 
     static deleteIncidence = async (req: Request, res: Response, next: any) => {
-        let incidences: Incidence = req.body;
+        let incidences: IncidenceModel = req.body;
         incidences.id = req.query.id;
         try {
             incidences.update({

@@ -1,19 +1,20 @@
-import {Model, DataTypes} from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class LocationType extends Model {
+export class CenterTypeModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public type!:string;
+    public type!: string;
+    public temporary!: number;
 
     // timestamps!
-    public createdAt!: Date;
+    public readonly createdAt!: Date;
     public updatedAt!: Date | null;
     public deletedAt!: Date | null;
 }
 
-LocationType.init({
+CenterTypeModel.init({
     id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
@@ -22,11 +23,15 @@ LocationType.init({
         type: new DataTypes.STRING(32),
         allowNull: false,
     },
+    temporary: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
     deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },
 }, {
-    tableName: 'locations_type',
+    tableName: 'centers_types',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

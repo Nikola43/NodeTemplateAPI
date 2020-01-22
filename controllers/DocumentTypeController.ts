@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { DocumentType } from "../db/models/DocumentType";
+import { DocumentTypeModel } from "../db/models/DocumentTypeModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
@@ -8,7 +8,7 @@ export default class DocumentsTypesController {
     static getAll = async (req: Request, res: Response, next: any) => {
         let documentsTypes = null;
         try {
-            documentsTypes = await DocumentType.findAll()
+            documentsTypes = await DocumentTypeModel.findAll()
             if (documentsTypes) {
                 res.status(200).send(documentsTypes);
             } else {
@@ -22,7 +22,7 @@ export default class DocumentsTypesController {
     static getDocumentTypeById = async (req: Request, res: Response, next: any) => {
         let documentType = null;
         try {
-            const documentType = await DocumentType.findByPk(req.query.id)
+            const documentType = await DocumentTypeModel.findByPk(req.query.id)
             if (documentType) {
                 res.status(200).send(documentType);
             } else {
@@ -36,7 +36,7 @@ export default class DocumentsTypesController {
     static insertDocumentType = async (req: Request, res: Response, next: any) => {
         let newDocumentType = null;
         try {
-            const newDocument = await DocumentType.create({
+            const newDocument = await DocumentTypeModel.create({
                 type: req.body.type
             });
             res.status(200).send(newDocument);
@@ -46,7 +46,7 @@ export default class DocumentsTypesController {
     };
 
     static updateDocumentType = async (req: Request, res: Response, next: any) => {
-        let documentType: DocumentType = req.body;
+        let documentType: DocumentTypeModel = req.body;
         documentType.id = req.query.id;
         documentType.updatedAt = new Date();
         try {
@@ -68,7 +68,7 @@ export default class DocumentsTypesController {
     };
 
     static deleteDocumentType = async (req: Request, res: Response, next: any) => {
-        let documentType: DocumentType = req.body;
+        let documentType: DocumentTypeModel = req.body;
         documentType.id = req.query.id;
         try {
             documentType.update({

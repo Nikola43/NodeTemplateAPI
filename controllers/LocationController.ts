@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
-import { Location } from "../db/models/Location";
+import { LocationModel } from "../db/models/LocationModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 
 export default class LocationsController {
     static getAll = async (req: Request, res: Response, next: any) => {
-        let incidencess = null;
+        let locations = null;
         try {
-            incidencess = await Location.findAll()
-            if (incidencess) {
-                res.status(200).send(incidencess);
+            locations = await LocationModel.findAll()
+            if (locations) {
+                res.status(200).send(locations);
             } else {
                 res.status(200).send([]);
             }
@@ -20,13 +20,13 @@ export default class LocationsController {
     };
 
     static getLocationById = async (req: Request, res: Response, next: any) => {
-        let incidences = null;
+        let locations = null;
         try {
-            const incidences = await Location.findByPk(req.query.id)
-            if (incidences) {
-                res.status(200).send(incidences);
+            const locations = await LocationModel.findByPk(req.params.id);
+            if (locations) {
+                res.status(200).send(locations);
             } else {
-                res.status(200).send({ error: "incidences not found" });
+                res.status(200).send({ error: "locations not found" });
             }
         } catch (e) {
             res.status(500).send({ error: "Error en la petición" });
@@ -36,7 +36,7 @@ export default class LocationsController {
     static insertLocation = async (req: Request, res: Response, next: any) => {
         let newLocation = null;
         try {
-            const newLocation = await Location.create({
+            const newLocation = await LocationModel.create({
                 user_id: req.body.user_id,
                 location_id: req.body.location_id,
                 type_id: req.body.type_id,
@@ -59,38 +59,38 @@ export default class LocationsController {
     };
 
     static updateLocation = async (req: Request, res: Response, next: any) => {
-        let incidences: Location = req.body;
-        incidences.id = req.query.id;
-        incidences.updatedAt = new Date();
+        let locations: LocationModel = req.body;
+        locations.id = req.query.id;
+        locations.updatedAt = new Date();
         try {
-            incidences.update(incidences,
+            locations.update(locations,
                 {
                     where: {
                         id: {
-                            [Op.eq]: incidences.id
+                            [Op.eq]: locations.id
                         },
                         deleted_at: {
                             [Op.is]: null
                         }
                     }
                 });
-            res.status(200).send(incidences);
+            res.status(200).send(locations);
         } catch (e) {
             res.status(500).send({ error: "Error actualizando" });
         }
     };
 
     static deleteLocation = async (req: Request, res: Response, next: any) => {
-        let incidences: Location = req.body;
-        incidences.id = req.query.id;
+        let locations: LocationModel = req.body;
+        locations.id = req.query.id;
         try {
-            incidences.update({
+            locations.update({
                 deleted_at: new Date()
             },
                 {
                     where: {
                         id: {
-                            [Op.eq]: incidences.id
+                            [Op.eq]: locations.id
                         },
                         deleted_at: {
                             [Op.is]: null

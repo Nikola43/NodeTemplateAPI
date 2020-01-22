@@ -1,17 +1,11 @@
-import { Model, DataTypes } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
+import {BaseTypeModel} from "./BaseTypeModel";
 
-export class ResourceType extends Model {
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public type!: string;
-
-    // timestamps!
-    public readonly createdAt!: Date;
-    public updatedAt!: Date | null;
-    public deletedAt!: Date | null;
+export class DeviceTypeModel extends BaseTypeModel {
 }
 
-ResourceType.init({
+DeviceTypeModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
@@ -27,6 +21,6 @@ ResourceType.init({
         allowNull: true
     },
 }, {
-    tableName: 'resources_types',
+    tableName: 'devices_types',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

@@ -1,20 +1,24 @@
 import { Request, Response } from "express";
 import { IncidenceModel } from "../db/models/IncidenceModel";
+import {LOGUtil} from "../utils/LOGUtil";
+
 const Sequelize = require('sequelize');
-const Op = Sequelize.Op
+const Op = Sequelize.Op;
 
 
 export default class IncidencesController {
     static getAll = async (req: Request, res: Response, next: any) => {
-        let incidencess = null;
+        let incidences = null;
         try {
-            incidencess = await IncidenceModel.findAll();
-            if (incidencess) {
-                res.status(200).send(incidencess);
+            incidences = await IncidenceModel.findAll();
+            if (incidences) {
+                res.status(200).send(incidences);
             } else {
                 res.status(200).send([]);
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get all incidence- " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -29,31 +33,21 @@ export default class IncidencesController {
                 res.status(200).send({ error: "incidences not found" });
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get incidence by ID - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
 
     static insertIncidence = async (req: Request, res: Response, next: any) => {
-        let newIncidence = null;
+        //
+        let incidence: IncidenceModel = req.body;
         try {
-            const newIncidence = await IncidenceModel.create({
-                user_id: req.body.user_id,
-                location_id: req.body.location_id,
-                type_id: req.body.type_id,
-                name: req.body.name,
-                description: req.body.description,
-                subtype: req.body.subtype,
-                status: req.body.status,
-                level: req.body.level,
-                perimeter: req.body.perimeter,
-                area: req.body.area,
-                strategy: req.body.strategy,
-                tactic: req.body.tactic,
-                maneuver: req.body.maneuver,
-                end_date: req.body.end_date
-            });
+            const newIncidence = await IncidenceModel.create(incidence);
             res.status(200).send(newIncidence);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("insert incidence - " + e.toString());
             res.status(500).send({ error: "Error insertando" });
         }
     };
@@ -69,13 +63,15 @@ export default class IncidencesController {
                         id: {
                             [Op.eq]: incidences.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send(incidences);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("update incidence - " + e.toString());
             res.status(500).send({ error: "Error actualizando" });
         }
     };
@@ -85,20 +81,22 @@ export default class IncidencesController {
         incidences.id = req.query.id;
         try {
             incidences.update({
-                deleted_at: new Date()
+                deletedAt: new Date()
             },
                 {
                     where: {
                         id: {
                             [Op.eq]: incidences.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
-            res.status(200).send({ success: "Incidenceo eliminado" });
+            res.status(200).send({ success: "Incidence eliminado" });
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("delete incidence - " + e.toString());
             res.status(500).send({ error: "Error eliminando" });
         }
     };

@@ -3,6 +3,7 @@ import ResourceErrors from "../errors/ResourceErrors";
 import {ResourceModel} from "../db/models/ResourceModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
+import {LOGUtil} from "../utils/LOGUtil";
 
 
 
@@ -16,6 +17,7 @@ export default class ResourceController {
             res.status(200).send(resources);
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("Get all resource - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -32,6 +34,7 @@ export default class ResourceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("Get resource by ID - " + e.toString());
             res.status(500).send({error: "internal error"});
         }
     };
@@ -93,6 +96,7 @@ export default class ResourceController {
                     res.status(200).send(newResource);
                 } catch (e) {
                     console.log(e);
+                    LOGUtil.saveLog("insert resource - " + e.toString());
                     res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
                 }
             }
@@ -140,6 +144,7 @@ export default class ResourceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("updated resource - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -176,6 +181,7 @@ export default class ResourceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("delete resource - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };

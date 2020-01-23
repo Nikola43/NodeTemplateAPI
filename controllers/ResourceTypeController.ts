@@ -3,6 +3,7 @@ import ResourceErrors from "../errors/ResourceTypeErrors";
 import {ResourceTypeModel} from "../db/models/ResourceTypeModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
+import {LOGUtil} from "../utils/LOGUtil";
 
 
 
@@ -16,6 +17,7 @@ export default class ResourceController {
             res.status(200).send(resourcesType);
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get all resource type - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -32,6 +34,7 @@ export default class ResourceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get resource type by ID - " + e.toString());
             res.status(500).send({error: "internal error"});
         }
     };
@@ -78,11 +81,13 @@ export default class ResourceController {
                     res.status(200).send(newResourceType);
                 } catch (e) {
                     console.log(e);
+                    LOGUtil.saveLog("insert resource type - " + e.toString());
                     res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
                 }
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("insert resource type - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -125,6 +130,7 @@ export default class ResourceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("update resource type - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -161,6 +167,7 @@ export default class ResourceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("delete resource type - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { CenterTypeModel } from "../db/models/CenterTypeModel";
+import {LOGUtil} from "../utils/LOGUtil";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
@@ -15,6 +16,8 @@ export default class CentersTypesController {
                 res.status(200).send([]);
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get all center type - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -29,6 +32,8 @@ export default class CentersTypesController {
                 res.status(200).send({ error: "center_type not found" });
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get center type by ID - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -42,6 +47,8 @@ export default class CentersTypesController {
             });
             res.status(200).send(newCenterType);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("insert center Type- " + e.toString());
             res.status(500).send({ error: "Error insertando" });
         }
     };
@@ -57,13 +64,15 @@ export default class CentersTypesController {
                         id: {
                             [Op.eq]: center_type.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send(center_type);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("update center type - " + e.toString());
             res.status(500).send({ error: "Error actualizando" });
         }
     };
@@ -73,20 +82,22 @@ export default class CentersTypesController {
         center_type.id = req.query.id;
         try {
             center_type.update({
-                deleted_at: new Date()
+                deletedAt: new Date()
             },
                 {
                     where: {
                         id: {
                             [Op.eq]: center_type.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send({ success: "Tipo de centro eliminado" });
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("delete center type - " + e.toString());
             res.status(500).send({ error: "Error eliminando" });
         }
     };

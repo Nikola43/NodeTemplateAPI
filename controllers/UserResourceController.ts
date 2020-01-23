@@ -3,6 +3,7 @@ import UserResourceErrors from "../errors/UserErrors";
 import {UserResourceModel} from "../db/models/UserResourceModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
+import {LOGUtil} from "../utils/LOGUtil";
 
 
 
@@ -16,6 +17,7 @@ export default class UserResourceController {
             res.status(200).send(userResource);
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get all user resource - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -32,6 +34,7 @@ export default class UserResourceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get user resource by ID - " + e.toString());
             res.status(500).send({error: "internal error"});
         }
     };
@@ -85,11 +88,13 @@ export default class UserResourceController {
                     res.status(200).send(newUserResource);
                 } catch (e) {
                     console.log(e);
+                    LOGUtil.saveLog("insert user resource - " + e.toString());
                     res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
                 }
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("insert user resource - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -108,7 +113,7 @@ export default class UserResourceController {
         try {
             // create userResource from request data
             let userResource: UserResourceModel = req.body;
-            userResource.updated_at = new Date();
+            userResource.updatedAt = new Date();
 
             const updatedUserResource = await UserResourceModel.update(userResource,
                 {
@@ -132,6 +137,7 @@ export default class UserResourceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("update user resource - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -168,6 +174,7 @@ export default class UserResourceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("delete user resource - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };

@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { CenterModel } from "../db/models/CenterModel";
+import {LOGUtil} from "../utils/LOGUtil";
+
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -15,6 +17,8 @@ export default class CentersController {
                 res.status(200).send([]);
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get all center - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -29,26 +33,21 @@ export default class CentersController {
                 res.status(200).send({ error: "center not found" });
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get center by ID - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
 
     static insertCenter = async (req: Request, res: Response, next: any) => {
-        let newCenter = null;
+        //
+        let center: CenterModel = req.body;
         try {
-            const newCenter = await CenterModel.create({
-                location_id: req.body.location_id,
-                type_id: req.body.type_id,
-                name: req.body.name,
-                description: req.body.description,
-                phone: req.body.phone,
-                email: req.body.email,
-                leader: req.body.leader,
-                schedule: req.body.schedule,
-                end_at: req.body.end_at
-            });
+            const newCenter = await CenterModel.create(center);
             res.status(200).send(newCenter);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("insert center - " + e.toString());
             res.status(500).send({ error: "Error insertando" });
         }
     };
@@ -64,13 +63,15 @@ export default class CentersController {
                         id: {
                             [Op.eq]: center.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send(center);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("update center - " + e.toString());
             res.status(500).send({ error: "Error actualizando" });
         }
     };
@@ -80,20 +81,22 @@ export default class CentersController {
         center.id = req.query.id;
         try {
             center.update({
-                deleted_at: new Date()
+                deletedAt: new Date()
             },
                 {
                     where: {
                         id: {
                             [Op.eq]: center.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send({ success: "Centro eliminado" });
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("delete center - " + e.toString());
             res.status(500).send({ error: "Error eliminando" });
         }
     };

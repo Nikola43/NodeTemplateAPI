@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { CoordinateModel } from "../db/models/CoordinateModel";
+import {LOGUtil} from "../utils/LOGUtil";
+import {CenterModel} from "../db/models/CenterModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -14,6 +16,8 @@ export default class CoordinatesController {
                 res.status(200).send([]);
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get all coordinate - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -28,19 +32,20 @@ export default class CoordinatesController {
                 res.status(200).send({ error: "coordinate not found" });
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get coordinate by ID - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
 
     static insertCoordinate = async (req: Request, res: Response, next: any) => {
-        let newCoordinate = null;
+        let coordinate: CoordinateModel = req.body;
         try {
-            const newCoordinate = await CoordinateModel.create({
-                lat: req.body.lat,
-                lon: req.body.lon
-            });
+            const newCoordinate = await CoordinateModel.create(coordinate);
             res.status(200).send(newCoordinate);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("insert coordinate - " + e.toString());
             res.status(500).send({ error: "Error insertando" });
         }
     };
@@ -56,13 +61,15 @@ export default class CoordinatesController {
                         id: {
                             [Op.eq]: coordinate.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send(coordinate);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("update coordinate - " + e.toString());
             res.status(500).send({ error: "Error actualizando" });
         }
     };
@@ -72,20 +79,22 @@ export default class CoordinatesController {
         coordinate.id = req.query.id;
         try {
             coordinate.update({
-                deleted_at: new Date()
+                deletedAt: new Date()
             },
                 {
                     where: {
                         id: {
                             [Op.eq]: coordinate.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send({ success: "Coordenada eliminada" });
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("delete coordinate - " + e.toString());
             res.status(500).send({ error: "Error eliminando" });
         }
     };

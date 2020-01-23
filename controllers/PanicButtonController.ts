@@ -3,6 +3,8 @@ import {PanicButtonModel} from "../db/models/PanicButtonModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 import PanicButtonErrors from "../errors/PanicButtonErrors";
+import {LOGUtil} from "../utils/LOGUtil";
+import {CenterModel} from "../db/models/CenterModel";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -14,6 +16,7 @@ export default class PanicButtonController {
             res.status(200).send(panicButtons);
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get all panic button - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -29,18 +32,18 @@ export default class PanicButtonController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get panic button by id - " + e.toString());
             res.status(500).send({error: "internal error"});
         }
     };
 
     static insertPanicButton = async (req: Request, res: Response, next: any) => {
 
-        // get userID from request
-        const userId = req.body.user_id;
+        let panicButton: PanicButtonModel = req.body;
 
         // check if userID are set
         // if not are set, break execution
-        if (!userId) {
+        if (!panicButton.user_id) {
             res.status(400).send(PanicButtonErrors.USERID_EMPTY_ERROR);
             return;
         }
@@ -54,8 +57,8 @@ export default class PanicButtonController {
                     endAt: {
                         [Op.is]: null
                     },
-                    deletedAt: {
-                        [Op.is]: null
+                    user_id: {
+                        [Op.eq]: panicButton.user_id
                     }
                 }
             });
@@ -63,23 +66,22 @@ export default class PanicButtonController {
             // check if user already have panic button
             // break execution
             if (tempPanicButton) {
-                res.status(400).send(PanicButtonErrors.USER_ALREADY_HAS_ASIGNED_PANIC_BUTTON_ERROR);
+                res.status(409).send(PanicButtonErrors.USER_ALREADY_HAS_ASIGNED_PANIC_BUTTON_ERROR);
                 return;
             } else {
                 try {
                     // Create user from request data
-                    const newPanicButton = await PanicButtonModel.create({
-                        user_id:userId
-                    });
-
+                    const newPanicButton = await PanicButtonModel.create(panicButton);
                     res.status(200).send(newPanicButton);
                 } catch (e) {
                     console.log(e);
+                    LOGUtil.saveLog("insert panic button - " + e.toString());
                     res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
                 }
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("insert panic button  - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -114,14 +116,15 @@ export default class PanicButtonController {
 
             // check if user are updated
             if (updatedPanicButton[0] === 1) {
-               res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
-               //res.status(200).send(updatedPanicButton);
+                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+                //res.status(200).send(updatedPanicButton);
 
             } else {
                 res.status(404).send(PanicButtonErrors.PANIC_BUTTON_NOT_FOUND_ERROR);
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("update panic button - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -158,6 +161,7 @@ export default class PanicButtonController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("delete panic button - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { IncidenceTypeModel } from "../db/models/IncidenceTypeModel";
+import {LOGUtil} from "../utils/LOGUtil";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
@@ -15,6 +16,8 @@ export default class IncidencesTypesController {
                 res.status(200).send([]);
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get all incidence type - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -29,6 +32,8 @@ export default class IncidencesTypesController {
                 res.status(200).send({ error: "incidencesTypes not found" });
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get incidence type by ID - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -41,6 +46,8 @@ export default class IncidencesTypesController {
             });
             res.status(200).send(newIncidenceTypes);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("insert incidence type - " + e.toString());
             res.status(500).send({ error: "Error insertando" });
         }
     };
@@ -56,13 +63,15 @@ export default class IncidencesTypesController {
                         id: {
                             [Op.eq]: incidencesTypes.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send(incidencesTypes);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("update incidence type - " + e.toString());
             res.status(500).send({ error: "Error actualizando" });
         }
     };
@@ -72,20 +81,22 @@ export default class IncidencesTypesController {
         incidencesTypes.id = req.query.id;
         try {
             incidencesTypes.update({
-                deleted_at: new Date()
+                deletedAt: new Date()
             },
                 {
                     where: {
                         id: {
                             [Op.eq]: incidencesTypes.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send({ success: "Tipo de incidencia eliminada" });
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("delete incidence type - " + e.toString());
             res.status(500).send({ error: "Error eliminando" });
         }
     };

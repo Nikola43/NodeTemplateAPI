@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { DocumentModel } from "../db/models/DocumentModel";
+import {LOGUtil} from "../utils/LOGUtil";
+
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
@@ -15,6 +17,8 @@ export default class DocumentsController {
                 res.status(200).send([]);
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get all documents - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -30,23 +34,20 @@ export default class DocumentsController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get document by id - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
 
     static insertDocument = async (req: Request, res: Response, next: any) => {
-        let newDocument = null;
+        //
+        let document: DocumentModel = req.body;
         try {
-            const newDocument = await DocumentModel.create({
-                user_id: req.body.user_id,
-                type_id: req.body.type_id,
-                name: req.body.name,
-                description: req.body.description,
-                url: req.body.url,
-                end_at: req.body.end_at
-            });
+            const newDocument = await DocumentModel.create(document);
             res.status(200).send(newDocument);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("insert document - " + e.toString());
             res.status(500).send({ error: "Error insertando" });
         }
     };
@@ -62,13 +63,15 @@ export default class DocumentsController {
                         id: {
                             [Op.eq]: document.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send(document);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("update document - " + e.toString());
             res.status(500).send({ error: "Error actualizando" });
         }
     };
@@ -78,20 +81,22 @@ export default class DocumentsController {
         document.id = req.query.id;
         try {
             document.update({
-                deleted_at: new Date()
+                deletedAt: new Date()
             },
                 {
                     where: {
                         id: {
                             [Op.eq]: document.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send({ success: "Documento eliminado" });
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("delete document - " + e.toString());
             res.status(500).send({ error: "Error eliminando" });
         }
     };

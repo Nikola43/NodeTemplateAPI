@@ -1,0 +1,17 @@
+hOLA  MuNDO
+hOLA  MuNDO
+hOLA  MuNDO
+hOLA  MuNDO
+23-1-2020 13:20:14 - Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+23-1-2020 13:22:41 - update location type - Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+23-1-2020 13:22:44 - update location type - Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+23-1-2020 13:22:46 - update location type - Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+23-1-2020 13:22:47 - update location type - Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+23-1-2020 15:33:6 - update center - TypeError: center.update is not a function
+23-1-2020 15:46:36 - insert incidence - SequelizeDatabaseError: Table 'signis.incidencess' doesn't exist
+23-1-2020 15:49:34 - insert incidence - SequelizeDatabaseError: Table 'signis.incidencess' doesn't exist
+23-1-2020 15:55:7 - insert location - SequelizeValidationError: notNull Violation: LocationModel.coordinates_id cannot be null
+23-1-2020 16:32:58 - insert panic button  - SequelizeDatabaseError: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '2 LIMIT 1' at line 1
+23-1-2020 16:33:18 - insert panic button  - SequelizeDatabaseError: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '1 LIMIT 1' at line 1
+23-1-2020 16:35:53 - insert panic button  - SequelizeDatabaseError: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '1 LIMIT 1' at line 1
+23-1-2020 16:48:56 - update location type - Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client

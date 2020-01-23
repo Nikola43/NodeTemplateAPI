@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { LocationModel } from "../db/models/LocationModel";
+import {LOGUtil} from "../utils/LOGUtil";
+import {CenterModel} from "../db/models/CenterModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -8,13 +10,15 @@ export default class LocationsController {
     static getAll = async (req: Request, res: Response, next: any) => {
         let locations = null;
         try {
-            locations = await LocationModel.findAll()
+            locations = await LocationModel.findAll();
             if (locations) {
                 res.status(200).send(locations);
             } else {
                 res.status(200).send([]);
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get all location - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -29,31 +33,21 @@ export default class LocationsController {
                 res.status(200).send({ error: "locations not found" });
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get location by ID - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
 
     static insertLocation = async (req: Request, res: Response, next: any) => {
-        let newLocation = null;
+        //
+        let location: LocationModel = req.body;
         try {
-            const newLocation = await LocationModel.create({
-                user_id: req.body.user_id,
-                location_id: req.body.location_id,
-                type_id: req.body.type_id,
-                name: req.body.name,
-                description: req.body.description,
-                subtype: req.body.subtype,
-                status: req.body.status,
-                level: req.body.level,
-                perimeter: req.body.perimeter,
-                area: req.body.area,
-                strategy: req.body.strategy,
-                tactic: req.body.tactic,
-                maneuver: req.body.maneuver,
-                end_date: req.body.end_date
-            });
+            const newLocation = await LocationModel.create(location);
             res.status(200).send(newLocation);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("insert location - " + e.toString());
             res.status(500).send({ error: "Error insertando" });
         }
     };
@@ -69,13 +63,15 @@ export default class LocationsController {
                         id: {
                             [Op.eq]: locations.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send(locations);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("update location - " + e.toString());
             res.status(500).send({ error: "Error actualizando" });
         }
     };
@@ -85,20 +81,22 @@ export default class LocationsController {
         locations.id = req.query.id;
         try {
             locations.update({
-                deleted_at: new Date()
+                deletedAt: new Date()
             },
                 {
                     where: {
                         id: {
                             [Op.eq]: locations.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send({ success: "Locationo eliminado" });
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("delete location - " + e.toString());
             res.status(500).send({ error: "Error eliminando" });
         }
     };

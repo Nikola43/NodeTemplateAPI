@@ -23,7 +23,7 @@ UserResourceModel.init({
         primaryKey: true,
         allowNull: false,
     },
-    end_at: {
+    endAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },

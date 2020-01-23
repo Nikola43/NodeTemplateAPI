@@ -3,6 +3,7 @@ import UserIncidenceErrors from "../errors/UserErrors";
 import {UserIncidenceModel} from "../db/models/UserIncidenceModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
+import {LOGUtil} from "../utils/LOGUtil";
 
 
 
@@ -16,6 +17,7 @@ export default class UserIncidenceController {
             res.status(200).send(userIncidence);
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get all user incidence - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -32,6 +34,7 @@ export default class UserIncidenceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get user incidence by ID - " + e.toString());
             res.status(500).send({error: "internal error"});
         }
     };
@@ -94,6 +97,7 @@ export default class UserIncidenceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("insert user incidence - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -112,7 +116,7 @@ export default class UserIncidenceController {
         try {
             // create userIncidence from request data
             let userIncidence: UserIncidenceModel = req.body;
-            userIncidence.updated_at = new Date();
+            userIncidence.updatedAt = new Date();
 
             const updatedUserIncidence = await UserIncidenceModel.update(userIncidence,
                 {
@@ -136,6 +140,7 @@ export default class UserIncidenceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("update user incidence - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -172,6 +177,7 @@ export default class UserIncidenceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("delete user incidence - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };

@@ -3,6 +3,7 @@ import {UserModel} from "../db/models/UserModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 import UserErrors from "../errors/UserErrors";
+import {LOGUtil} from "../utils/LOGUtil";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -14,6 +15,7 @@ export default class UsersController {
             res.status(200).send(users);
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get all user- " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -30,6 +32,7 @@ export default class UsersController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get user by ID - " + e.toString());
             res.status(500).send({error: "internal error"});
         }
     };
@@ -82,11 +85,13 @@ export default class UsersController {
                     res.status(200).send(newUser);
                 } catch (e) {
                     console.log(e);
+                    LOGUtil.saveLog("insert user - " + e.toString());
                     res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
                 }
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("insert user - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -117,6 +122,7 @@ export default class UsersController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("update user - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -144,6 +150,7 @@ export default class UsersController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("delete user - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };

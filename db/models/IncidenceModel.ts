@@ -92,6 +92,6 @@ IncidenceModel.init({
         allowNull: true
     },
 }, {
-    tableName: 'incidencess',
+    tableName: 'incidences',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

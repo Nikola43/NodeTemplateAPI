@@ -3,6 +3,7 @@ import UserDeviceErrors from "../errors/UserErrors";
 import {UserDeviceModel} from "../db/models/UserDeviceModel";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
+import {LOGUtil} from "../utils/LOGUtil";
 
 
 
@@ -16,6 +17,7 @@ export default class UserDeviceController {
             res.status(200).send(userDevice);
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get all user device - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -32,6 +34,7 @@ export default class UserDeviceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get user device by id - " + e.toString());
             res.status(500).send({error: "internal error"});
         }
     };
@@ -85,11 +88,13 @@ export default class UserDeviceController {
                     res.status(200).send(newUserDevice);
                 } catch (e) {
                     console.log(e);
+                    LOGUtil.saveLog("insert user device - " + e.toString());
                     res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
                 }
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("insert user device - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -108,7 +113,7 @@ export default class UserDeviceController {
         try {
             // create userDevice from request data
             let userDevice: UserDeviceModel = req.body;
-            userDevice.updated_at = new Date();
+            userDevice.updatedAt = new Date();
 
             const updatedUserDevice = await UserDeviceModel.update(userDevice,
                 {
@@ -132,6 +137,7 @@ export default class UserDeviceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("update user device - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -168,6 +174,7 @@ export default class UserDeviceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("delete user device - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };

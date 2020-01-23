@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { DocumentTypeModel } from "../db/models/DocumentTypeModel";
+import {LOGUtil} from "../utils/LOGUtil";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
@@ -15,6 +16,8 @@ export default class DocumentsTypesController {
                 res.status(200).send([]);
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get all document type - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -29,6 +32,8 @@ export default class DocumentsTypesController {
                 res.status(200).send({ error: "documentType not found" });
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get document type - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -41,6 +46,8 @@ export default class DocumentsTypesController {
             });
             res.status(200).send(newDocument);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("insert document type - " + e.toString());
             res.status(500).send({ error: "Error insertando" });
         }
     };
@@ -56,13 +63,15 @@ export default class DocumentsTypesController {
                         id: {
                             [Op.eq]: documentType.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send(documentType);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("update document type - " + e.toString());
             res.status(500).send({ error: "Error actualizando" });
         }
     };
@@ -72,20 +81,22 @@ export default class DocumentsTypesController {
         documentType.id = req.query.id;
         try {
             documentType.update({
-                deleted_at: new Date()
+                deletedAt: new Date()
             },
                 {
                     where: {
                         id: {
                             [Op.eq]: documentType.id
                         },
-                        deleted_at: {
+                        deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
             res.status(200).send({ success: "Tipo de documento eliminado" });
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("delete document type - " + e.toString());
             res.status(500).send({ error: "Error eliminando" });
         }
     };

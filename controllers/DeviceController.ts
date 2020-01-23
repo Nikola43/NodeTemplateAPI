@@ -4,6 +4,7 @@ import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
 import DeviceErrors from "../errors/DeviceErrors";
 import {UserModel} from "../db/models/UserModel";
+import {LOGUtil} from "../utils/LOGUtil";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -15,6 +16,7 @@ export default class DeviceController {
             res.status(200).send(devices);
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get all device - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -30,6 +32,7 @@ export default class DeviceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("get device by ID - " + e.toString());
             res.status(500).send({error: "internal error"});
         }
     };
@@ -82,11 +85,13 @@ export default class DeviceController {
                     res.status(200).send(newDevice);
                 } catch (e) {
                     console.log(e);
+                    LOGUtil.saveLog("insert device - " + e.toString());
                     res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
                 }
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("insert device - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -123,13 +128,12 @@ export default class DeviceController {
             // check if device are updated
             if (updatedDevice[0] === 1) {
                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
-               //res.status(200).send(updatedDevice);
-
             } else {
                 res.status(404).send(DeviceErrors.DEVICE_NOT_FOUND_ERROR);
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("update device  - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
@@ -166,6 +170,7 @@ export default class DeviceController {
             }
         } catch (e) {
             console.log(e);
+            LOGUtil.saveLog("Delete device - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };

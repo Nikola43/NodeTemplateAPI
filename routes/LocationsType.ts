@@ -1,8 +1,8 @@
 import {Router} from "express";
-import PanicButtonController from "../controllers/PanicButtonController";
+import LocationTypeController from "../controllers/LocationTypeController";
 import {checkJwt} from "../middlewares/CheckJwt";
 
-export class PanicButtonsRoutes {
+export class LocationsTypeRoutes {
     router: Router;
 
     constructor() {
@@ -10,23 +10,23 @@ export class PanicButtonsRoutes {
     }
 
     init() {
-        /* GET ALL PANICBUTTONS */
-        this.router.get("/", [checkJwt], PanicButtonController.getAll);
+        /* GET ALL LOCATIONTYPES */
+        this.router.get("/", [checkJwt], LocationTypeController.getAll);
 
-        /* GET PANICBUTTON BY ID */
-        this.router.get("/:id", [checkJwt], PanicButtonController.getPanicButtonById);
+        /* GET LOCATIONTYPE BY ID */
+        this.router.get("/:id", [checkJwt], LocationTypeController.getLocationTypeById);
 
-        /* INSERT PANICBUTTON */
-        this.router.post("/", [checkJwt], PanicButtonController.insertPanicButton);
+        /* INSERT LOCATIONTYPE */
+        this.router.post("/", [checkJwt], LocationTypeController.insertLocationType);
 
-        /* UPDATE PANICBUTTON BY ID*/
-        this.router.patch("/:id", [checkJwt], PanicButtonController.updatePanicButton);
+        /* UPDATE LOCATIONTYPE BY ID*/
+        this.router.patch("/:id", [checkJwt], LocationTypeController.updateLocationType);
 
-        /* DELETE PANICBUTTON BY ID*/
-        this.router.delete("/:id", [checkJwt], PanicButtonController.deletePanicButton);
+        /* DELETE LOCATIONTYPE BY ID*/
+        this.router.delete("/:id", [checkJwt], LocationTypeController.deleteLocationType);
     }
 }
 
-let panicButtonsRoutes = new PanicButtonsRoutes();
-panicButtonsRoutes.init();
-export default panicButtonsRoutes.router;
+let locationsTypeRoutes = new LocationsTypeRoutes();
+locationsTypeRoutes.init();
+export default locationsTypeRoutes.router;

@@ -1,4 +1,4 @@
-import { DataTypes} from 'sequelize';
+import { DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 import {BaseTypeModel} from "./BaseTypeModel";
 
@@ -7,7 +7,7 @@ export class LocationTypeModel extends BaseTypeModel {
 
 LocationTypeModel.init({
     id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
@@ -21,6 +21,6 @@ LocationTypeModel.init({
         allowNull: true
     },
 }, {
-    tableName: 'locations_type',
+    tableName: 'locations_types',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

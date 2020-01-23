@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { DeviceTypeModel } from "../db/models/DeviceTypeModel";
+import {LOGUtil} from "../utils/LOGUtil";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -14,7 +15,8 @@ export default class DeviceTypesController {
                 res.status(200).send([]);
             }
         } catch (e) {
-            console.log(e)
+            console.log(e);
+            LOGUtil.saveLog("get all device type - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -29,6 +31,8 @@ export default class DeviceTypesController {
                 res.status(404).send({ error: "deviceType not found" });
             }
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("update location type - " + e.toString());
             res.status(500).send({ error: "Error en la petición" });
         }
     };
@@ -41,6 +45,8 @@ export default class DeviceTypesController {
             });
             res.status(200).send(newDeviceType);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("update location type - " + e.toString());
             res.status(500).send({ error: "Error insertando" });
         }
     };
@@ -63,6 +69,8 @@ export default class DeviceTypesController {
                 });
             res.status(200).send(deviceType);
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("update device type - " + e.toString());
             res.status(500).send({ error: "Error actualizando" });
         }
     };
@@ -86,6 +94,8 @@ export default class DeviceTypesController {
                 });
             res.status(200).send({ success: "Coordenada eliminada" });
         } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("delete device type - " + e.toString());
             res.status(500).send({ error: "Error eliminando" });
         }
     };

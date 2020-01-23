@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { DocumentTypeModel } from "../db/models/DocumentTypeModel";
 import {LOGUtil} from "../utils/LOGUtil";
+import {CenterModel} from "../db/models/CenterModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
@@ -39,12 +40,11 @@ export default class DocumentsTypesController {
     };
 
     static insertDocumentType = async (req: Request, res: Response, next: any) => {
-        let newDocumentType = null;
+        //
+        let documentType: DocumentTypeModel = req.body;
         try {
-            const newDocument = await DocumentTypeModel.create({
-                type: req.body.type
-            });
-            res.status(200).send(newDocument);
+            const newDocumentType = await DocumentTypeModel.create(documentType);
+            res.status(200).send(newDocumentType);
         } catch (e) {
             console.log(e);
             LOGUtil.saveLog("insert document type - " + e.toString());

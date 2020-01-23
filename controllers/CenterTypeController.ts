@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CenterTypeModel } from "../db/models/CenterTypeModel";
 import {LOGUtil} from "../utils/LOGUtil";
+import {CenterModel} from "../db/models/CenterModel";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op
 
@@ -39,12 +40,10 @@ export default class CentersTypesController {
     };
 
     static insertCenterType = async (req: Request, res: Response, next: any) => {
-        let newCenterType = null;
+        //
+        let centerType: CenterModel = req.body;
         try {
-            const newCenterType = await CenterTypeModel.create({
-                type: req.body.type,
-                temporary: req.body.temporary
-            });
+            const newCenterType = await CenterTypeModel.create(centerType);
             res.status(200).send(newCenterType);
         } catch (e) {
             console.log(e);

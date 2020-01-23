@@ -39,11 +39,10 @@ export default class IncidencesTypesController {
     };
 
     static insertIncidenceType = async (req: Request, res: Response, next: any) => {
-        let newIncidenceTypes = null;
+        //
+        let incidenceType: IncidenceTypeModel = req.body;
         try {
-            const newIncidenceTypes = await IncidenceTypeModel.create({
-                type: req.body.type
-            });
+            const newIncidenceTypes = await IncidenceTypeModel.create(incidenceType);
             res.status(200).send(newIncidenceTypes);
         } catch (e) {
             console.log(e);

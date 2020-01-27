@@ -21,7 +21,7 @@ class CentersController extends BaseController {
             const data = CenterModel.findByPk(req.params.id);
             data ? res.status(200).send(data) : res.status(404).send(CenterErrors.CENTER_NOT_FOUND_ERROR);
         } catch (e) {
-            ErrorUtil.handleError(res,e, 'get all centers');
+            ErrorUtil.handleError(res,e, 'get center by id');
         }
     };
 
@@ -64,7 +64,7 @@ class CentersController extends BaseController {
                 res.status(201).send(await CenterModel.create())
             }
         } catch (e) {
-            ErrorUtil.handleError(res,e, 'delete center');
+            ErrorUtil.handleError(res,e, 'insert center');
         }
     };
 

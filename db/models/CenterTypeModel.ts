@@ -1,15 +1,9 @@
-import { Model, DataTypes } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
+import {BaseTypeModel} from "./BaseTypeModel";
 
-export class CenterTypeModel extends Model {
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public type!: string;
+export class CenterTypeModel extends BaseTypeModel {
     public temporary!: number;
-
-    // timestamps!
-    public readonly createdAt!: Date;
-    public updatedAt!: Date | null;
-    public deletedAt!: Date | null;
 }
 
 CenterTypeModel.init({

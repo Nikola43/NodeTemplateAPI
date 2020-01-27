@@ -1,104 +1,127 @@
 import {Request, Response} from "express";
 import {DocumentTypeModel} from "../db/models/DocumentTypeModel";
-import {LOGUtil} from "../utils/LOGUtil";
-import {CenterModel} from "../db/models/CenterModel";
 import BaseController from "./BaseController";
+import {ErrorUtil} from "../utils/ErrorUtil";
+import DocumentTypeErrors from "../errors/DocumentTypeErrors";
+import Messages from "../messages/Messages";
 
+
+const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class DocumentsTypesController extends BaseController {
-    getAll = async (req: Request, res: Response, next: any) => {
-        let documentsTypes = null;
+    getAll = async (req: Request, res: Response, next: Function) => {
         try {
-            documentsTypes = await DocumentTypeModel.findAll();
-            if (documentsTypes) {
-                res.status(200).send(documentsTypes);
+            const data = await DocumentTypeModel.findAll();
+            data ? res.status(HttpStatus.OK).send(data) : res.status(HttpStatus.OK).send([]);
+        } catch (e) {
+            ErrorUtil.handleError(res, e, 'get all document type');
+        }
+    };
+
+    getById = async (req: Request, res: Response, next: Function) => {
+        try {
+            const data = await DocumentTypeModel.findByPk(req.params.id);
+            data ? res.status(HttpStatus.OK).send(data) : res.status(HttpStatus.NOT_FOUND).send({error: "document type not found"});
+        } catch (e) {
+            ErrorUtil.handleError(res, e, 'get document type by id');
+        }
+    };
+
+    insert = async (req: Request, res: Response, next: Function) => {
+        // get document from request
+        const data: DocumentTypeModel = req.body;
+
+        // check if type id are set
+        if (!data.type) {
+            res.status(HttpStatus.BAD_REQUEST).send(DocumentTypeErrors.DOCUMENT_TYPE_ID_EMPTY_ERROR);
+            return;
+        }
+
+        try {
+            const tempDocument = await DocumentTypeModel.findOne({
+                attributes: [
+                    'type',
+                ], where: {
+                    type: {
+                        [Op.eq]: data.type
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // check if device already exist
+            if (tempDocument) {
+                res.status(HttpStatus.CONFLICT).send(DocumentTypeErrors.DOCUMENT_TYPE_ALREADY_EXIST_ERROR);
+                return;
             } else {
-                res.status(200).send([]);
+                // Create document from request data
+                res.status(HttpStatus.CREATED).send(await DocumentTypeModel.create(data))
             }
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get all document type - " + e.toString());
-            res.status(500).send({error: "Error en la petición"});
+            ErrorUtil.handleError(res, e, 'insert document type');
         }
     };
 
-    getById = async (req: Request, res: Response, next: any) => {
-        let documentType = null;
-        try {
-            const documentType = await DocumentTypeModel.findByPk(req.query.id)
-            if (documentType) {
-                res.status(200).send(documentType);
-            } else {
-                res.status(200).send({error: "documentType not found"});
-            }
-        } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get document type - " + e.toString());
-            res.status(500).send({error: "Error en la petición"});
-        }
-    };
+    update = async (req: Request, res: Response, next: Function) => {
+        let data: DocumentTypeModel = req.body;
+        data.id = Number(req.params.id);
+        data.updatedAt = new Date();
 
-    insert = async (req: Request, res: Response, next: any) => {
-        //
-        let documentType: DocumentTypeModel = req.body;
+        // update
         try {
-            const newDocumentType = await DocumentTypeModel.create(documentType);
-            res.status(200).send(newDocumentType);
-        } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("insert document type - " + e.toString());
-            res.status(500).send({error: "Error insertando"});
-        }
-    };
-
-    update = async (req: Request, res: Response, next: any) => {
-        let documentType: DocumentTypeModel = req.body;
-        documentType.id = req.query.id;
-        documentType.updatedAt = new Date();
-        try {
-            documentType.update(documentType,
+            const updatedData = await DocumentTypeModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: documentType.id
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
-            res.status(200).send(documentType);
+            if (updatedData[0] === 1) {
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send(DocumentTypeErrors.DOCUMENT_TYPE_NOT_FOUND_ERROR);
+            }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("update document type - " + e.toString());
-            res.status(500).send({error: "Error actualizando"});
+            ErrorUtil.handleError(res, e, 'update document type');
         }
     };
 
-    delete = async (req: Request, res: Response, next: any) => {
-        let documentType: DocumentTypeModel = req.body;
-        documentType.id = req.query.id;
+    delete = async (req: Request, res: Response, next: Function) => {
+        // create model from request data
+        const data: DocumentTypeModel = req.body;
+        data.id = Number(req.params.id);
+        data.deletedAt = new Date();
+
+        // update
         try {
-            documentType.update({
-                    deletedAt: new Date()
-                },
+            const updatedData = await DocumentTypeModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: documentType.id
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
-            res.status(200).send({success: "Tipo de documento eliminado"});
+            if (updatedData[0] === 1) {
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send(DocumentTypeErrors.DOCUMENT_TYPE_NOT_FOUND_ERROR);
+            }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("delete document type - " + e.toString());
-            res.status(500).send({error: "Error eliminando"});
+            ErrorUtil.handleError(res, e, 'deleted document type');
         }
     };
 }

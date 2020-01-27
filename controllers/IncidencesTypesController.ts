@@ -1,102 +1,127 @@
 import { Request, Response } from "express";
 import { IncidenceTypeModel } from "../db/models/IncidenceTypeModel";
-import {LOGUtil} from "../utils/LOGUtil";
+import IncidenceTypeErrors from "../errors/IncidenceTypeErrors";
+import {ErrorUtil} from "../utils/ErrorUtil";
+import Messages from "../messages/Messages";
+import BaseController from "./BaseController";
 
+
+const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-class IncidencesTypesController {
-     getAll = async (req: Request, res: Response, next: any) => {
-        let incidencesTypess = null;
+class IncidencesTypesController extends BaseController {
+    getAll = async (req: Request, res: Response, next: Function) => {
         try {
-            incidencesTypess = await IncidenceTypeModel.findAll()
-            if (incidencesTypess) {
-                res.status(200).send(incidencesTypess);
+            const data = await IncidenceTypeModel.findAll();
+            data ? res.status(HttpStatus.OK).send(data) : res.status(HttpStatus.OK).send([]);
+        } catch (e) {
+            ErrorUtil.handleError(res, e, 'get all incidence type');
+        }
+    };
+
+    getById = async (req: Request, res: Response, next: Function) => {
+        try {
+            const data = await IncidenceTypeModel.findByPk(req.params.id);
+            data ? res.status(HttpStatus.OK).send(data) : res.status(HttpStatus.NOT_FOUND).send({error: "incidence type not found"});
+        } catch (e) {
+            ErrorUtil.handleError(res, e, 'get incidence type by id');
+        }
+    };
+
+    insert = async (req: Request, res: Response, next: Function) => {
+        // get center from request
+        const data: IncidenceTypeModel = req.body;
+
+        // check if type id are set
+        if (!data.type) {
+            res.status(HttpStatus.BAD_REQUEST).send(IncidenceTypeErrors.INCIDENCE_TYPE_ID_EMPTY_ERROR);
+            return;
+        }
+
+        try {
+            const tempCenter = await IncidenceTypeModel.findOne({
+                attributes: [
+                    'type',
+                ], where: {
+                    type: {
+                        [Op.eq]: data.type
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // check if incidence already exist
+            if (tempCenter) {
+                res.status(HttpStatus.CONFLICT).send(IncidenceTypeErrors.INCIDENCE_TYPE_ALREADY_EXIST_ERROR);
+                return;
             } else {
-                res.status(200).send([]);
+                // Create center from request data
+                res.status(HttpStatus.CREATED).send(await IncidenceTypeModel.create(data))
             }
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get all incidence type - " + e.toString());
-            res.status(500).send({ error: "Error en la petición" });
+            ErrorUtil.handleError(res, e, 'insert incidence type');
         }
     };
 
-     getById = async (req: Request, res: Response, next: any) => {
-        let incidencesTypes = null;
-        try {
-            const incidencesTypes = await IncidenceTypeModel.findByPk(req.query.id)
-            if (incidencesTypes) {
-                res.status(200).send(incidencesTypes);
-            } else {
-                res.status(200).send({ error: "incidencesTypes not found" });
-            }
-        } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get incidence type by ID - " + e.toString());
-            res.status(500).send({ error: "Error en la petición" });
-        }
-    };
+    update = async (req: Request, res: Response, next: Function) => {
+        let data: IncidenceTypeModel = req.body;
+        data.id = Number(req.params.id);
+        data.updatedAt = new Date();
 
-     insert = async (req: Request, res: Response, next: any) => {
-        //
-        let incidenceType: IncidenceTypeModel = req.body;
+        // update
         try {
-            const newIncidenceTypes = await IncidenceTypeModel.create(incidenceType);
-            res.status(200).send(newIncidenceTypes);
-        } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("insert incidence type - " + e.toString());
-            res.status(500).send({ error: "Error insertando" });
-        }
-    };
-
-     update = async (req: Request, res: Response, next: any) => {
-        let incidencesTypes: IncidenceTypeModel = req.body;
-        incidencesTypes.id = req.query.id;
-        incidencesTypes.updatedAt = new Date();
-        try {
-            incidencesTypes.update(incidencesTypes,
+            const updatedData = await IncidenceTypeModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: incidencesTypes.id
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
-            res.status(200).send(incidencesTypes);
+            if (updatedData[0] === 1) {
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send(IncidenceTypeErrors.INCIDENCE_TYPE_NOT_FOUND_ERROR);
+            }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("update incidence type - " + e.toString());
-            res.status(500).send({ error: "Error actualizando" });
+            ErrorUtil.handleError(res, e, 'update incidence type');
         }
     };
 
-     delete = async (req: Request, res: Response, next: any) => {
-        let incidencesTypes: IncidenceTypeModel = req.body;
-        incidencesTypes.id = req.query.id;
+    delete = async (req: Request, res: Response, next: Function) => {
+        // create model from request data
+        const data: IncidenceTypeModel = req.body;
+        data.id = Number(req.params.id);
+        data.deletedAt = new Date();
+
+        // update
         try {
-            incidencesTypes.update({
-                deletedAt: new Date()
-            },
+            const updatedData = await IncidenceTypeModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: incidencesTypes.id
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
-            res.status(200).send({ success: "Tipo de incidencia eliminada" });
+            if (updatedData[0] === 1) {
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send(IncidenceTypeErrors.INCIDENCE_TYPE_NOT_FOUND_ERROR);
+            }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("delete incidence type - " + e.toString());
-            res.status(500).send({ error: "Error eliminando" });
+            ErrorUtil.handleError(res, e, 'deleted center type');
         }
     };
 }

@@ -21,6 +21,6 @@ IncidenceTypeModel.init({
         allowNull: true
     },
 }, {
-    tableName: 'incidences',
+    tableName: 'incidences_types',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

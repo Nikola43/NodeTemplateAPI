@@ -1,114 +1,127 @@
 import {Request, Response} from "express";
 import {LocationTypeModel} from "../db/models/LocationTypeModel";
 import Messages from "../messages/Messages";
-import DeviceErrors from "../errors/DeviceErrors";
-import {LOGUtil} from "../utils/LOGUtil";
+import LocationTypeErrors from "../errors/LocationTypeErrors";
 import BaseController from "./BaseController";
+import {ErrorUtil} from "../utils/ErrorUtil";
+import CenterTypeErrors from "../errors/CenterTypeErrors";
 
+const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class LocationsTypesController extends BaseController {
-    getAll = async (req: Request, res: Response, next: any) => {
-        let locationTypes = null;
+    getAll = async (req: Request, res: Response, next: Function) => {
         try {
-            locationTypes = await LocationTypeModel.findAll();
-            if (locationTypes) {
-                res.status(200).send(locationTypes);
-            } else {
-                res.status(200).send([]);
-            }
+            const data = await LocationTypeModel.findAll();
+            data ? res.status(HttpStatus.OK).send(data) : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("getAll location type - " + e.toString());
-            res.status(500).send({error: "Error en la petición"});
+            ErrorUtil.handleError(res, e, 'get all location type');
         }
     };
 
-    getById = async (req: Request, res: Response, next: any) => {
-        let locationTypes = null;
+    getById = async (req: Request, res: Response, next: Function) => {
         try {
-            const locationTypes = await LocationTypeModel.findByPk(req.params.id);
-            if (locationTypes) {
-                res.status(200).send(locationTypes);
-            } else {
-                res.status(200).send({error: "locations Types not found"});
-            }
+            const data = await LocationTypeModel.findByPk(req.params.id);
+            data ? res.status(HttpStatus.OK).send(data) : res.status(HttpStatus.NOT_FOUND).send({error: "location type not found"});
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get Location Type By Id  - " + e.toString());
-            res.status(500).send({error: "Error en la petición"});
+            ErrorUtil.handleError(res, e, 'get location type by id');
         }
     };
 
-    insert = async (req: Request, res: Response, next: any) => {
-        let newLocationTypes = null;
+    insert = async (req: Request, res: Response, next: Function) => {
+        // get location from request
+        const data: LocationTypeModel = req.body;
+
+        // check if type id are set
+        if (!data.type) {
+            res.status(HttpStatus.BAD_REQUEST).send(CenterTypeErrors.CENTER_TYPE_ID_EMPTY_ERROR);
+            return;
+        }
+
         try {
-            const newLocationTypes = await LocationTypeModel.create({
-                type: req.body.type
+            const tempCenter = await LocationTypeModel.findOne({
+                attributes: [
+                    'type',
+                ], where: {
+                    type: {
+                        [Op.eq]: data.type
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
             });
-            res.status(200).send(newLocationTypes);
-        } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("insert Location Type - " + e.toString());
-            res.status(500).send({error: "Error insertando"});
-        }
-    };
 
-    update = async (req: Request, res: Response, next: any) => {
-        let locationTypes: LocationTypeModel = req.body;
-        locationTypes.id = req.query.id;
-        locationTypes.updatedAt = new Date();
-        try {
-
-
-            const updatedLocationTypes = await LocationTypeModel.update(locationTypes,
-                {
-                    where: {
-                        id: {
-                            [Op.eq]: locationTypes.id
-                        },
-                        deletedAt: {
-                            [Op.is]: null
-                        }
-                    }
-                });
-            // check if device are updated
-            if (updatedLocationTypes[0] === 1) {
-                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            // check if device already exist
+            if (tempCenter) {
+                res.status(HttpStatus.CONFLICT).send(LocationTypeErrors.LOCATION_TYPE_ALREADY_EXIST_ERROR);
+                return;
             } else {
-                res.status(404).send(DeviceErrors.DEVICE_NOT_FOUND_ERROR);
+                // Create location from request data
+                res.status(HttpStatus.CREATED).send(await LocationTypeModel.create(data))
             }
-            res.status(200).send(locationTypes);
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("update location type - " + e.toString());
-            res.status(500).send({error: "Error actualizando"});
+            ErrorUtil.handleError(res, e, 'insert location type');
         }
     };
 
-    delete = async (req: Request, res: Response, next: any) => {
-        let locationTypes: LocationTypeModel = req.body;
-        locationTypes.id = req.query.id;
+    update = async (req: Request, res: Response, next: Function) => {
+        let data: LocationTypeModel = req.body;
+        data.id = Number(req.params.id);
+        data.updatedAt = new Date();
+
+        // update
         try {
-            locationTypes.update({
-                    deletedAt: new Date()
-                },
+            const updatedData = await LocationTypeModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: locationTypes.id
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
-            res.status(200).send({success: "Tipo de localización eliminada"});
+            if (updatedData[0] === 1) {
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send(LocationTypeErrors.LOCATION_TYPE_NOT_FOUND_ERROR);
+            }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("delete location type - " + e.toString());
-            res.status(500).send({error: "Error eliminando"});
+            ErrorUtil.handleError(res, e, 'update location type');
+        }
+    };
+
+    delete = async (req: Request, res: Response, next: Function) => {
+        // create model from request data
+        const data: LocationTypeModel = req.body;
+        data.id = Number(req.params.id);
+        data.deletedAt = new Date();
+
+        // update
+        try {
+            const updatedData = await LocationTypeModel.update(data,
+                {
+                    where: {
+                        id: {
+                            [Op.eq]: data.id
+                        },
+                        deletedAt: {
+                            [Op.is]: null
+                        }
+                    }
+                });
+            if (updatedData[0] === 1) {
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send(LocationTypeErrors.LOCATION_TYPE_NOT_FOUND_ERROR);
+            }
+
+        } catch (e) {
+            ErrorUtil.handleError(res, e, 'deleted location type');
         }
     };
 }

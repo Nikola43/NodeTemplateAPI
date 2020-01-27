@@ -4,7 +4,7 @@ import Config from "../config/Config";
 import UserErrors from "../errors/UserErrors";
 import ServerErrors from "../errors/ServerErrors";
 import Messages from "../messages/Messages";
-import {User} from "../db/models/User";
+import {UserModel} from "../db/models/UserModel";
 import {Op} from "sequelize";
 import bcrypt from "bcrypt"
 
@@ -12,7 +12,7 @@ class AuthController {
     static login = async (req: Request, res: Response) => {
         const username = req.body.username;
         const password = req.body.password;
-        let user: User | null;
+        let user: UserModel | null;
 
         // check if username are set
         // if not are set, then stop execution
@@ -30,7 +30,7 @@ class AuthController {
 
         // find user on db
         try {
-            user = await User.findOne({
+            user = await UserModel.findOne({
                 attributes: [
                     'id',
                     'username',
@@ -66,7 +66,7 @@ class AuthController {
                 user.token = token;
 
                 // update user token
-                await User.update({token: token}, {
+                await UserModel.update({token: token}, {
                     where: {
                         username: username
                     }
@@ -92,14 +92,14 @@ class AuthController {
         }
 
         try {
-            const user = await User.findOne({where: {username: username}});
+            const user = await UserModel.findOne({where: {username: username}});
 
             if (user) {
                 //Generate new password
                 const password = await bcrypt.hash(req.body.password, 10);
 
                 //Update user token
-                const updatedUser = await User.update({password: password}, {
+                const updatedUser = await UserModel.update({password: password}, {
                     where: {
                         username: username
                     }

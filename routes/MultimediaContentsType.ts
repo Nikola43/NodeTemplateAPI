@@ -1,5 +1,5 @@
 import {Router} from "express";
-import PanicButtonController from "../controllers/PanicButtonController";
+import PanicButtonsController from "../controllers/PanicButtonsController";
 import {checkJwt} from "../middlewares/CheckJwt";
 
 export class PanicButtonsRoutes {
@@ -11,19 +11,19 @@ export class PanicButtonsRoutes {
 
     init() {
         /* GET ALL PANICBUTTONS */
-        this.router.get("/", [checkJwt], PanicButtonController.getAll);
+        this.router.get("/", [checkJwt], PanicButtonsController.getAll);
 
         /* GET PANICBUTTON BY ID */
-        this.router.get("/:id", [checkJwt], PanicButtonController.getPanicButtonById);
+        this.router.get("/:id", [checkJwt], PanicButtonsController.getAll);
 
         /* INSERT PANICBUTTON */
-        this.router.post("/", [checkJwt], PanicButtonController.insertPanicButton);
+        this.router.post("/", [checkJwt], PanicButtonsController.insert);
 
         /* UPDATE PANICBUTTON BY ID*/
-        this.router.patch("/:id", [checkJwt], PanicButtonController.updatePanicButton);
+        this.router.patch("/:id", [checkJwt], PanicButtonsController.update);
 
         /* DELETE PANICBUTTON BY ID*/
-        this.router.delete("/:id", [checkJwt], PanicButtonController.deletePanicButton);
+        this.router.delete("/:id", [checkJwt], PanicButtonsController.delete);
     }
 }
 

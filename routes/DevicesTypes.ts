@@ -1,5 +1,5 @@
 import { Router } from "express";
-import DevicesTypesController from "../controllers/DeviceTypeController";
+import DevicesTypesController from "../controllers/DevicesTypesController";
 
 export class DevicesTypesRoutes {
     router: Router;
@@ -13,16 +13,16 @@ export class DevicesTypesRoutes {
         this.router.get("/", DevicesTypesController.getAll);
 
         /* GET COORDINATE BY ID */
-        this.router.get("/:id", DevicesTypesController.getDeviceTypeById);
+        this.router.get("/:id", DevicesTypesController.getById);
 
         /* INSERT COORDINATE */
-        this.router.post("/", DevicesTypesController.insertDeviceType);
+        this.router.post("/", DevicesTypesController.insert);
 
         /* UPDATE COORDINATE BY ID*/
-        this.router.patch("/:id", DevicesTypesController.updateDeviceType);
+        this.router.patch("/:id", DevicesTypesController.update);
 
         /* DELETE COORDINATE BY ID*/
-        this.router.delete("/:id", DevicesTypesController.deleteDeviceType);
+        this.router.delete("/:id", DevicesTypesController.delete);
     }
 }
 

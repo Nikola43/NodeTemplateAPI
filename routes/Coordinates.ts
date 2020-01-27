@@ -1,5 +1,5 @@
 import { Router } from "express";
-import CoordinatesController from "../controllers/CoordinateController";
+import CoordinatesController from "../controllers/CoordinatesController";
 
 export class CoordinatesRoutes {
     router: Router;
@@ -13,16 +13,16 @@ export class CoordinatesRoutes {
         this.router.get("/", CoordinatesController.getAll);
 
         /* GET COORDINATE BY ID */
-        this.router.get("/:id", CoordinatesController.getCoordinateById);
+        this.router.get("/:id", CoordinatesController.getById);
 
         /* INSERT COORDINATE */
-        this.router.post("/", CoordinatesController.insertCoordinate);
+        this.router.post("/", CoordinatesController.insert);
 
         /* UPDATE COORDINATE BY ID*/
-        this.router.patch("/:id", CoordinatesController.updateCoordinate);
+        this.router.patch("/:id", CoordinatesController.update);
 
         /* DELETE COORDINATE BY ID*/
-        this.router.delete("/:id", CoordinatesController.deleteCoordinate);
+        this.router.delete("/:id", CoordinatesController.delete);
     }
 }
 

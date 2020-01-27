@@ -1,5 +1,5 @@
 import {Router} from "express";
-import LocationController from "../controllers/LocationController";
+import LocationController from "../controllers/LocationsController";
 import {checkJwt} from "../middlewares/CheckJwt";
 
 export class LocationsRoutes {
@@ -14,16 +14,16 @@ export class LocationsRoutes {
         this.router.get("/", [checkJwt], LocationController.getAll);
 
         /* GET LOCATION BY ID */
-        this.router.get("/:id", [checkJwt], LocationController.getLocationById);
+        this.router.get("/:id", [checkJwt], LocationController.getById);
 
         /* INSERT LOCATION */
-        this.router.post("/", [checkJwt], LocationController.insertLocation);
+        this.router.post("/", [checkJwt], LocationController.insert);
 
         /* UPDATE LOCATION BY ID*/
-        this.router.patch("/:id", [checkJwt], LocationController.updateLocation);
+        this.router.patch("/:id", [checkJwt], LocationController.update);
 
         /* DELETE LOCATION BY ID*/
-        this.router.delete("/:id", [checkJwt], LocationController.deleteLocation);
+        this.router.delete("/:id", [checkJwt], LocationController.delete);
     }
 }
 

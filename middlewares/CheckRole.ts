@@ -9,8 +9,8 @@ export const checkRole = (roles: Array<string>) => {
     /*
 
     //Get user role from the database
-    const userRepository = getRepository(User);
-    let user: User;
+    const userRepository = getRepository(UserModel);
+    let user: UserModel;
     try {
       user = await userRepository.findOneOrFail(id);
     } catch (id) {

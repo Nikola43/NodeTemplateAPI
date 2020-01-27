@@ -1,5 +1,5 @@
 import { Router } from "express";
-import CentersController from "../controllers/CenterController";
+import CentersController from "../controllers/CentersController";
 
 export class CentersRoutes {
     router: Router;
@@ -13,16 +13,16 @@ export class CentersRoutes {
         this.router.get("/", CentersController.getAll);
 
         /* GET CENTER BY ID */
-        this.router.get("/:id", CentersController.getCenterById);
+        this.router.get("/:id", CentersController.getById);
 
         /* INSERT CENTER */
-        this.router.post("/", CentersController.insertCenter);
+        this.router.post("/", CentersController.insert);
 
         /* UPDATE CENTER BY ID*/
-        this.router.patch("/:id", CentersController.updateCenter);
+        this.router.patch("/:id", CentersController.update);
 
         /* DELETE CENTER BY ID*/
-        this.router.delete("/:id", CentersController.deleteCenter);
+        this.router.delete("/:id", CentersController.delete);
     }
 }
 

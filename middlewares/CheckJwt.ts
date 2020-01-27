@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
 import * as jwt from "jsonwebtoken";
 import config from "../config/Config";
-import {User} from "../db/models/User";
+import {UserModel} from "../db/models/UserModel";
 
 export const checkJwt = async (req: Request, res: Response, next: NextFunction) => {
     //Get the jwt token from the head
@@ -28,7 +28,7 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
 
 
     //Update user token
-    await User.update({token: newToken}, {
+    await UserModel.update({token: newToken}, {
         where: {
             username: username
         }

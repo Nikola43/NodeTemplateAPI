@@ -1,5 +1,5 @@
 import { Router } from "express";
-import IncidenceController from "../controllers/IncidenceController";
+import IncidenceController from "../controllers/IncidencesController";
 
 export class IncidenceRoutes {
     router: Router;
@@ -13,16 +13,16 @@ export class IncidenceRoutes {
         this.router.get("/", IncidenceController.getAll);
 
         /* GET DOCUMENTTYPE BY ID */
-        this.router.get("/:id", IncidenceController.getIncidenceById);
+        this.router.get("/:id", IncidenceController.getById);
 
         /* INSERT DOCUMENTTYPE */
-        this.router.post("/", IncidenceController.insertIncidence);
+        this.router.post("/", IncidenceController.insert);
 
         /* UPDATE DOCUMENTTYPE BY ID*/
-        this.router.patch("/:id", IncidenceController.updateIncidence);
+        this.router.patch("/:id", IncidenceController.update);
 
         /* DELETE DOCUMENTTYPE BY ID*/
-        this.router.delete("/:id", IncidenceController.deleteIncidence);
+        this.router.delete("/:id", IncidenceController.delete);
     }
 }
 

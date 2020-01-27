@@ -1,9 +1,9 @@
 import {Router} from "express";
-import ResourcesController from "../controllers/ResourceController";
+import ResourcesTypeController from "../controllers/ResourcesTypesController";
 import {checkJwt} from "../middlewares/CheckJwt";
 
 
-export class ResourcesRoutes {
+export class ResourcesTypeRoutes {
     router: Router;
 
     constructor() {
@@ -12,22 +12,22 @@ export class ResourcesRoutes {
 
     init() {
         /* GET ALL RESOURCES */
-        this.router.get("/", [checkJwt], ResourcesController.getAll);
+        this.router.get("/", [checkJwt], ResourcesTypeController.getAll);
 
         /* GET RESOURCE BY ID */
-        this.router.get("/:id", [checkJwt], ResourcesController.getResourceById);
+        this.router.get("/:id", [checkJwt], ResourcesTypeController.getById);
 
         /* INSERT RESOURCE */
-        this.router.post("/", [checkJwt], ResourcesController.insertResource);
+        this.router.post("/", [checkJwt], ResourcesTypeController.insert);
 
         /* UPDATE RESOURCE BY ID*/
-        this.router.patch("/:id", [checkJwt], ResourcesController.updateResource);
+        this.router.patch("/:id", [checkJwt], ResourcesTypeController.update);
 
         /* DELETE RESOURCE BY ID*/
-        this.router.delete("/:id", [checkJwt], ResourcesController.deleteResource);
+        this.router.delete("/:id", [checkJwt], ResourcesTypeController.delete);
     }
 }
 
-let resourcesRoutes = new ResourcesRoutes();
-resourcesRoutes.init();
-export default resourcesRoutes.router;
+let resourcesTypesRoutes = new ResourcesTypeRoutes();
+resourcesTypesRoutes.init();
+export default resourcesTypesRoutes.router;

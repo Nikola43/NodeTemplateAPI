@@ -3,8 +3,6 @@ import {CenterModel} from "../db/models/CenterModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
 import CenterErrors from "../errors/CenterErrors";
-import ServerErrors from "../errors/ServerErrors";
-
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -29,7 +27,7 @@ class CentersController extends BaseController {
 
     insert = async (req: Request, res: Response, next: Function) => {
         // get center from request
-        let data: CenterModel = req.body;
+        const data: CenterModel = req.body;
 
         // check if type id are set
         if (!data.type_id) {
@@ -49,7 +47,7 @@ class CentersController extends BaseController {
                     'name',
                 ], where: {
                     name: {
-                        [Op.is]: data.name
+                        [Op.eq]: data.name
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -74,8 +72,6 @@ class CentersController extends BaseController {
         // create model from request data
         const data: CenterModel = req.body;
         data.id = Number(req.params.id);
-
-        // set updated date
         data.updatedAt = new Date();
 
         // update

@@ -23,9 +23,8 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
     //We want to send a new token on every request
     const {userId, username} = jwtPayload;
     const newToken = jwt.sign({userId, username}, config.jwtSecret, {
-        expiresIn: "24h"
+        expiresIn: "168h"
     });
-
 
     //Update user token
     await UserModel.update({token: newToken}, {

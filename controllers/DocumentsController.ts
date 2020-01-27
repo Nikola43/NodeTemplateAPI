@@ -6,7 +6,7 @@ import BaseController from "./BaseController";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-export default class DocumentsController extends BaseController {
+class DocumentsController extends BaseController {
      getAll = async (req: Request, res: Response, next: any) => {
         let documents = null;
         try {
@@ -101,3 +101,6 @@ export default class DocumentsController extends BaseController {
         }
     };
 }
+
+const documentsController = new DocumentsController();
+export default documentsController;

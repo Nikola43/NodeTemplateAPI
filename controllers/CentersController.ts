@@ -2,42 +2,88 @@ import {Request, Response} from "express";
 import {CenterModel} from "../db/models/CenterModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
+import CenterErrors from "../errors/CenterErrors";
+
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-class CenterController extends BaseController {
+class CentersController extends BaseController {
     getAll = async (req: Request, res: Response, next: Function) => {
         try {
             const data = await CenterModel.findAll();
             data ? res.status(200).send(data) : res.status(200).send([]);
         } catch (e) {
-            ErrorUtil.handleError(res, e, 'get all center');
+            ErrorUtil.handleError(res, e, 'get all centers');
         }
     };
 
     getById = async (req: Request, res: Response, next: Function) => {
         try {
             const data = await CenterModel.findByPk(req.params.id);
-            data ? res.status(200).send(data) : res.status(200).send({error: "data not found"});
+            data ? res.status(200).send(data) : res.status(200).send(CenterErrors.CENTER_NOT_FOUND_ERROR);
         } catch (e) {
             ErrorUtil.handleError(res, e, 'get center by id');
         }
     };
 
     insert = async (req: Request, res: Response, next: Function) => {
+        // get center from request
+        let data: CenterModel = req.body;
+
+        // check if type id are set
+        if (!data.type_id) {
+            res.status(400).send(CenterErrors.CENTER_TYPE_ID_EMPTY_ERROR);
+            return;
+        }
+
+        // check if name are set
+        if (!data.name) {
+            res.status(400).send(CenterErrors.CENTER_NAME_EMPTY_ERROR);
+            return;
+        }
+
+        // find center in db for check if already exists
         try {
-            res.status(200).send(await CenterModel.create(req.body));
+            const tempCenter = await CenterModel.findOne({
+                attributes: [
+                    'name',
+                ], where: {
+                    name: {
+                        [Op.eq]: data.name
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // check if device already exist
+            if (tempCenter) {
+                res.status(409).send(CenterErrors.CENTER_ALREADY_EXIST_ERROR);
+                return;
+            } else {
+                // Create center from request data
+                try {
+                    res.status(201).send(await CenterModel.create(data));
+                } catch (e) {
+                    ErrorUtil.handleError(res, e, 'insert device');
+                }
+            }
         } catch (e) {
-            ErrorUtil.handleError(res, e, 'insert center');
+            ErrorUtil.handleError(res, e, 'insert device');
         }
     };
 
     update = async (req: Request, res: Response, next: Function) => {
-        let data: CenterModel = req.body;
-        data.id = req.query.id;
+        // create model from request data
+        const data: CenterModel = req.body;
+        data.id = Number(req.params.id);
+
+        // set updated date
         data.updatedAt = new Date();
 
+        // update
         try {
             data.update(data,
                 {
@@ -57,13 +103,14 @@ class CenterController extends BaseController {
     };
 
     delete = async (req: Request, res: Response, next: Function) => {
-        const data: CenterModel = req.body;
-        data.id = req.query.id;
+        // get id from request params
+        const data = new CenterModel();
+        data.id = Number(req.params.id);
+        data.updatedAt = new Date();
 
+        // delete
         try {
-            data.update({
-                    deletedAt: new Date()
-                },
+            data.update(data,
                 {
                     where: {
                         id: {
@@ -81,5 +128,5 @@ class CenterController extends BaseController {
     };
 }
 
-const centersController = new CenterController();
+const centersController = new CentersController();
 export default centersController;

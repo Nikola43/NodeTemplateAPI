@@ -14,8 +14,7 @@ class CentersController extends BaseController {
         try {
             res.status(200).send(await CenterModel.findAll())
         } catch (e) {
-            ErrorUtil.handleError(e, 'get all centers');
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, 'get all centers');
         }
     };
 
@@ -24,8 +23,7 @@ class CentersController extends BaseController {
             const data = CenterModel.findByPk(req.params.id);
             data ? res.status(200).send(data) : res.status(404).send(CenterErrors.CENTER_NOT_FOUND_ERROR);
         } catch (e) {
-            ErrorUtil.handleError(e, 'get all centers');
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res,e, 'get all centers');
         }
     };
 
@@ -51,7 +49,7 @@ class CentersController extends BaseController {
                     'name',
                 ], where: {
                     name: {
-                        [Op.eq]: data.name
+                        [Op.is]: data.name
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -68,8 +66,7 @@ class CentersController extends BaseController {
                 res.status(201).send(await CenterModel.create())
             }
         } catch (e) {
-            ErrorUtil.handleError(e, 'delete center');
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res,e, 'delete center');
         }
     };
 
@@ -96,8 +93,7 @@ class CentersController extends BaseController {
                 });
             res.status(200).send(data);
         } catch (e) {
-            ErrorUtil.handleError(e, 'update center');
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res,e, 'update center');
         }
     };
 
@@ -122,8 +118,7 @@ class CentersController extends BaseController {
                 });
             res.status(200).send({success: "Centro eliminado"});
         } catch (e) {
-            ErrorUtil.handleError(e, 'delete center');
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res,e, 'delete center');
         }
     };
 }

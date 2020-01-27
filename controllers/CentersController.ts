@@ -3,14 +3,18 @@ import {CenterModel} from "../db/models/CenterModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
 import CenterErrors from "../errors/CenterErrors";
+import {CenterTypeModel} from "../db/models/CenterTypeModel";
+import Messages from "../messages/Messages";
 
+const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class CentersController extends BaseController {
     getAll = async (req: Request, res: Response, next: Function) => {
         try {
-            res.status(200).send(await CenterModel.findAll())
+            const data = await CenterTypeModel.findAll();
+            data ? res.status(HttpStatus.OK).send(data) : res.status(HttpStatus.OK).send([]);
         } catch (e) {
             ErrorUtil.handleError(res, e, 'get all centers');
         }
@@ -19,7 +23,7 @@ class CentersController extends BaseController {
     getById = async (req: Request, res: Response, next: Function) => {
         try {
             const data = await CenterModel.findByPk(req.params.id);
-            data ? res.status(200).send(data) : res.status(404).send(CenterErrors.CENTER_NOT_FOUND_ERROR);
+            data ? res.status(HttpStatus.OK).send(data) : res.status(HttpStatus.NOT_FOUND).send(CenterErrors.CENTER_NOT_FOUND_ERROR);
         } catch (e) {
             ErrorUtil.handleError(res, e, 'get center by id');
         }
@@ -31,13 +35,13 @@ class CentersController extends BaseController {
 
         // check if type id are set
         if (!data.type_id) {
-            res.status(400).send(CenterErrors.CENTER_TYPE_ID_EMPTY_ERROR);
+            res.status(HttpStatus.BAD_REQUEST).send(CenterErrors.CENTER_TYPE_ID_EMPTY_ERROR);
             return;
         }
 
         // check if name are set
         if (!data.name) {
-            res.status(400).send(CenterErrors.CENTER_NAME_EMPTY_ERROR);
+            res.status(HttpStatus.BAD_REQUEST).send(CenterErrors.CENTER_NAME_EMPTY_ERROR);
             return;
         }
 
@@ -57,11 +61,11 @@ class CentersController extends BaseController {
 
             // check if device already exist
             if (tempCenter) {
-                res.status(409).send(CenterErrors.CENTER_ALREADY_EXIST_ERROR);
+                res.status(HttpStatus.CONFLICT).send(CenterErrors.CENTER_ALREADY_EXIST_ERROR);
                 return;
             } else {
                 // Create center from request data
-                res.status(201).send(await CenterModel.create())
+                res.status(HttpStatus.CREATED).send(await CenterModel.create(data))
             }
         } catch (e) {
             ErrorUtil.handleError(res, e, 'insert center');
@@ -76,7 +80,7 @@ class CentersController extends BaseController {
 
         // update
         try {
-            await data.update(data,
+            const updatedData = await CenterModel.update(data,
                 {
                     where: {
                         id: {
@@ -87,21 +91,26 @@ class CentersController extends BaseController {
                         }
                     }
                 });
-            res.status(200).send(data);
+            if (updatedData[0] === 1) {
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send(CenterErrors.CENTER_NOT_FOUND_ERROR);
+            }
+
         } catch (e) {
             ErrorUtil.handleError(res, e, 'update center');
         }
     };
 
     delete = async (req: Request, res: Response, next: Function) => {
-        // get id from request params
-        const data = new CenterModel();
+        // create model from request data
+        const data: CenterModel = req.body;
         data.id = Number(req.params.id);
-        data.updatedAt = new Date();
+        data.deletedAt = new Date();
 
-        // delete
+        // update
         try {
-            await data.update(data,
+            const updatedData = await CenterModel.update(data,
                 {
                     where: {
                         id: {
@@ -112,9 +121,14 @@ class CentersController extends BaseController {
                         }
                     }
                 });
-            res.status(200).send({success: "Centro eliminado"});
+            if (updatedData[0] === 1) {
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send(CenterErrors.CENTER_NOT_FOUND_ERROR);
+            }
+
         } catch (e) {
-            ErrorUtil.handleError(res, e, 'delete center');
+            ErrorUtil.handleError(res, e, 'deleted center');
         }
     };
 }

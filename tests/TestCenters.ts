@@ -31,10 +31,10 @@ describe('Center', () => {
 
     it('Get by id found ', async () => {
         const options = {
-            url: "http://localhost:3000/api/v1/centers/3",
+            url: "http://localhost:3000/api/v1/centers/4",
             method: 'GET',
             headers: {
-                'authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoicGF1bG8iLCJpYXQiOjE1ODAwOTA5OTIsImV4cCI6MTU4MDE3NzM5Mn0.zI_ZMo3ehKsfi8iy59P2uSFhhcqw1T5DdSU51ME-RNU'
+                'authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoicGF1bG8iLCJpYXQiOjE1ODAxMzU0MjgsImV4cCI6MTU4MDIyMTgyOH0.L_VpzQHnnYJRADY-TsfqUal_RfUT51FcJ9nml881tSI'
             },
         };
 

@@ -8,7 +8,7 @@ import {LOGUtil} from "../utils/LOGUtil";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-export default class UsersDevicesController {
+class UsersDevicesController {
     getAll = async (req: Request, res: Response, next: any) => {
         try {
             const userDevice = await UserDeviceModel.findAll();

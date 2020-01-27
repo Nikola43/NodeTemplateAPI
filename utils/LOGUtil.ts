@@ -10,7 +10,7 @@ export class LOGUtil {
         const formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear();
         const formatted_hour = current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds();
         try {
-            fs.appendFile('/var/log/signis/' + formatted_date.toString() + '.txt', formatted_date.toString() + ' ' + formatted_hour.toString() + ' - ' + message + '\r\n', (err: Error) => {
+            fs.appendFile(formatted_date.toString() + '.txt', formatted_date.toString() + ' ' + formatted_hour.toString() + ' - ' + message + '\r\n', (err: Error) => {
                 if (err) {
                     throw err;
                 }

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import { DocumentModel } from "../db/models/DocumentModel";
 import {LOGUtil} from "../utils/LOGUtil";
 import BaseController from "./BaseController";

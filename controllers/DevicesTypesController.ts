@@ -2,24 +2,18 @@ import {Request, Response} from "express";
 import {DeviceTypeModel} from "../db/models/DeviceTypeModel";
 import {LOGUtil} from "../utils/LOGUtil";
 import BaseController from "./BaseController";
+import {ErrorUtil} from "../utils/ErrorUtil";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class DeviceTypesController extends BaseController {
     getAll = async (req: Request, res: Response, next: Function) => {
-        let deviceTypes = null;
         try {
-            deviceTypes = await DeviceTypeModel.findAll();
-            if (deviceTypes) {
-                res.status(200).send(deviceTypes);
-            } else {
-                res.status(200).send([]);
-            }
+            const deviceTypes = await DeviceTypeModel.findAll();
+            deviceTypes ? res.status(200).send(deviceTypes) : res.status(200).send([]);
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get all device type - " + e.toString());
-            res.status(500).send({error: "Error en la petición"});
+            ErrorUtil.handleError(res, e, 'get all device type');
         }
     };
 

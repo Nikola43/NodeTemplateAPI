@@ -3,6 +3,7 @@ import {CenterModel} from "../db/models/CenterModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
 import CenterErrors from "../errors/CenterErrors";
+import ServerErrors from "../errors/ServerErrors";
 
 
 const Sequelize = require('sequelize');
@@ -11,19 +12,20 @@ const Op = Sequelize.Op;
 class CentersController extends BaseController {
     getAll = async (req: Request, res: Response, next: Function) => {
         try {
-            const data = await CenterModel.findAll();
-            data ? res.status(200).send(data) : res.status(200).send([]);
+            res.status(200).send(await CenterModel.findAll())
         } catch (e) {
-            ErrorUtil.handleError(res, e, 'get all centers');
+            ErrorUtil.handleError(e, 'get all centers');
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
 
     getById = async (req: Request, res: Response, next: Function) => {
         try {
-            const data = await CenterModel.findByPk(req.params.id);
-            data ? res.status(200).send(data) : res.status(200).send(CenterErrors.CENTER_NOT_FOUND_ERROR);
+            const data = CenterModel.findByPk(req.params.id);
+            data ? res.status(200).send(data) : res.status(404).send(CenterErrors.CENTER_NOT_FOUND_ERROR);
         } catch (e) {
-            ErrorUtil.handleError(res, e, 'get center by id');
+            ErrorUtil.handleError(e, 'get all centers');
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
 
@@ -43,7 +45,6 @@ class CentersController extends BaseController {
             return;
         }
 
-        // find center in db for check if already exists
         try {
             const tempCenter = await CenterModel.findOne({
                 attributes: [
@@ -64,14 +65,11 @@ class CentersController extends BaseController {
                 return;
             } else {
                 // Create center from request data
-                try {
-                    res.status(201).send(await CenterModel.create(data));
-                } catch (e) {
-                    ErrorUtil.handleError(res, e, 'insert device');
-                }
+                res.status(201).send(await CenterModel.create())
             }
         } catch (e) {
-            ErrorUtil.handleError(res, e, 'insert device');
+            ErrorUtil.handleError(e, 'delete center');
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
 
@@ -98,7 +96,8 @@ class CentersController extends BaseController {
                 });
             res.status(200).send(data);
         } catch (e) {
-            ErrorUtil.handleError(res, e, 'update center');
+            ErrorUtil.handleError(e, 'update center');
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
 
@@ -123,7 +122,8 @@ class CentersController extends BaseController {
                 });
             res.status(200).send({success: "Centro eliminado"});
         } catch (e) {
-            ErrorUtil.handleError(res, e, 'delete center');
+            ErrorUtil.handleError(e, 'delete center');
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
 }

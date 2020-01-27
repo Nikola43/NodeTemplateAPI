@@ -1,5 +1,6 @@
-import { Router } from "express";
+import {Router} from "express";
 import CentersController from "../controllers/CentersController";
+import {checkJwt} from "../middlewares/CheckJwt";
 
 export class CentersRoutes {
     router: Router;
@@ -10,19 +11,19 @@ export class CentersRoutes {
 
     init() {
         /* GET ALL CENTERS */
-        this.router.get("/", CentersController.getAll);
+        this.router.get("/", [checkJwt], CentersController.getAll);
 
         /* GET CENTER BY ID */
-        this.router.get("/:id", CentersController.getById);
+        this.router.get("/:id", [checkJwt], CentersController.getById);
 
         /* INSERT CENTER */
-        this.router.post("/", CentersController.insert);
+        this.router.post("/", [checkJwt], CentersController.insert);
 
         /* UPDATE CENTER BY ID*/
-        this.router.patch("/:id", CentersController.update);
+        this.router.patch("/:id", [checkJwt], CentersController.update);
 
         /* DELETE CENTER BY ID*/
-        this.router.delete("/:id", CentersController.delete);
+        this.router.delete("/:id", [checkJwt], CentersController.delete);
     }
 }
 

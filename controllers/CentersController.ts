@@ -18,10 +18,10 @@ class CentersController extends BaseController {
 
     getById = async (req: Request, res: Response, next: Function) => {
         try {
-            const data = CenterModel.findByPk(req.params.id);
+            const data = await CenterModel.findByPk(req.params.id);
             data ? res.status(200).send(data) : res.status(404).send(CenterErrors.CENTER_NOT_FOUND_ERROR);
         } catch (e) {
-            ErrorUtil.handleError(res,e, 'get center by id');
+            ErrorUtil.handleError(res, e, 'get center by id');
         }
     };
 
@@ -64,7 +64,7 @@ class CentersController extends BaseController {
                 res.status(201).send(await CenterModel.create())
             }
         } catch (e) {
-            ErrorUtil.handleError(res,e, 'insert center');
+            ErrorUtil.handleError(res, e, 'insert center');
         }
     };
 
@@ -76,7 +76,7 @@ class CentersController extends BaseController {
 
         // update
         try {
-            data.update(data,
+            await data.update(data,
                 {
                     where: {
                         id: {
@@ -89,7 +89,7 @@ class CentersController extends BaseController {
                 });
             res.status(200).send(data);
         } catch (e) {
-            ErrorUtil.handleError(res,e, 'update center');
+            ErrorUtil.handleError(res, e, 'update center');
         }
     };
 
@@ -101,7 +101,7 @@ class CentersController extends BaseController {
 
         // delete
         try {
-            data.update(data,
+            await data.update(data,
                 {
                     where: {
                         id: {
@@ -114,7 +114,7 @@ class CentersController extends BaseController {
                 });
             res.status(200).send({success: "Centro eliminado"});
         } catch (e) {
-            ErrorUtil.handleError(res,e, 'delete center');
+            ErrorUtil.handleError(res, e, 'delete center');
         }
     };
 }

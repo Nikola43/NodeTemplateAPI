@@ -6,11 +6,11 @@ import {UserModel} from "../db/models/UserModel";
 export const checkJwt = async (req: Request, res: Response, next: NextFunction) => {
     //Get the jwt token from the head
     let token = <string>req.headers['authorization'];
-    token = token.replace('Bearer ', '');
     let jwtPayload;
 
     //Try to validate the token and get data
     try {
+        token = token.replace('Bearer ', '');
         jwtPayload = <any>jwt.verify(token, config.jwtSecret);
         res.locals.jwtPayload = jwtPayload;
     } catch (error) {

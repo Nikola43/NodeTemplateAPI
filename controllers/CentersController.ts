@@ -13,12 +13,6 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class CentersController extends BaseController {
-
-    constructor() {
-        super();
-        this.className = CentersController.name;
-    }
-
     // functions
     // GET ALL
     getAll = async (req: Request, res: Response, next: Function) => {
@@ -42,7 +36,7 @@ class CentersController extends BaseController {
                 ? res.status(HttpStatus.OK).send(queryResult)
                 : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_ALL)
+            ErrorUtil.handleError(res, e, CentersController.name + ' - ' + DBActions.GET_ALL)
         }
     };
 
@@ -60,9 +54,9 @@ class CentersController extends BaseController {
             // if not has result, send not found error
             queryResult && !queryResult.deletedAt
                 ? res.status(HttpStatus.OK).send(queryResult)
-                : res.status(HttpStatus.NOT_FOUND).send({error: CenterModel.className + " " + GenericErrors.NOT_FOUND_ERROR});
+                : res.status(HttpStatus.NOT_FOUND).send({error: CenterModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_BY_ID)
+            ErrorUtil.handleError(res, e, CentersController.name + ' - ' + DBActions.GET_BY_ID)
         }
     };
 
@@ -100,7 +94,7 @@ class CentersController extends BaseController {
                 attributes: [
                     'name',
                 ], where: {
-                    type: {
+                    name: {
                         [Op.eq]: data.name
                     },
                     deletedAt: {
@@ -129,7 +123,7 @@ class CentersController extends BaseController {
                 res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.INSERT);
+            ErrorUtil.handleError(res, e, CentersController.name + ' - ' + DBActions.INSERT);
         }
     };
 
@@ -179,7 +173,7 @@ class CentersController extends BaseController {
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.UPDATE);
+            ErrorUtil.handleError(res, e, CentersController.name + ' - ' + DBActions.UPDATE);
         }
     };
 
@@ -225,7 +219,7 @@ class CentersController extends BaseController {
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.DELETE)
+            ErrorUtil.handleError(res, e, CentersController.name + ' - ' + DBActions.DELETE)
         }
     };
 }

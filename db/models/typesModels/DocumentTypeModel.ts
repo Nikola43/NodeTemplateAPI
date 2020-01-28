@@ -1,11 +1,11 @@
 import { DataTypes } from 'sequelize';
-import dbConnection from "../../utils/DBUtil";
-import {BaseTypeModel} from "./BaseTypeModel";
+import dbConnection from "../../../utils/DBUtil";
+import {BaseTypeModel} from "../baseModels/BaseTypeModel";
 
-export class DeviceTypeModel extends BaseTypeModel {
+export class DocumentTypeModel extends BaseTypeModel {
 }
 
-DeviceTypeModel.init({
+DocumentTypeModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
@@ -13,7 +13,7 @@ DeviceTypeModel.init({
         allowNull: false,
     },
     type: {
-        type: new DataTypes.STRING(64),
+        type: new DataTypes.STRING(8),
         allowNull: false,
     },
     deletedAt: {
@@ -21,6 +21,6 @@ DeviceTypeModel.init({
         allowNull: true
     },
 }, {
-    tableName: 'devices_types',
+    tableName: 'documents_types',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

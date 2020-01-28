@@ -1,8 +1,8 @@
 import {DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
-import {BaseTypeModel} from "./BaseTypeModel";
+import {BaseModel} from "./baseModels/BaseModel";
 
-export class CenterModel extends BaseTyp eModel {
+export class CenterModel extends BaseModel {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public location_id!: number;
     public type_id!: number;
@@ -13,11 +13,6 @@ export class CenterModel extends BaseTyp eModel {
     public leader!: string | null;
     public schedule!: string | null;
     public endAt!: Date | null;
-
-    // timestamps!
-    public createdAt!: Date;
-    public updatedAt!: Date | null;
-    public deletedAt!: Date | null;
 }
 
 CenterModel.init({

@@ -1,13 +1,6 @@
 import {Request, Response} from "express";
 
 export default abstract class BaseController {
-    // atrinutes
-    protected className: string;
-
-    constructor() {
-        this.className = 'BaseController';
-    }
-
     // functions
     abstract getAll = async (req: Request, res: Response, next: Function) => {
     };

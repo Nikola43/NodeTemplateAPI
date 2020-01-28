@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import dbConnection from "../../utils/DBUtil";
+import dbConnection from "../../../utils/DBUtil";
 
 export class BaseTypeModel extends Model {
     public static className: string;

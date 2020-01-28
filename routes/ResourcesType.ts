@@ -1,5 +1,5 @@
 import {Router} from "express";
-import ResourcesTypeController from "../controllers/ResourcesTypesController";
+import ResourcesTypeController from "../controllers/typesControllers/ResourcesTypesController";
 import {checkJwt} from "../middlewares/CheckJwt";
 
 

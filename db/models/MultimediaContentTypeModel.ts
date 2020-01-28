@@ -7,7 +7,7 @@ export class MultimediaContentTypeModel extends BaseTypeModel {
 
 MultimediaContentTypeModel.init({
     id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,

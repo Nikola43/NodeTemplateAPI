@@ -1,61 +1,92 @@
 import {Request, Response} from "express";
-import ResourceErrors from "../constants/errors/ResourceTypeErrors";
 import {ResourceTypeModel} from "../db/models/ResourceTypeModel";
-import ServerErrors from "../constants/errors/ServerErrors";
+import BaseController from "./BaseController";
+import {ErrorUtil} from "../utils/ErrorUtil";
 import Messages from "../constants/messages/Messages";
-import {LOGUtil} from "../utils/LOGUtil";
+import server from "../server";
+import GenericErrors from "../constants/errors/GenericErrors";
+import DBActions from "../constants/DBActions";
 
+const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-class ResourcesController {
-    getAll = async (req: Request, res: Response, next: any) => {
+class ResourcesTypesController extends BaseController {
+
+    constructor() {
+        super();
+        this.className = ResourcesTypesController.name;
+    }
+
+    // functions
+    // GET ALL
+    getAll = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        // find all records
         try {
-            const resourcesType = await ResourceTypeModel.findAll();
-            res.status(200).send(resourcesType);
+            queryResult = await ResourceTypeModel.findAll({
+                where: {
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // if has results, then send result data
+            // if not has result, send empty array
+            queryResult
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get all resource type - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_ALL)
         }
     };
 
-    getById = async (req: Request, res: Response, next: any) => {
-        try {
-            const resourceType = await ResourceTypeModel.findByPk(req.params.id);
-            console.log(req.params.id);
+    // GET BY ID
+    getById = async (req: Request, res: Response, next: Function) => {
 
-            if (resourceType) {
-                res.status(200).send(resourceType);
-            } else {
-                res.status(404).send(ResourceErrors.RESOURCE_TYPE_NOT_FOUND_ERROR);
-            }
+        // create variable for store query result
+        let queryResult: any;
+
+        // find record by pk
+        try {
+            queryResult = await ResourceTypeModel.findByPk(req.params.id);
+
+            // if has results, then send result data
+            // if not has result, send not found error
+            queryResult && !queryResult.deletedAt
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.NOT_FOUND).send({error: ResourceTypeModel.className + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get resource type by ID - " + e.toString());
-            res.status(500).send({error: "internal error"});
+            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_BY_ID)
         }
     };
 
-    insert = async (req: Request, res: Response, next: any) => {
+    // INSERT
+    insert = async (req: Request, res: Response, next: Function) => {
 
-        const type = req.body.type;
+        // create model from request body data
+        const data: ResourceTypeModel = req.body;
+        let tempData: any;
 
-        // check if centerID are set
-        // if not are set, break execution
-        if (!type) {
-            res.status(400).send(ResourceErrors.RESOURCE_TYPE_NOT_FOUND_ERROR);
+        // check if field called 'type' are set
+        // if field not are set, then send empty required field error
+        if (!data.type) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: ResourceTypeModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
             return;
         }
 
-        // find resourceType in db for check if already exists
+        // find if exists any record with same request value in type field
         try {
-            const tempResource = await ResourceTypeModel.findOne({
+            tempData = await ResourceTypeModel.findOne({
                 attributes: [
                     'type',
                 ], where: {
                     type: {
-                        [Op.eq]: type
+                        [Op.eq]: data.type
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -63,54 +94,48 @@ class ResourcesController {
                 }
             });
 
-            // check if resourceType already have center
-            // break execution
-            if (tempResource) {
-                res.status(400).send(ResourceErrors.RESOURCE_TYPE_ALREADY_EXIST_ERROR);
+            // if already exist
+            // send conflict error
+            if (tempData) {
+                res.status(HttpStatus.CONFLICT).send({error: ResourceTypeModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
                 return;
             } else {
+                // create new record from request body data
+                const newData = await ResourceTypeModel.create(data);
 
-                const newResourceTypeData: ResourceTypeModel = req.body;
+                // emit new data
+                server.io.emit('DBEvent', {
+                    modelName: ResourceTypeModel.name,
+                    action: DBActions.INSERT + ResourceTypeModel.name,
+                    data: newData
+                });
 
-                try {
-                    // Create resourceType from request data
-                    const newResourceType = await ResourceTypeModel.create(newResourceTypeData);
-
-                    res.status(200).send(newResourceType);
-                } catch (e) {
-                    console.log(e);
-                    LOGUtil.saveLog("insert resource type - " + e.toString());
-                    res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
-                }
+                // respond request
+                res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("insert resource type - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.INSERT);
         }
     };
 
-    update = async (req: Request, res: Response, next: any) => {
-        // get resourceID from request
-        const resourceTypeId = req.params.id;
+    // UPDATE
+    update = async (req: Request, res: Response, next: Function) => {
+        // create model from request body data
+        const data: ResourceTypeModel = req.body;
 
-        // check if resourceId are set
-        // if not are set, break execution
-        if (!resourceTypeId) {
-            res.status(400).send(ResourceErrors.RESOURCE_TYPE_ID_EMPTY_ERROR);
-            return;
-        }
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
 
+        // set updated date
+        data.updatedAt = new Date();
+
+        // update
         try {
-            // create resourceType from request data
-            let resourceType: ResourceTypeModel = req.body;
-            resourceType.updatedAt = new Date();
-
-            const updatedResourceType = await ResourceTypeModel.update(resourceType,
+            const updateResult = await ResourceTypeModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: resourceTypeId
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
@@ -118,58 +143,77 @@ class ResourcesController {
                     }
                 });
 
-            // check if resourceType are updated
-            if (updatedResourceType[0] === 1) {
-                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
-                //res.status(200).send(updatedResource);
+            // if it has affected one row
+            if (updateResult[0] === 1) {
+
+                // find updated data
+                const updatedData = await ResourceTypeModel.findByPk(data.id);
+
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: ResourceTypeModel.name,
+                    action: DBActions.UPDATE + ResourceTypeModel.name,
+                    data: updatedData
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(updatedData);
 
             } else {
-                res.status(404).send(ResourceErrors.RESOURCE_TYPE_NOT_FOUND_ERROR);
+                res.status(HttpStatus.NOT_FOUND).send({error: ResourceTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("update resource type - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.UPDATE);
         }
     };
 
-    delete = async (req: Request, res: Response, next: any) => {
-        // get resourceID from request
-        const resourceTypeId = req.params.id;
+    // DELETE
+    delete = async (req: Request, res: Response, next: Function) => {
 
-        // check if resourceId are set
-        // if not are set, break execution
-        if (!resourceTypeId) {
-            res.status(400).send(ResourceErrors.RESOURCE_TYPE_ID_EMPTY_ERROR);
-            return;
-        }
+        // create model from request body data
+        const data: ResourceTypeModel = req.body;
 
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
+
+        // set deleted date
+        data.deletedAt = new Date();
+
+        // delete
         try {
-            const resourceType = await ResourceTypeModel.update({deletedAt: new Date()},
+            const deleteResult = await ResourceTypeModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: resourceTypeId
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
-                            [Op.eq]: null
+                            [Op.is]: null
                         }
                     }
                 });
 
-            // check if resourceType are deleted
-            if (resourceType[0] === 1) {
-                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            // if it has affected one row
+            if (deleteResult[0] === 1) {
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: ResourceTypeModel.name,
+                    action: DBActions.DELETE + ResourceTypeModel.name,
+                    data: data.id
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
-                res.status(404).send(ResourceErrors.USED_RESOURCE_TYPE_ERROR);
+                res.status(HttpStatus.NOT_FOUND).send({error: ResourceTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("delete resource type - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.DELETE)
         }
     };
 }
 
-const resourcesController = new ResourcesController();
-export default resourcesController;
+const centersTypesController = new ResourcesTypesController();
+export default centersTypesController;

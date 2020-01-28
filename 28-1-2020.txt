@@ -1,0 +1,8 @@
+28-1-2020 13:2:6 - IncidencesTypesController - GetAll
+SequelizeDatabaseError: Unknown column 'deletedAt' in 'field list'
+28-1-2020 13:2:13 - IncidencesTypesController - GetAll
+SequelizeDatabaseError: Unknown column 'deletedAt' in 'field list'
+28-1-2020 13:4:42 - IncidencesTypesController - GetAll
+SequelizeDatabaseError: Unknown column 'deletedAt' in 'field list'
+28-1-2020 13:8:42 - IncidencesTypesController - GetById
+SequelizeDatabaseError: Unknown column 'deletedAt' in 'field list'

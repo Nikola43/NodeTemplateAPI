@@ -1,23 +1,18 @@
 import {Request, Response} from "express";
-import {IncidenceTypeModel} from "../db/models/IncidenceTypeModel";
-import BaseController from "./BaseController";
-import {ErrorUtil} from "../utils/ErrorUtil";
-import Messages from "../constants/messages/Messages";
-import server from "../server";
-import GenericErrors from "../constants/errors/GenericErrors";
-import DBActions from "../constants/DBActions";
+import {DeviceTypeModel} from "../../db/models/typesModels/DeviceTypeModel";
+import BaseController from "../BaseController";
+import {ErrorUtil} from "../../utils/ErrorUtil";
+import Messages from "../../constants/messages/Messages";
+import CenterTypeErrors from "../../constants/errors/CenterTypeErrors";
+import server from "../../server";
+import GenericErrors from "../../constants/errors/GenericErrors";
+import DBActions from "../../constants/DBActions";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-class IncidencesTypesController extends BaseController {
-
-    constructor() {
-        super();
-        this.className = IncidencesTypesController.name;
-    }
-
+class DevicesTypesController extends BaseController {
     // functions
     // GET ALL
     getAll = async (req: Request, res: Response, next: Function) => {
@@ -27,7 +22,7 @@ class IncidencesTypesController extends BaseController {
 
         // find all records
         try {
-            queryResult = await IncidenceTypeModel.findAll({
+            queryResult = await DeviceTypeModel.findAll({
                 where: {
                     deletedAt: {
                         [Op.is]: null
@@ -41,7 +36,7 @@ class IncidencesTypesController extends BaseController {
                 ? res.status(HttpStatus.OK).send(queryResult)
                 : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_ALL)
+            ErrorUtil.handleError(res, e, DevicesTypesController.name + ' - ' + DBActions.GET_ALL)
         }
     };
 
@@ -53,15 +48,15 @@ class IncidencesTypesController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await IncidenceTypeModel.findByPk(req.params.id);
+            queryResult = await DeviceTypeModel.findByPk(req.params.id);
 
             // if has results, then send result data
             // if not has result, send not found error
             queryResult && !queryResult.deletedAt
                 ? res.status(HttpStatus.OK).send(queryResult)
-                : res.status(HttpStatus.NOT_FOUND).send({error: IncidenceTypeModel.className + " " + GenericErrors.NOT_FOUND_ERROR});
+                : res.status(HttpStatus.NOT_FOUND).send({error: DeviceTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_BY_ID)
+            ErrorUtil.handleError(res, e, DevicesTypesController.name + ' - ' + DBActions.GET_BY_ID)
         }
     };
 
@@ -69,19 +64,19 @@ class IncidencesTypesController extends BaseController {
     insert = async (req: Request, res: Response, next: Function) => {
 
         // create model from request body data
-        const data: IncidenceTypeModel = req.body;
+        const data: DeviceTypeModel = req.body;
         let tempData: any;
 
         // check if field called 'type' are set
         // if field not are set, then send empty required field error
         if (!data.type) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: IncidenceTypeModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
+            res.status(HttpStatus.BAD_REQUEST).send({error: DeviceTypeModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
             return;
         }
 
         // find if exists any record with same request value in type field
         try {
-            tempData = await IncidenceTypeModel.findOne({
+            tempData = await DeviceTypeModel.findOne({
                 attributes: [
                     'type',
                 ], where: {
@@ -97,16 +92,16 @@ class IncidencesTypesController extends BaseController {
             // if already exist
             // send conflict error
             if (tempData) {
-                res.status(HttpStatus.CONFLICT).send({error: IncidenceTypeModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
+                res.status(HttpStatus.CONFLICT).send({error: DeviceTypeModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
                 return;
             } else {
                 // create new record from request body data
-                const newData = await IncidenceTypeModel.create(data);
+                const newData = await DeviceTypeModel.create(data);
 
                 // emit new data
                 server.io.emit('DBEvent', {
-                    modelName: IncidenceTypeModel.name,
-                    action: DBActions.INSERT + IncidenceTypeModel.name,
+                    modelName: DeviceTypeModel.name,
+                    action: DBActions.INSERT + DeviceTypeModel.name,
                     data: newData
                 });
 
@@ -114,14 +109,14 @@ class IncidencesTypesController extends BaseController {
                 res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.INSERT);
+            ErrorUtil.handleError(res, e, DevicesTypesController.name + ' - ' + DBActions.INSERT);
         }
     };
 
     // UPDATE
     update = async (req: Request, res: Response, next: Function) => {
         // create model from request body data
-        const data: IncidenceTypeModel = req.body;
+        const data: DeviceTypeModel = req.body;
 
         // get record id(pk) from request params
         data.id = Number(req.params.id);
@@ -131,7 +126,7 @@ class IncidencesTypesController extends BaseController {
 
         // update
         try {
-            const updateResult = await IncidenceTypeModel.update(data,
+            const updateResult = await DeviceTypeModel.update(data,
                 {
                     where: {
                         id: {
@@ -147,12 +142,12 @@ class IncidencesTypesController extends BaseController {
             if (updateResult[0] === 1) {
 
                 // find updated data
-                const updatedData = await IncidenceTypeModel.findByPk(data.id);
+                const updatedData = await DeviceTypeModel.findByPk(data.id);
 
                 // emit updated data
                 server.io.emit('DBEvent', {
-                    modelName: IncidenceTypeModel.name,
-                    action: DBActions.UPDATE + IncidenceTypeModel.name,
+                    modelName: DeviceTypeModel.name,
+                    action: DBActions.UPDATE + DeviceTypeModel.name,
                     data: updatedData
                 });
 
@@ -160,11 +155,11 @@ class IncidencesTypesController extends BaseController {
                 res.status(HttpStatus.OK).send(updatedData);
 
             } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: IncidenceTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+                res.status(HttpStatus.NOT_FOUND).send({error: DeviceTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.UPDATE);
+            ErrorUtil.handleError(res, e, DevicesTypesController.name + ' - ' + DBActions.UPDATE);
         }
     };
 
@@ -172,7 +167,7 @@ class IncidencesTypesController extends BaseController {
     delete = async (req: Request, res: Response, next: Function) => {
 
         // create model from request body data
-        const data: IncidenceTypeModel = req.body;
+        const data: DeviceTypeModel = req.body;
 
         // get record id(pk) from request params
         data.id = Number(req.params.id);
@@ -182,7 +177,7 @@ class IncidencesTypesController extends BaseController {
 
         // delete
         try {
-            const deleteResult = await IncidenceTypeModel.update(data,
+            const deleteResult = await DeviceTypeModel.update(data,
                 {
                     where: {
                         id: {
@@ -198,22 +193,23 @@ class IncidencesTypesController extends BaseController {
             if (deleteResult[0] === 1) {
                 // emit updated data
                 server.io.emit('DBEvent', {
-                    modelName: IncidenceTypeModel.name,
-                    action: DBActions.DELETE + IncidenceTypeModel.name,
+                    modelName: DeviceTypeModel.name,
+                    action: DBActions.DELETE + DeviceTypeModel.name,
                     data: data.id
                 });
 
                 // respond request
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: IncidenceTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+                res.status(HttpStatus.NOT_FOUND).send({error: DeviceTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.DELETE)
+            ErrorUtil.handleError(res, e, DevicesTypesController.name + ' - ' + DBActions.DELETE)
         }
     };
 }
 
-const incidencesTypesController = new IncidencesTypesController();
-export default incidencesTypesController;
+const devicesTypesController = new DevicesTypesController();
+export default devicesTypesController;
+

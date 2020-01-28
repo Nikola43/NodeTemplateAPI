@@ -1,11 +1,11 @@
-import { DataTypes} from 'sequelize';
-import dbConnection from "../../utils/DBUtil";
-import {BaseTypeModel} from "./BaseTypeModel";
+import { DataTypes } from 'sequelize';
+import dbConnection from "../../../utils/DBUtil";
+import {BaseTypeModel} from "../baseModels/BaseTypeModel";
 
-export class MultimediaContentTypeModel extends BaseTypeModel {
+export class IncidenceTypeModel extends BaseTypeModel {
 }
 
-MultimediaContentTypeModel.init({
+IncidenceTypeModel.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
@@ -16,12 +16,11 @@ MultimediaContentTypeModel.init({
         type: new DataTypes.STRING(32),
         allowNull: false,
     },
-
     deletedAt: {
         type: new DataTypes.DATE,
         allowNull: true
     },
 }, {
-    tableName: 'multimedia_contents_types',
+    tableName: 'incidences_types',
     sequelize: dbConnection.getSequelize, // this bit is important
 });

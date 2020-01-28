@@ -1,23 +1,17 @@
 import {Request, Response} from "express";
-import {MultimediaContentTypeModel} from "../db/models/MultimediaContentTypeModel";
-import BaseController from "./BaseController";
-import {ErrorUtil} from "../utils/ErrorUtil";
-import Messages from "../constants/messages/Messages";
-import server from "../server";
-import GenericErrors from "../constants/errors/GenericErrors";
-import DBActions from "../constants/DBActions";
+import {MultimediaContentTypeModel} from "../../db/models/typesModels/MultimediaContentTypeModel";
+import BaseController from "../BaseController";
+import {ErrorUtil} from "../../utils/ErrorUtil";
+import Messages from "../../constants/messages/Messages";
+import server from "../../server";
+import GenericErrors from "../../constants/errors/GenericErrors";
+import DBActions from "../../constants/DBActions";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class MultimediaContentsTypesController extends BaseController {
-
-    constructor() {
-        super();
-        this.className = MultimediaContentsTypesController.name;
-    }
-
     // functions
     // GET ALL
     getAll = async (req: Request, res: Response, next: Function) => {
@@ -41,7 +35,7 @@ class MultimediaContentsTypesController extends BaseController {
                 ? res.status(HttpStatus.OK).send(queryResult)
                 : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_ALL)
+            ErrorUtil.handleError(res, e, MultimediaContentTypeModel.name + ' - ' + DBActions.GET_ALL)
         }
     };
 
@@ -61,7 +55,7 @@ class MultimediaContentsTypesController extends BaseController {
                 ? res.status(HttpStatus.OK).send(queryResult)
                 : res.status(HttpStatus.NOT_FOUND).send({error: MultimediaContentTypeModel.className + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_BY_ID)
+            ErrorUtil.handleError(res, e, MultimediaContentTypeModel.name + ' - ' + DBActions.GET_BY_ID)
         }
     };
 
@@ -114,7 +108,7 @@ class MultimediaContentsTypesController extends BaseController {
                 res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.INSERT);
+            ErrorUtil.handleError(res, e, MultimediaContentTypeModel.name + ' - ' + DBActions.INSERT);
         }
     };
 
@@ -164,7 +158,7 @@ class MultimediaContentsTypesController extends BaseController {
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.UPDATE);
+            ErrorUtil.handleError(res, e, MultimediaContentTypeModel.name + ' - ' + DBActions.UPDATE);
         }
     };
 
@@ -210,7 +204,7 @@ class MultimediaContentsTypesController extends BaseController {
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.DELETE)
+            ErrorUtil.handleError(res, e, MultimediaContentTypeModel.name + ' - ' + DBActions.DELETE)
         }
     };
 }

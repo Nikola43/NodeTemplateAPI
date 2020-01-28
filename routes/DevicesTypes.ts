@@ -1,5 +1,5 @@
 import { Router } from "express";
-import DevicesTypesController from "../controllers/DevicesTypesController";
+import DevicesTypesController from "../controllers/typesControllers/DevicesTypesController";
 
 export class DevicesTypesRoutes {
     router: Router;

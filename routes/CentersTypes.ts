@@ -1,5 +1,5 @@
 import { Router } from "express";
-import CentersTypesController from "../controllers/CentersTypesController";
+import CentersTypesController from "../controllers/typesControllers/CentersTypesController";
 
 export class CentersTypesRoutes {
     router: Router;

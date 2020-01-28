@@ -1,5 +1,5 @@
 import {Router} from "express";
-import LocationTypeController from "../controllers/LocationsTypesController";
+import LocationTypeController from "../controllers/typesControllers/LocationsTypesController";
 import {checkJwt} from "../middlewares/CheckJwt";
 
 export class LocationsTypeRoutes {

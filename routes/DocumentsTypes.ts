@@ -1,5 +1,5 @@
 import { Router } from "express";
-import DocumentsTypesController from "../controllers/DocumentTypesController";
+import DocumentsTypesController from "../controllers/typesControllers/DocumentTypesController";
 
 export class DocumentsTypesRoutes {
     router: Router;

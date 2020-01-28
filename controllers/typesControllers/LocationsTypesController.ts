@@ -1,22 +1,17 @@
 import {Request, Response} from "express";
-import {LocationTypeModel} from "../db/models/LocationTypeModel";
-import BaseController from "./BaseController";
-import {ErrorUtil} from "../utils/ErrorUtil";
-import Messages from "../constants/messages/Messages";
-import server from "../server";
-import GenericErrors from "../constants/errors/GenericErrors";
-import DBActions from "../constants/DBActions";
+import {LocationTypeModel} from "../../db/models/typesModels/LocationTypeModel";
+import BaseController from "../BaseController";
+import {ErrorUtil} from "../../utils/ErrorUtil";
+import Messages from "../../constants/messages/Messages";
+import server from "../../server";
+import GenericErrors from "../../constants/errors/GenericErrors";
+import DBActions from "../../constants/DBActions";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class LocationsTypesController extends BaseController {
-
-    constructor() {
-        super();
-        this.className = LocationsTypesController.name;
-    }
 
     // functions
     // GET ALL
@@ -41,7 +36,7 @@ class LocationsTypesController extends BaseController {
                 ? res.status(HttpStatus.OK).send(queryResult)
                 : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_ALL)
+            ErrorUtil.handleError(res, e, LocationsTypesController.name + ' - ' + DBActions.GET_ALL)
         }
     };
 
@@ -61,7 +56,7 @@ class LocationsTypesController extends BaseController {
                 ? res.status(HttpStatus.OK).send(queryResult)
                 : res.status(HttpStatus.NOT_FOUND).send({error: LocationTypeModel.className + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_BY_ID)
+            ErrorUtil.handleError(res, e, LocationsTypesController.name + ' - ' + DBActions.GET_BY_ID)
         }
     };
 
@@ -114,7 +109,7 @@ class LocationsTypesController extends BaseController {
                 res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.INSERT);
+            ErrorUtil.handleError(res, e, LocationsTypesController.name + ' - ' + DBActions.INSERT);
         }
     };
 
@@ -164,7 +159,7 @@ class LocationsTypesController extends BaseController {
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.UPDATE);
+            ErrorUtil.handleError(res, e, LocationsTypesController.name + ' - ' + DBActions.UPDATE);
         }
     };
 
@@ -210,7 +205,7 @@ class LocationsTypesController extends BaseController {
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.DELETE)
+            ErrorUtil.handleError(res, e, LocationsTypesController.name + ' - ' + DBActions.DELETE)
         }
     };
 }

@@ -1,5 +1,5 @@
 import {Router} from "express";
-import MultimediaContentsTypesController from "../controllers/MultimediaContentsTypesController";
+import MultimediaContentsTypesController from "../controllers/typesControllers/MultimediaContentsTypesController";
 import {checkJwt} from "../middlewares/CheckJwt";
 
 export class MultimediaContentsRoutes {

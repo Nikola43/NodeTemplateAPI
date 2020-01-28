@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
-import UserResourceErrors from "../errors/UserErrors";
+import UserResourceErrors from "../constants/errors/UserErrors";
 import {UserResourceModel} from "../db/models/UserResourceModel";
-import ServerErrors from "../errors/ServerErrors";
-import Messages from "../messages/Messages";
+import ServerErrors from "../constants/errors/ServerErrors";
+import Messages from "../constants/messages/Messages";
 import {LOGUtil} from "../utils/LOGUtil";
 
 

@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
 import {PanicButtonModel} from "../db/models/PanicButtonModel";
-import ServerErrors from "../errors/ServerErrors";
-import Messages from "../messages/Messages";
-import PanicButtonErrors from "../errors/PanicButtonErrors";
+import ServerErrors from "../constants/errors/ServerErrors";
+import Messages from "../constants/messages/Messages";
+import PanicButtonErrors from "../constants/errors/PanicButtonErrors";
 import {LOGUtil} from "../utils/LOGUtil";
 import {CenterModel} from "../db/models/CenterModel";
 import BaseController from "./BaseController";

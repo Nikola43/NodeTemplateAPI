@@ -2,9 +2,10 @@ import {Request, Response} from "express";
 import {CenterModel} from "../db/models/CenterModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
-import CenterErrors from "../errors/CenterErrors";
+import CenterErrors from "../constants/errors/CenterErrors";
 import {CenterTypeModel} from "../db/models/CenterTypeModel";
-import Messages from "../messages/Messages";
+import Messages from "../constants/messages/Messages";
+import server from "../server";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -59,13 +60,25 @@ class CentersController extends BaseController {
                 }
             });
 
+
+
             // check if device already exist
             if (tempCenter) {
                 res.status(HttpStatus.CONFLICT).send(CenterErrors.CENTER_ALREADY_EXIST_ERROR);
                 return;
             } else {
                 // Create center from request data
-                res.status(HttpStatus.CREATED).send(await CenterModel.create(data))
+                const newData = await CenterModel.create(data);
+
+                // emit new data
+                server.io.emit('DBEvent', {
+                    modelName: 'CenterModel',
+                    action: "insert",
+                    data: newData
+                });
+
+                // respond request
+                res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
             ErrorUtil.handleError(res, e, 'insert center');

@@ -1,6 +1,6 @@
 import {LOGUtil} from "./LOGUtil";
 import {Response} from "express";
-import ServerErrors from "../errors/ServerErrors";
+import ServerErrors from "../constants/errors/ServerErrors";
 
 export class ErrorUtil {
 

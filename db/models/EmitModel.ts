@@ -1,5 +1,5 @@
 export interface EmitModel {
-    modelName: String;
-    actionDb: string;
+    modelName: string;
+    action: string;
     data: any;
 }

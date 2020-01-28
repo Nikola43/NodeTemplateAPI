@@ -2,8 +2,8 @@ import {Request, Response} from "express";
 import {DocumentTypeModel} from "../db/models/DocumentTypeModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
-import DocumentTypeErrors from "../errors/DocumentTypeErrors";
-import Messages from "../messages/Messages";
+import DocumentTypeErrors from "../constants/errors/DocumentTypeErrors";
+import Messages from "../constants/messages/Messages";
 
 
 const HttpStatus = require('http-status-codes');

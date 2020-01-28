@@ -2,8 +2,9 @@ import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
 export class BaseTypeModel extends Model {
+    public static className: string;
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public type!: string;
+    public type!: number;
 
     // timestamps!
     public readonly createdAt!: Date;
@@ -19,7 +20,7 @@ BaseTypeModel.init({
         allowNull: false,
     },
     type: {
-        type: new DataTypes.STRING(64),
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
     deletedAt: {

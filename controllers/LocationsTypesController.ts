@@ -1,10 +1,10 @@
 import {Request, Response} from "express";
 import {LocationTypeModel} from "../db/models/LocationTypeModel";
-import Messages from "../messages/Messages";
-import LocationTypeErrors from "../errors/LocationTypeErrors";
+import Messages from "../constants/messages/Messages";
+import LocationTypeErrors from "../constants/errors/LocationTypeErrors";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
-import CenterTypeErrors from "../errors/CenterTypeErrors";
+import CenterTypeErrors from "../constants/errors/CenterTypeErrors";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');

@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
-import UserIncidenceErrors from "../errors/UserErrors";
+import UserIncidenceErrors from "../constants/errors/UserErrors";
 import {UserIncidenceModel} from "../db/models/UserIncidenceModel";
-import ServerErrors from "../errors/ServerErrors";
-import Messages from "../messages/Messages";
+import ServerErrors from "../constants/errors/ServerErrors";
+import Messages from "../constants/messages/Messages";
 import {LOGUtil} from "../utils/LOGUtil";
 
 

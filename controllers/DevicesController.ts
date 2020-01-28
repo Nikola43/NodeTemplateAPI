@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
 import {DeviceModel} from "../db/models/DeviceModel";
-import ServerErrors from "../errors/ServerErrors";
-import Messages from "../messages/Messages";
-import DeviceErrors from "../errors/DeviceErrors";
+import ServerErrors from "../constants/errors/ServerErrors";
+import Messages from "../constants/messages/Messages";
+import DeviceErrors from "../constants/errors/DeviceErrors";
 import {UserModel} from "../db/models/UserModel";
 import {LOGUtil} from "../utils/LOGUtil";
 import BaseController from "./BaseController";

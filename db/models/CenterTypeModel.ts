@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize';
+import {DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 import {BaseTypeModel} from "./BaseTypeModel";
 
@@ -14,7 +14,7 @@ CenterTypeModel.init({
         allowNull: false,
     },
     type: {
-        type: new DataTypes.STRING(32),
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
     temporary: {

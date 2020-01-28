@@ -6,6 +6,7 @@ import Messages from "../constants/messages/Messages";
 import CenterTypeErrors from "../constants/errors/CenterTypeErrors";
 import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
+import DBActions from "../constants/DBActions";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -41,7 +42,7 @@ class CentersTypesController extends BaseController {
                 ? res.status(HttpStatus.OK).send(queryResult)
                 : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - getAll');
+            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_ALL)
         }
     };
 
@@ -61,7 +62,7 @@ class CentersTypesController extends BaseController {
                 ? res.status(HttpStatus.OK).send(queryResult)
                 : res.status(HttpStatus.NOT_FOUND).send({error: CenterTypeModel.className + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - getById');
+            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.GET_BY_ID)
         }
     };
 
@@ -113,7 +114,7 @@ class CentersTypesController extends BaseController {
                 // emit new data
                 server.io.emit('DBEvent', {
                     modelName: CenterTypeModel.name,
-                    action: 'Insert' + CenterTypeModel.name,
+                    action: DBActions.INSERT + CenterTypeModel.name,
                     data: newData
                 });
 
@@ -121,7 +122,7 @@ class CentersTypesController extends BaseController {
                 res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - insert');
+            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.INSERT);
         }
     };
 
@@ -159,7 +160,7 @@ class CentersTypesController extends BaseController {
                 // emit updated data
                 server.io.emit('DBEvent', {
                     modelName: CenterTypeModel.name,
-                    action: 'Update' + CenterTypeModel.name,
+                    action: DBActions.UPDATE + CenterTypeModel.name,
                     data: updatedData
                 });
 
@@ -171,7 +172,7 @@ class CentersTypesController extends BaseController {
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - update')
+            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.UPDATE);
         }
     };
 
@@ -206,7 +207,7 @@ class CentersTypesController extends BaseController {
                 // emit updated data
                 server.io.emit('DBEvent', {
                     modelName: CenterTypeModel.name,
-                    action: 'Delete' + CenterTypeModel.name,
+                    action: DBActions.DELETE + CenterTypeModel.name,
                     data: data.id
                 });
 
@@ -217,7 +218,7 @@ class CentersTypesController extends BaseController {
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, this.className + ' - delete')
+            ErrorUtil.handleError(res, e, this.className + ' - ' + DBActions.DELETE)
         }
     };
 }

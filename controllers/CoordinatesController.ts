@@ -1,106 +1,201 @@
 import {Request, Response} from "express";
 import {CoordinateModel} from "../db/models/CoordinateModel";
-import {LOGUtil} from "../utils/LOGUtil";
-import {CenterModel} from "../db/models/CenterModel";
 import BaseController from "./BaseController";
+import {ErrorUtil} from "../utils/ErrorUtil";
+import Messages from "../constants/messages/Messages";
+import server from "../server";
+import GenericErrors from "../constants/errors/GenericErrors";
+import DBActions from "../constants/DBActions";
+import CoordinateErrors from "../constants/errors/CoordinateErrors";
 
+const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class CoordinatesController extends BaseController {
-    getAll = async (req: Request, res: Response, next: any) => {
-        let coordinates = null;
+    // functions
+    // GET ALL
+    getAll = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        // find all records
         try {
-            coordinates = await CoordinateModel.findAll();
-            if (coordinates) {
-                res.status(200).send(coordinates);
-            } else {
-                res.status(200).send([]);
-            }
+            queryResult = await CoordinateModel.findAll({
+                where: {
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // if has results, then send result data
+            // if not has result, send empty array
+            queryResult
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get all coordinate - " + e.toString());
-            res.status(500).send({error: "Error en la petición"});
+            ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.GET_ALL)
         }
     };
 
-    getById = async (req: Request, res: Response, next: any) => {
-        let coordinate = null;
+    // GET BY ID
+    getById = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        // find record by pk
         try {
-            const coordinate = await CoordinateModel.findByPk(req.query.id)
-            if (coordinate) {
-                res.status(200).send(coordinate);
-            } else {
-                res.status(200).send({error: "coordinate not found"});
-            }
+            queryResult = await CoordinateModel.findByPk(req.params.id);
+
+            // if has results, then send result data
+            // if not has result, send not found error
+            queryResult && !queryResult.deletedAt
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.NOT_FOUND).send({error: CoordinateModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get coordinate by ID - " + e.toString());
-            res.status(500).send({error: "Error en la petición"});
+            ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.GET_BY_ID)
         }
     };
 
-    insert = async (req: Request, res: Response, next: any) => {
-        let coordinate: CoordinateModel = req.body;
+    // INSERT
+    insert = async (req: Request, res: Response, next: Function) => {
+
+        // create model from request body data
+        const data: CoordinateModel = req.body;
+        let tempData: any;
+
+        // check if field called 'type_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.lat) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: CoordinateModel.name + " " + CoordinateErrors.COORDINATE_LAT_EMPTY_ERROR});
+            return;
+        }
+
+        // check if field callet 'location_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.lon) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: CoordinateModel.name + " " + CoordinateErrors.COORDINATE_LON_EMPTY_ERROR});
+            return;
+        }
         try {
-            const newCoordinate = await CoordinateModel.create(coordinate);
-            res.status(200).send(newCoordinate);
+            // create new record from request body data
+            const newData = await CoordinateModel.create(data);
+
+            // emit new data
+            server.io.emit('DBEvent', {
+                modelName: CoordinateModel.name,
+                action: DBActions.INSERT + CoordinateModel.name,
+                data: newData
+            });
+
+            // respond request
+            res.status(HttpStatus.CREATED).send(newData)
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("insert coordinate - " + e.toString());
-            res.status(500).send({error: "Error insertando"});
+            ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.INSERT);
         }
     };
 
-    update = async (req: Request, res: Response, next: any) => {
-        let coordinate: CoordinateModel = req.body;
-        coordinate.id = req.query.id;
-        coordinate.updatedAt = new Date();
+    // UPDATE
+    update = async (req: Request, res: Response, next: Function) => {
+        // create model from request body data
+        const data: CoordinateModel = req.body;
+
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
+
+        // set updated date
+        data.updatedAt = new Date();
+
+        // update
         try {
-            coordinate.update(coordinate,
+            const updateResult = await CoordinateModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: coordinate.id
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
-            res.status(200).send(coordinate);
+
+            // if it has affected one row
+            if (updateResult[0] === 1) {
+
+                // find updated data
+                const updatedData = await CoordinateModel.findByPk(data.id);
+
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: CoordinateModel.name,
+                    action: DBActions.UPDATE + CoordinateModel.name,
+                    data: updatedData
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(updatedData);
+
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send({error: CoordinateModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+            }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("update coordinate - " + e.toString());
-            res.status(500).send({error: "Error actualizando"});
+            ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.UPDATE);
         }
     };
 
-    delete = async (req: Request, res: Response, next: any) => {
-        let coordinate: CoordinateModel = req.body;
-        coordinate.id = req.query.id;
+    // DELETE
+    delete = async (req: Request, res: Response, next: Function) => {
+
+        // create model from request body data
+        const data: CoordinateModel = req.body;
+
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
+
+        // set deleted date
+        data.deletedAt = new Date();
+
+        // delete
         try {
-            coordinate.update({
-                    deletedAt: new Date()
-                },
+            const deleteResult = await CoordinateModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: coordinate.id
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
-            res.status(200).send({success: "Coordenada eliminada"});
+
+            // if it has affected one row
+            if (deleteResult[0] === 1) {
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: CoordinateModel.name,
+                    action: DBActions.DELETE + CoordinateModel.name,
+                    data: data.id
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send({error: CoordinateModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+            }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("delete coordinate - " + e.toString());
-            res.status(500).send({error: "Error eliminando"});
+            ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.DELETE)
         }
     };
 }
 
 const coordinatesController = new CoordinatesController();
 export default coordinatesController;
+

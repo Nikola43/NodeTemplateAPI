@@ -1,8 +1,8 @@
 import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
+import {BaseModel} from "./baseModels/BaseModel";
 
-export class MultimediaContentModel extends Model {
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
+export class MultimediaContentModel extends BaseModel {
     public user_id!: number;
     public location_id!: number | null;
     public type_id!: number;
@@ -18,21 +18,21 @@ export class MultimediaContentModel extends Model {
 
 MultimediaContentModel.init({
     id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
     user_id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
     location_id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true,
     },
     type_id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
     name: {

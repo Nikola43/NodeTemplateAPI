@@ -1,15 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../../utils/DBUtil";
+import {BaseModel} from "./BaseModel";
 
-export class BaseTypeModel extends Model {
-    public static className: string;
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
+export class BaseTypeModel extends BaseModel {
     public type!: number;
-
-    // timestamps!
-    public readonly createdAt!: Date;
-    public updatedAt!: Date | null;
-    public deletedAt!: Date | null;
 }
 
 BaseTypeModel.init({

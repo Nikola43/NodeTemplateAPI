@@ -1,17 +1,18 @@
 import {Request, Response} from "express";
-import {MultimediaContentTypeModel} from "../../db/models/typesModels/MultimediaContentTypeModel";
-import BaseController from "../BaseController";
-import {ErrorUtil} from "../../utils/ErrorUtil";
-import Messages from "../../constants/messages/Messages";
-import server from "../../server";
-import GenericErrors from "../../constants/errors/GenericErrors";
-import DBActions from "../../constants/DBActions";
+import {MultimediaContentModel} from "../db/models/MultimediaContentModel";
+import BaseController from "./BaseController";
+import {ErrorUtil} from "../utils/ErrorUtil";
+import Messages from "../constants/messages/Messages";
+import server from "../server";
+import GenericErrors from "../constants/errors/GenericErrors";
+import DBActions from "../constants/DBActions";
+
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-class MultimediaContentsTypesController extends BaseController {
+class MultimediaContentsController extends BaseController {
     // functions
     // GET ALL
     getAll = async (req: Request, res: Response, next: Function) => {
@@ -21,7 +22,7 @@ class MultimediaContentsTypesController extends BaseController {
 
         // find all records
         try {
-            queryResult = await MultimediaContentTypeModel.findAll({
+            queryResult = await MultimediaContentModel.findAll({
                 where: {
                     deletedAt: {
                         [Op.is]: null
@@ -35,7 +36,7 @@ class MultimediaContentsTypesController extends BaseController {
                 ? res.status(HttpStatus.OK).send(queryResult)
                 : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            ErrorUtil.handleError(res, e, MultimediaContentTypeModel.name + ' - ' + DBActions.GET_ALL)
+            ErrorUtil.handleError(res, e, MultimediaContentsController.name + ' - ' + DBActions.GET_ALL)
         }
     };
 
@@ -47,15 +48,15 @@ class MultimediaContentsTypesController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await MultimediaContentTypeModel.findByPk(req.params.id);
+            queryResult = await MultimediaContentModel.findByPk(req.params.id);
 
             // if has results, then send result data
             // if not has result, send not found error
             queryResult && !queryResult.deletedAt
                 ? res.status(HttpStatus.OK).send(queryResult)
-                : res.status(HttpStatus.NOT_FOUND).send({error: MultimediaContentTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+                : res.status(HttpStatus.NOT_FOUND).send({error: MultimediaContentModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
-            ErrorUtil.handleError(res, e, MultimediaContentTypeModel.name + ' - ' + DBActions.GET_BY_ID)
+            ErrorUtil.handleError(res, e, MultimediaContentsController.name + ' - ' + DBActions.GET_BY_ID)
         }
     };
 
@@ -63,24 +64,53 @@ class MultimediaContentsTypesController extends BaseController {
     insert = async (req: Request, res: Response, next: Function) => {
 
         // create model from request body data
-        const data: MultimediaContentTypeModel = req.body;
+        const data: MultimediaContentModel = req.body;
         let tempData: any;
 
-        // check if field called 'type' are set
+        // check if field called 'type_id' are set
         // if field not are set, then send empty required field error
-        if (!data.type) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentTypeModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
+        if (!data.type_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
             return;
         }
 
+        // check if field callet 'location_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.location_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentModel.name + " " + GenericErrors.LOCATION_ID_EMPTY_ERROR});
+            return;
+        }
+
+        // check if field callet 'name' are set
+        // if field not are set, then send empty required field error
+        if (!data.name) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentModel.name + " " + GenericErrors.NAME_EMPTY_ERROR});
+            return;
+        }
+        
+        // check if field called 'user_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.user_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentModel.name + " " + GenericErrors.USER_ID_EMPTY_ERROR});
+            return;
+        }
+
+        // check if field called 'url' are set
+        // if field not are set, then send empty required field error
+        if (!data.url) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentModel.name + " " + GenericErrors.USER_ID_EMPTY_ERROR});
+            return;
+        }
+        
+
         // find if exists any record with same request value in type field
         try {
-            tempData = await MultimediaContentTypeModel.findOne({
+            tempData = await MultimediaContentModel.findOne({
                 attributes: [
-                    'type',
+                    'name',
                 ], where: {
-                    type: {
-                        [Op.eq]: data.type
+                    name: {
+                        [Op.eq]: data.name
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -91,16 +121,16 @@ class MultimediaContentsTypesController extends BaseController {
             // if already exist
             // send conflict error
             if (tempData) {
-                res.status(HttpStatus.CONFLICT).send({error: MultimediaContentTypeModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
+                res.status(HttpStatus.CONFLICT).send({error: MultimediaContentModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
                 return;
             } else {
                 // create new record from request body data
-                const newData = await MultimediaContentTypeModel.create(data);
+                const newData = await MultimediaContentModel.create(data);
 
                 // emit new data
                 server.io.emit('DBEvent', {
-                    modelName: MultimediaContentTypeModel.name,
-                    action: DBActions.INSERT + MultimediaContentTypeModel.name,
+                    modelName: MultimediaContentModel.name,
+                    action: DBActions.INSERT + MultimediaContentModel.name,
                     data: newData
                 });
 
@@ -108,14 +138,14 @@ class MultimediaContentsTypesController extends BaseController {
                 res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
-            ErrorUtil.handleError(res, e, MultimediaContentTypeModel.name + ' - ' + DBActions.INSERT);
+            ErrorUtil.handleError(res, e, MultimediaContentsController.name + ' - ' + DBActions.INSERT);
         }
     };
 
     // UPDATE
     update = async (req: Request, res: Response, next: Function) => {
         // create model from request body data
-        const data: MultimediaContentTypeModel = req.body;
+        const data: MultimediaContentModel = req.body;
 
         // get record id(pk) from request params
         data.id = Number(req.params.id);
@@ -125,7 +155,7 @@ class MultimediaContentsTypesController extends BaseController {
 
         // update
         try {
-            const updateResult = await MultimediaContentTypeModel.update(data,
+            const updateResult = await MultimediaContentModel.update(data,
                 {
                     where: {
                         id: {
@@ -141,12 +171,12 @@ class MultimediaContentsTypesController extends BaseController {
             if (updateResult[0] === 1) {
 
                 // find updated data
-                const updatedData = await MultimediaContentTypeModel.findByPk(data.id);
+                const updatedData = await MultimediaContentModel.findByPk(data.id);
 
                 // emit updated data
                 server.io.emit('DBEvent', {
-                    modelName: MultimediaContentTypeModel.name,
-                    action: DBActions.UPDATE + MultimediaContentTypeModel.name,
+                    modelName: MultimediaContentModel.name,
+                    action: DBActions.UPDATE + MultimediaContentModel.name,
                     data: updatedData
                 });
 
@@ -154,11 +184,11 @@ class MultimediaContentsTypesController extends BaseController {
                 res.status(HttpStatus.OK).send(updatedData);
 
             } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: MultimediaContentTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+                res.status(HttpStatus.NOT_FOUND).send({error: MultimediaContentModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, MultimediaContentTypeModel.name + ' - ' + DBActions.UPDATE);
+            ErrorUtil.handleError(res, e, MultimediaContentsController.name + ' - ' + DBActions.UPDATE);
         }
     };
 
@@ -166,7 +196,7 @@ class MultimediaContentsTypesController extends BaseController {
     delete = async (req: Request, res: Response, next: Function) => {
 
         // create model from request body data
-        const data: MultimediaContentTypeModel = req.body;
+        const data: MultimediaContentModel = req.body;
 
         // get record id(pk) from request params
         data.id = Number(req.params.id);
@@ -176,7 +206,7 @@ class MultimediaContentsTypesController extends BaseController {
 
         // delete
         try {
-            const deleteResult = await MultimediaContentTypeModel.update(data,
+            const deleteResult = await MultimediaContentModel.update(data,
                 {
                     where: {
                         id: {
@@ -192,22 +222,22 @@ class MultimediaContentsTypesController extends BaseController {
             if (deleteResult[0] === 1) {
                 // emit updated data
                 server.io.emit('DBEvent', {
-                    modelName: MultimediaContentTypeModel.name,
-                    action: DBActions.DELETE + MultimediaContentTypeModel.name,
+                    modelName: MultimediaContentModel.name,
+                    action: DBActions.DELETE + MultimediaContentModel.name,
                     data: data.id
                 });
 
                 // respond request
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: MultimediaContentTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+                res.status(HttpStatus.NOT_FOUND).send({error: MultimediaContentModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, MultimediaContentTypeModel.name + ' - ' + DBActions.DELETE)
+            ErrorUtil.handleError(res, e, MultimediaContentsController.name + ' - ' + DBActions.DELETE)
         }
     };
 }
 
-const multimediaContentsTypesController = new MultimediaContentsTypesController();
-export default multimediaContentsTypesController;
+const multimediaContentsController = new MultimediaContentsController();
+export default multimediaContentsController;

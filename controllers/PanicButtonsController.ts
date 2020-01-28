@@ -1,113 +1,138 @@
 import {Request, Response} from "express";
 import {PanicButtonModel} from "../db/models/PanicButtonModel";
-import ServerErrors from "../constants/errors/ServerErrors";
+import BaseController from "./BaseController";
+import {ErrorUtil} from "../utils/ErrorUtil";
 import Messages from "../constants/messages/Messages";
 import PanicButtonErrors from "../constants/errors/PanicButtonErrors";
-import {LOGUtil} from "../utils/LOGUtil";
-import {CenterModel} from "../db/models/CenterModel";
-import BaseController from "./BaseController";
+import server from "../server";
+import GenericErrors from "../constants/errors/GenericErrors";
+import DBActions from "../constants/DBActions";
 
+
+const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class PanicButtonsController extends BaseController {
-    getAll = async (req: Request, res: Response, next: any) => {
+    // functions
+    // GET ALL
+    getAll = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        // find all records
         try {
-            const panicButtons = await PanicButtonModel.findAll();
-            res.status(200).send(panicButtons);
-        } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get all panic button - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
-        }
-    };
-
-    getById = async (req: Request, res: Response, next: any) => {
-        try {
-            const panicButton = await PanicButtonModel.findByPk(req.params.id);
-
-            if (panicButton) {
-                res.status(200).send(panicButton);
-            } else {
-                res.status(404).send(PanicButtonErrors.PANIC_BUTTON_NOT_FOUND_ERROR);
-            }
-        } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get panic button by id - " + e.toString());
-            res.status(500).send({error: "internal error"});
-        }
-    };
-
-    insert = async (req: Request, res: Response, next: any) => {
-
-        let panicButton: PanicButtonModel = req.body;
-
-        // check if userID are set
-        // if not are set, break execution
-        if (!panicButton.user_id) {
-            res.status(400).send(PanicButtonErrors.USERID_EMPTY_ERROR);
-            return;
-        }
-
-        // find user in db for check if already exists
-        try {
-            const tempPanicButton = await PanicButtonModel.findOne({
-                attributes: [
-                    'user_id',
-                ], where: {
-                    endAt: {
+            queryResult = await PanicButtonModel.findAll({
+                where: {
+                    deletedAt: {
                         [Op.is]: null
-                    },
-                    user_id: {
-                        [Op.eq]: panicButton.user_id
                     }
                 }
             });
 
-            // check if user already have panic button
-            // break execution
-            if (tempPanicButton) {
-                res.status(409).send(PanicButtonErrors.USER_ALREADY_HAS_ASIGNED_PANIC_BUTTON_ERROR);
-                return;
-            } else {
-                try {
-                    // Create user from request data
-                    const newPanicButton = await PanicButtonModel.create(panicButton);
-                    res.status(200).send(newPanicButton);
-                } catch (e) {
-                    console.log(e);
-                    LOGUtil.saveLog("insert panic button - " + e.toString());
-                    res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
-                }
-            }
+            // if has results, then send result data
+            // if not has result, send empty array
+            queryResult
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("insert panic button  - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, PanicButtonsController.name + ' - ' + DBActions.GET_ALL)
         }
     };
 
-    update = async (req: Request, res: Response, next: any) => {
-        // get userID from request
-        const panicButtonId = req.params.id;
+    // GET BY ID
+    getById = async (req: Request, res: Response, next: Function) => {
 
-        // check if panicButtonId are set
-        // if not are set, break execution
-        if (!panicButtonId) {
-            res.status(400).send(PanicButtonErrors.PANIC_BUTTON_ID_EMPTY_ERROR);
+        // create variable for store query result
+        let queryResult: any;
+
+        // find record by pk
+        try {
+            queryResult = await PanicButtonModel.findByPk(req.params.id);
+
+            // if has results, then send result data
+            // if not has result, send not found error
+            queryResult && !queryResult.deletedAt
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.NOT_FOUND).send({error: PanicButtonModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+        } catch (e) {
+            ErrorUtil.handleError(res, e, PanicButtonsController.name + ' - ' + DBActions.GET_BY_ID)
+        }
+    };
+
+    // INSERT
+    insert = async (req: Request, res: Response, next: Function) => {
+
+        // create model from request body data
+        const data: PanicButtonModel = req.body;
+        let tempData: any;
+
+        // check if field callet 'location_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.user_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: PanicButtonModel.name + " " + PanicButtonErrors.USERID_EMPTY_ERROR});
             return;
         }
+        
 
+        // find if exists any record with same request value in type field
         try {
-            // create user from request data
-            let panicButton: PanicButtonModel = req.body;
-            panicButton.updatedAt = new Date();
+            tempData = await PanicButtonModel.findOne({
+                attributes: [
+                    'user_id',
+                ], where: {
+                    user_id: {
+                        [Op.eq]: data.user_id
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
 
-            const updatedPanicButton = await PanicButtonModel.update(panicButton,
+            // if already exist
+            // send conflict error
+            if (tempData) {
+                res.status(HttpStatus.CONFLICT).send({error: PanicButtonModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
+                return;
+            } else {
+                // create new record from request body data
+                const newData = await PanicButtonModel.create(data);
+
+                // emit new data
+                server.io.emit('DBEvent', {
+                    modelName: PanicButtonModel.name,
+                    action: DBActions.INSERT + PanicButtonModel.name,
+                    data: newData
+                });
+
+                // respond request
+                res.status(HttpStatus.CREATED).send(newData)
+            }
+        } catch (e) {
+            ErrorUtil.handleError(res, e, PanicButtonsController.name + ' - ' + DBActions.INSERT);
+        }
+    };
+
+    // UPDATE
+    update = async (req: Request, res: Response, next: Function) => {
+        // create model from request body data
+        const data: PanicButtonModel = req.body;
+
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
+
+        // set updated date
+        data.updatedAt = new Date();
+
+        // update
+        try {
+            const updateResult = await PanicButtonModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: panicButtonId
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
@@ -115,57 +140,77 @@ class PanicButtonsController extends BaseController {
                     }
                 });
 
-            // check if user are updated
-            if (updatedPanicButton[0] === 1) {
-                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
-                //res.status(200).send(updatedPanicButton);
+            // if it has affected one row
+            if (updateResult[0] === 1) {
+
+                // find updated data
+                const updatedData = await PanicButtonModel.findByPk(data.id);
+
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: PanicButtonModel.name,
+                    action: DBActions.UPDATE + PanicButtonModel.name,
+                    data: updatedData
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(updatedData);
 
             } else {
-                res.status(404).send(PanicButtonErrors.PANIC_BUTTON_NOT_FOUND_ERROR);
+                res.status(HttpStatus.NOT_FOUND).send({error: PanicButtonModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("update panic button - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, PanicButtonsController.name + ' - ' + DBActions.UPDATE);
         }
     };
 
-    delete = async (req: Request, res: Response, next: any) => {
-        // get userID from request
-        const panicButtonId = req.params.id;
+    // DELETE
+    delete = async (req: Request, res: Response, next: Function) => {
 
-        // check if panicButtonId are set
-        // if not are set, break execution
-        if (!panicButtonId) {
-            res.status(400).send(PanicButtonErrors.PANIC_BUTTON_ID_EMPTY_ERROR);
-            return;
-        }
+        // create model from request body data
+        const data: PanicButtonModel = req.body;
 
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
+
+        // set deleted date
+        data.deletedAt = new Date();
+
+        // delete
         try {
-            const panicButton = await PanicButtonModel.update({deletedAt: new Date()},
+            const deleteResult = await PanicButtonModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: panicButtonId
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
-                            [Op.eq]: null
+                            [Op.is]: null
                         }
                     }
                 });
 
-            // check if user are deletd
-            if (panicButton[0] === 1) {
-                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            // if it has affected one row
+            if (deleteResult[0] === 1) {
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: PanicButtonModel.name,
+                    action: DBActions.DELETE + PanicButtonModel.name,
+                    data: data.id
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
-                res.status(404).send(PanicButtonErrors.PANIC_BUTTON_NOT_FOUND_ERROR);
+                res.status(HttpStatus.NOT_FOUND).send({error: PanicButtonModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("delete panic button - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, PanicButtonsController.name + ' - ' + DBActions.DELETE)
         }
     };
 }
+
 const panicButtonsController = new PanicButtonsController();
 export default panicButtonsController;

@@ -2,10 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ecf7feb5-b9d3-48ec-bfbb-792baf415e39" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/constants/errors/CoordinateErrors.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/constants/errors/DocumentErrors.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/constants/errors/IncidenceErrors.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/controllers/MultimediaContentsController.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/28-1-2020.txt" beforeDir="false" afterPath="$PROJECT_DIR$/28-1-2020.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants/errors/CenterErrors.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/errors/CenterErrors.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants/errors/GenericErrors.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/errors/GenericErrors.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants/errors/LocationErrors.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/errors/LocationErrors.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/CentersController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/CentersController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/CoordinatesController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/CoordinatesController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/DevicesController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/DevicesController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/DocumentsController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/DocumentsController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/IncidencesController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/IncidencesController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/LocationsController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/LocationsController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/PanicButtonsController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/PanicButtonsController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/typesControllers/IncidencesTypesController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/typesControllers/IncidencesTypesController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/typesControllers/LocationsTypesController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/typesControllers/LocationsTypesController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/typesControllers/MultimediaContentsTypesController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/typesControllers/MultimediaContentsTypesController.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db/models/CenterModel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/db/models/CenterModel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/models/MultimediaContentModel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/db/models/MultimediaContentModel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/models/baseModels/BaseModel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/db/models/baseModels/BaseModel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/models/baseModels/BaseTypeModel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/db/models/baseModels/BaseTypeModel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/MultimediaContents.ts" beforeDir="false" afterPath="$PROJECT_DIR$/routes/MultimediaContents.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <ignored path="$PROJECT_DIR$/server.js/" />
@@ -20,22 +40,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/db/models/BaseTypeModel.ts">
+        <entry file="file://$PROJECT_DIR$/controllers/IncidencesController.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="66">
-              <caret line="3" column="38" selection-start-line="3" selection-start-column="38" selection-end-line="3" selection-end-column="38" />
-              <folding>
-                <element signature="e#0#45#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/controllers/CentersController.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="440">
-              <caret line="62" column="70" selection-start-line="62" selection-start-column="70" selection-end-line="62" selection-end-column="70" />
+            <state relative-caret-position="182">
+              <caret line="76" column="7" selection-start-line="76" selection-start-column="7" selection-end-line="82" />
               <folding>
                 <element signature="e#0#42#0" expanded="true" />
               </folding>
@@ -44,38 +52,66 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/constants/errors/CenterErrors.ts">
+        <entry file="file://$PROJECT_DIR$/controllers/LocationsController.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/db/models/CenterModel.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="4" column="41" selection-start-line="4" selection-start-column="41" selection-end-line="4" selection-end-column="41" />
+            <state relative-caret-position="3218">
+              <caret line="206" selection-start-line="206" selection-end-line="206" />
               <folding>
-                <element signature="e#0#36#0" expanded="true" />
+                <element signature="e#0#42#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/constants/errors/CenterTypeErrors.ts">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$PROJECT_DIR$/controllers/PanicButtonsController.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-38">
+              <caret line="83" column="27" selection-start-line="83" selection-start-column="27" selection-end-line="83" selection-end-column="27" />
+              <folding>
+                <element signature="e#0#42#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/db/models/CenterTypeModel.ts">
+        <entry file="file://$PROJECT_DIR$/28-1-2020.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-line="4" selection-end-column="52" />
+            <state relative-caret-position="99">
+              <caret line="13" column="80" selection-start-line="12" selection-start-column="29" selection-end-line="13" selection-end-column="80" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/controllers/MultimediaContentsController.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="418">
+              <caret line="19" column="49" selection-start-line="19" selection-start-column="49" selection-end-line="19" selection-end-column="49" />
               <folding>
-                <element signature="e#0#36#0" expanded="true" />
+                <element signature="e#0#42#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/MultimediaContents.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="22">
+              <caret line="1" column="68" selection-start-line="1" selection-start-column="68" selection-end-line="1" selection-end-column="68" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/db/models/MultimediaContentModel.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="704">
+              <caret line="34" column="13" selection-start-line="34" selection-start-column="13" selection-end-line="34" selection-end-column="13" />
+              <folding>
+                <element signature="e#0#43#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -110,30 +146,20 @@
       <find>200</find>
       <find>deviceType</find>
       <find>Center</find>
-      <find>center</find>
       <find>document</find>
       <find>incidence</find>
       <find>CenterTypeModel</find>
-      <find>panicButtonsRoutes</find>
       <find>centersTypesController</find>
       <find>CentersTypesController</find>
+      <find>center</find>
+      <find>CenterModel</find>
+      <find>CENTER</find>
+      <find>CenterErrors</find>
+      <find>CentersController</find>
+      <find>centersController</find>
+      <find>panicButtonsRoutes</find>
     </findStrings>
     <replaceStrings>
-      <replace>Resource</replace>
-      <replace>ResourceType</replace>
-      <replace>UserDevice</replace>
-      <replace>UserIncidence</replace>
-      <replace>UserResource</replace>
-      <replace>Device</replace>
-      <replace>PanicButtonController</replace>
-      <replace>DEVICE</replace>
-      <replace>resource</replace>
-      <replace>resourcesRoutes</replace>
-      <replace>createdAt</replace>
-      <replace>updatedAt</replace>
-      <replace>center</replace>
-      <replace>device</replace>
-      <replace>data</replace>
       <replace>Document</replace>
       <replace>document</replace>
       <replace>DocumentTypeModel</replace>
@@ -144,11 +170,26 @@
       <replace>DevicesTypesController</replace>
       <replace>DocumentsTypesController</replace>
       <replace>locationsTypesController</replace>
-      <replace>multimediaContentsRoutes</replace>
       <replace>multimediaContentsTypesController</replace>
       <replace>ResourcesTypesController</replace>
       <replace>incidencesTypesController</replace>
       <replace>CentersController</replace>
+      <replace>coordinate</replace>
+      <replace>CoordinatesController</replace>
+      <replace>coordinatesController</replace>
+      <replace>devicesController</replace>
+      <replace>DOCUMENT</replace>
+      <replace>DocumentsController</replace>
+      <replace>documentsController</replace>
+      <replace>CenterErrors</replace>
+      <replace>IncidencesController</replace>
+      <replace>LocationsController</replace>
+      <replace>locationsController</replace>
+      <replace>PanicButtonsController</replace>
+      <replace>panicButtonsController</replace>
+      <replace>MultimediaContentsController</replace>
+      <replace>multimediaContentsController</replace>
+      <replace>multimediaContentsRoutes</replace>
     </replaceStrings>
     <dirStrings>
       <dir>C:\NodeTemplateAPI\db\models</dir>
@@ -163,24 +204,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/controllers/ResourceController.ts" />
-        <option value="$PROJECT_DIR$/routes/PanicButtons.ts" />
-        <option value="$PROJECT_DIR$/app.ts" />
-        <option value="$PROJECT_DIR$/db/models/UserDevice.ts" />
-        <option value="$PROJECT_DIR$/db/models/CenterType.ts" />
-        <option value="$PROJECT_DIR$/db/models/UserIncidence.ts" />
-        <option value="$PROJECT_DIR$/db/models/UserResource.ts" />
-        <option value="$PROJECT_DIR$/db/models/Resource.ts" />
-        <option value="$PROJECT_DIR$/errors/ResourceErrors.ts" />
-        <option value="$PROJECT_DIR$/controllers/ResourceController.ts" />
-        <option value="$PROJECT_DIR$/db/models/Center.ts" />
-        <option value="$PROJECT_DIR$/db/models/Coordinate.ts" />
-        <option value="$PROJECT_DIR$/db/models/Device.ts" />
-        <option value="$PROJECT_DIR$/db/models/DeviceType.ts" />
-        <option value="$PROJECT_DIR$/db/models/Document.ts" />
-        <option value="$PROJECT_DIR$/db/models/DocumentType.ts" />
-        <option value="$PROJECT_DIR$/db/models/Incidence.ts" />
-        <option value="$PROJECT_DIR$/db/models/IncidenceType.ts" />
         <option value="$PROJECT_DIR$/db/models/PanicButton.ts" />
         <option value="$PROJECT_DIR$/db/models/ResourceType.ts" />
         <option value="$PROJECT_DIR$/db/models/User.ts" />
@@ -190,7 +213,6 @@
         <option value="$PROJECT_DIR$/controllers/DeviceController.ts" />
         <option value="$PROJECT_DIR$/errors/PanicButtonErrors.ts" />
         <option value="$PROJECT_DIR$/routes/Locations.ts" />
-        <option value="$PROJECT_DIR$/controllers/DocumentsController.ts" />
         <option value="$PROJECT_DIR$/controllers/UsersDevicesController.ts" />
         <option value="$PROJECT_DIR$/tests/TestCenters.ts" />
         <option value="$PROJECT_DIR$/utils/LOGUtil.ts" />
@@ -211,9 +233,28 @@
         <option value="$PROJECT_DIR$/routes/MultimediaContentsType.ts" />
         <option value="$PROJECT_DIR$/db/models/MultimediaContentTypeModel.ts" />
         <option value="$PROJECT_DIR$/controllers/IncidencesTypesController.ts" />
-        <option value="$PROJECT_DIR$/controllers/CentersController.ts" />
-        <option value="$PROJECT_DIR$/constants/errors/CenterErrors.ts" />
+        <option value="$PROJECT_DIR$/db/models/baseModels/BaseModel.ts" />
+        <option value="$PROJECT_DIR$/db/models/baseModels/BaseTypeModel.ts" />
         <option value="$PROJECT_DIR$/db/models/CenterModel.ts" />
+        <option value="$PROJECT_DIR$/controllers/typesControllers/IncidencesTypesController.ts" />
+        <option value="$PROJECT_DIR$/controllers/typesControllers/LocationsTypesController.ts" />
+        <option value="$PROJECT_DIR$/controllers/typesControllers/MultimediaContentsTypesController.ts" />
+        <option value="$PROJECT_DIR$/controllers/CentersController.ts" />
+        <option value="$PROJECT_DIR$/constants/errors/CoordinateErrors.ts" />
+        <option value="$PROJECT_DIR$/controllers/CoordinatesController.ts" />
+        <option value="$PROJECT_DIR$/controllers/DevicesController.ts" />
+        <option value="$PROJECT_DIR$/constants/errors/DocumentErrors.ts" />
+        <option value="$PROJECT_DIR$/controllers/DocumentsController.ts" />
+        <option value="$PROJECT_DIR$/constants/errors/GenericErrors.ts" />
+        <option value="$PROJECT_DIR$/constants/errors/CenterErrors.ts" />
+        <option value="$PROJECT_DIR$/constants/errors/IncidenceErrors.ts" />
+        <option value="$PROJECT_DIR$/controllers/IncidencesController.ts" />
+        <option value="$PROJECT_DIR$/constants/errors/LocationErrors.ts" />
+        <option value="$PROJECT_DIR$/controllers/LocationsController.ts" />
+        <option value="$PROJECT_DIR$/controllers/PanicButtonsController.ts" />
+        <option value="$PROJECT_DIR$/controllers/MultimediaContentsController.ts" />
+        <option value="$PROJECT_DIR$/routes/MultimediaContents.ts" />
+        <option value="$PROJECT_DIR$/db/models/MultimediaContentModel.ts" />
       </list>
     </option>
   </component>
@@ -248,7 +289,29 @@
             <path>
               <item name="NodeTemplateAPI" type="b2602c69:ProjectViewProjectNode" />
               <item name="NodeTemplateAPI" type="462c0819:PsiDirectoryNode" />
+              <item name="constants" type="462c0819:PsiDirectoryNode" />
+              <item name="errors" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NodeTemplateAPI" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NodeTemplateAPI" type="462c0819:PsiDirectoryNode" />
               <item name="controllers" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NodeTemplateAPI" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NodeTemplateAPI" type="462c0819:PsiDirectoryNode" />
+              <item name="db" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NodeTemplateAPI" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NodeTemplateAPI" type="462c0819:PsiDirectoryNode" />
+              <item name="db" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NodeTemplateAPI" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NodeTemplateAPI" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -268,7 +331,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1580153708620" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1580238691358" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="javascript.nodejs.core.library.configured.version" value="12.14.1" />
@@ -293,10 +356,10 @@
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\NodeTemplateAPI\controllers" />
+      <recent name="C:\NodeTemplateAPI\constants\errors" />
       <recent name="C:\NodeTemplateAPI\errors" />
       <recent name="C:\NodeTemplateAPI\routes" />
       <recent name="C:\NodeTemplateAPI\src\controllers" />
-      <recent name="C:\NodeTemplateAPI\src\errors" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -428,7 +491,7 @@
       <workItem from="1579598400599" duration="9611000" />
       <workItem from="1579621062928" duration="12264000" />
       <workItem from="1580136050321" duration="16459000" />
-      <workItem from="1580204156639" duration="11155000" />
+      <workItem from="1580204156639" duration="24411000" />
     </task>
     <servers />
   </component>
@@ -456,7 +519,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="71274000" />
+    <option name="totallyTimeSpent" value="84530000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -481,7 +544,7 @@
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.70354456" weight="0.24361949" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.70354456" visible="true" weight="0.42807424" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -489,7 +552,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.09976798" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.31554523" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.2964554" side_tool="true" weight="0.32946634" />
       <window_info anchor="bottom" id="TypeScript" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -503,7 +566,7 @@
       <window_info anchor="right" id="Database" order="8" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22932331" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16756175" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
@@ -513,15 +576,15 @@
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.70354456" visible="true" weight="0.32946634" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.70354456" weight="0.24361949" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32946634" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.2587007" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.31554523" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.2964554" side_tool="true" weight="0.32946634" />
       <window_info anchor="bottom" id="TypeScript" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -590,232 +653,6 @@
     <state x="368" y="202" width="703" height="518" key="find.popup/0.23.1440.877/-1920.-66.1920.1057@0.23.1440.877" timestamp="1579016783242" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/db/models/DeviceTypeModel.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="2" column="46" selection-start-line="2" selection-start-column="46" selection-end-line="2" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/BaseController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="6" lean-forward="true" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/Centers.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/ErrorUtil.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="12" column="18" selection-start-line="12" selection-start-column="12" selection-end-line="12" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/DevicesTypes.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/DocumentsTypes.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/PanicButtons.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/DevicesController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="30" column="31" selection-start-line="30" selection-start-column="30" selection-end-line="30" selection-end-column="31" />
-          <folding>
-            <element signature="e#1#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/DocumentsController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/UsersIncidencesController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/UsersResourcesController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/ResourcesController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/PanicButtonsController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/LocationsController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="25" column="7" selection-start-line="25" selection-start-column="7" selection-end-line="25" selection-end-column="7" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/TestCenters.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/http-status-codes/index.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2113">
-          <caret line="175" column="40" lean-forward="true" selection-start-line="175" selection-start-column="40" selection-end-line="175" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/sequelize/lib/instance-validator.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="73" column="14" selection-start-line="73" selection-start-column="14" selection-end-line="73" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/yarn-error.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="13" selection-start-line="12" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/utils/LOGUtil.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/LOGUtil.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="12" column="26" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/messages/Messages.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" column="27" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/UsersController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="103" column="56" selection-start-line="103" selection-start-column="56" selection-end-line="103" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/UsersDevicesController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/errors/ResourceTypeErrors.ts">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/errors/CenterTypeErrors.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/errors/DeviceTypeErrors.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="48" selection-start-line="8" selection-start-column="48" selection-end-line="8" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/errors/DocumentTypeErrors.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="52" selection-start-line="8" selection-start-column="52" selection-end-line="8" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/db/models/DocumentTypeModel.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="44">
@@ -948,16 +785,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/constants/errors/CenterErrors.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/constants/errors/CenterTypeErrors.ts">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/controllers/CentersTypesController.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
@@ -985,16 +812,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/CentersController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="62" column="70" selection-start-line="62" selection-start-column="70" selection-end-line="62" selection-end-column="70" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/db/models/BaseTypeModel.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="66">
@@ -1005,12 +822,240 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/db/models/baseModels/BaseTypeModel.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="5" column="25" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db/models/baseModels/BaseModel.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="3" column="23" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/db/models/CenterModel.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="41" selection-start-line="4" selection-start-column="41" selection-end-line="4" selection-end-column="41" />
+        <state relative-caret-position="110">
+          <caret line="8" column="39" selection-start-line="8" selection-start-column="39" selection-end-line="8" selection-end-column="39" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/typesControllers/IncidencesTypesController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="50" selection-start-line="50" selection-end-line="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/typesControllers/LocationsTypesController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="56" column="86" selection-start-line="56" selection-start-column="86" selection-end-line="56" selection-end-column="86" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/typesControllers/MultimediaContentsTypesController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="53" column="49" selection-start-line="53" selection-start-column="49" selection-end-line="53" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/errors/CenterTypeErrors.ts">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/errors/ServerErrors.ts">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/errors/UserErrors.ts">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/errors/IncidenceTypeErrors.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/CoordinatesController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="54" selection-start-line="4" selection-start-column="54" selection-end-line="4" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/DevicesController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2524">
+          <caret line="85" column="29" selection-start-line="85" selection-start-column="29" selection-end-line="85" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/errors/DocumentErrors.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/errors/CoordinateErrors.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="16" selection-start-column="16" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/errors/GenericErrors.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/errors/CenterErrors.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/errors/IncidenceErrors.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="39" selection-start-line="2" selection-start-column="39" selection-end-line="2" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/errors/LocationErrors.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="53" selection-start-line="4" selection-start-column="53" selection-end-line="4" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/CentersController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4570">
+          <caret selection-end-line="227" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/DocumentsController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="76" column="7" selection-start-line="76" selection-start-column="7" selection-end-line="81" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/errors/PanicButtonErrors.ts">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/PanicButtonsController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-38">
+          <caret line="83" column="27" selection-start-line="83" selection-start-column="27" selection-end-line="83" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/LocationsController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3218">
+          <caret line="206" selection-start-line="206" selection-end-line="206" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/IncidencesController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="76" column="7" selection-start-line="76" selection-start-column="7" selection-end-line="82" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/MultimediaContentsController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="19" column="49" selection-start-line="19" selection-start-column="49" selection-end-line="19" selection-end-column="49" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/MultimediaContents.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="1" column="68" selection-start-line="1" selection-start-column="68" selection-end-line="1" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="25" column="45" selection-start-line="25" selection-start-column="45" selection-end-line="25" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/routes/MultimediaContents.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="55" selection-start-line="6" selection-start-column="55" selection-end-line="6" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/controllers/MultimediaContentsController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="5" column="33" selection-start-line="5" selection-start-column="33" selection-end-line="5" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/db/models/MultimediaContentModel.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/28-1-2020.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="99">
+          <caret line="13" column="80" selection-start-line="12" selection-start-column="29" selection-end-line="13" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db/models/MultimediaContentModel.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="704">
+          <caret line="34" column="13" selection-start-line="34" selection-start-column="13" selection-end-line="34" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#43#0" expanded="true" />
           </folding>
         </state>
       </provider>

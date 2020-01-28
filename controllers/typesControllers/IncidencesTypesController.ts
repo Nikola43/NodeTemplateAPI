@@ -53,7 +53,7 @@ class IncidencesTypesController extends BaseController {
             // if not has result, send not found error
             queryResult && !queryResult.deletedAt
                 ? res.status(HttpStatus.OK).send(queryResult)
-                : res.status(HttpStatus.NOT_FOUND).send({error: IncidenceTypeModel.className + " " + GenericErrors.NOT_FOUND_ERROR});
+                : res.status(HttpStatus.NOT_FOUND).send({error: IncidenceTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
             ErrorUtil.handleError(res, e, IncidencesTypesController.name + ' - ' + DBActions.GET_BY_ID)
         }

@@ -3,7 +3,6 @@ import dbConnection from "../../utils/DBUtil";
 import {BaseModel} from "./baseModels/BaseModel";
 
 export class CenterModel extends BaseModel {
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public location_id!: number;
     public type_id!: number;
     public name!: string;

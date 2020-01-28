@@ -1,105 +1,209 @@
 import {Request, Response} from "express";
 import {LocationModel} from "../db/models/LocationModel";
-import {LOGUtil} from "../utils/LOGUtil";
 import BaseController from "./BaseController";
+import {ErrorUtil} from "../utils/ErrorUtil";
+import Messages from "../constants/messages/Messages";
+import LocationErrors from "../constants/errors/LocationErrors";
+import server from "../server";
+import GenericErrors from "../constants/errors/GenericErrors";
+import DBActions from "../constants/DBActions";
 
+const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class LocationsController extends BaseController {
-    getAll = async (req: Request, res: Response, next: any) => {
-        let locations = null;
+    // functions
+    // GET ALL
+    getAll = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        // find all records
         try {
-            locations = await LocationModel.findAll();
-            if (locations) {
-                res.status(200).send(locations);
+            queryResult = await LocationModel.findAll({
+                where: {
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // if has results, then send result data
+            // if not has result, send empty array
+            queryResult
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.OK).send([]);
+        } catch (e) {
+            ErrorUtil.handleError(res, e, LocationsController.name + ' - ' + DBActions.GET_ALL)
+        }
+    };
+
+    // GET BY ID
+    getById = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        // find record by pk
+        try {
+            queryResult = await LocationModel.findByPk(req.params.id);
+
+            // if has results, then send result data
+            // if not has result, send not found error
+            queryResult && !queryResult.deletedAt
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.NOT_FOUND).send({error: LocationModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+        } catch (e) {
+            ErrorUtil.handleError(res, e, LocationsController.name + ' - ' + DBActions.GET_BY_ID)
+        }
+    };
+
+    // INSERT
+    insert = async (req: Request, res: Response, next: Function) => {
+
+        // create model from request body data
+        const data: LocationModel = req.body;
+        let tempData: any;
+
+        // check if field called 'type_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.type_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: LocationModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
+            return;
+        }
+
+        // check if field callet 'location_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.coordinates_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: LocationModel.name + " " + LocationErrors.LOCATION_COORDINATE_ID_EMPTY_ERROR});
+            return;
+        }
+
+        // find if exists any record with same request value in type field
+        try {
+            
+            // if already exist
+            // send conflict error
+            if (tempData) {
+                res.status(HttpStatus.CONFLICT).send({error: LocationModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
+                return;
             } else {
-                res.status(200).send([]);
+                // create new record from request body data
+                const newData = await LocationModel.create(data);
+
+                // emit new data
+                server.io.emit('DBEvent', {
+                    modelName: LocationModel.name,
+                    action: DBActions.INSERT + LocationModel.name,
+                    data: newData
+                });
+
+                // respond request
+                res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get all location - " + e.toString());
-            res.status(500).send({error: "Error en la petición"});
+            ErrorUtil.handleError(res, e, LocationsController.name + ' - ' + DBActions.INSERT);
         }
     };
 
-    getById = async (req: Request, res: Response, next: any) => {
-        let locations = null;
-        try {
-            const locations = await LocationModel.findByPk(req.params.id);
-            if (locations) {
-                res.status(200).send(locations);
-            } else {
-                res.status(200).send({error: "locations not found"});
-            }
-        } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get location by ID - " + e.toString());
-            res.status(500).send({error: "Error en la petición"});
-        }
-    };
+    // UPDATE
+    update = async (req: Request, res: Response, next: Function) => {
+        // create model from request body data
+        const data: LocationModel = req.body;
 
-    insert = async (req: Request, res: Response, next: any) => {
-        //
-        let location: LocationModel = req.body;
-        try {
-            const newLocation = await LocationModel.create(location);
-            res.status(200).send(newLocation);
-        } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("insert location - " + e.toString());
-            res.status(500).send({error: "Error insertando"});
-        }
-    };
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
 
-    update = async (req: Request, res: Response, next: any) => {
-        let locations: LocationModel = req.body;
-        locations.id = req.query.id;
-        locations.updatedAt = new Date();
+        // set updated date
+        data.updatedAt = new Date();
+
+        // update
         try {
-            locations.update(locations,
+            const updateResult = await LocationModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: locations.id
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
-            res.status(200).send(locations);
+
+            // if it has affected one row
+            if (updateResult[0] === 1) {
+
+                // find updated data
+                const updatedData = await LocationModel.findByPk(data.id);
+
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: LocationModel.name,
+                    action: DBActions.UPDATE + LocationModel.name,
+                    data: updatedData
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(updatedData);
+
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send({error: LocationModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+            }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("update location - " + e.toString());
-            res.status(500).send({error: "Error actualizando"});
+            ErrorUtil.handleError(res, e, LocationsController.name + ' - ' + DBActions.UPDATE);
         }
     };
 
-    delete = async (req: Request, res: Response, next: any) => {
-        let locations: LocationModel = req.body;
-        locations.id = req.query.id;
+    // DELETE
+    delete = async (req: Request, res: Response, next: Function) => {
+
+        // create model from request body data
+        const data: LocationModel = req.body;
+
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
+
+        // set deleted date
+        data.deletedAt = new Date();
+
+        // delete
         try {
-            locations.update({
-                    deletedAt: new Date()
-                },
+            const deleteResult = await LocationModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: locations.id
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
                         }
                     }
                 });
-            res.status(200).send({success: "Locationo eliminado"});
+
+            // if it has affected one row
+            if (deleteResult[0] === 1) {
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: LocationModel.name,
+                    action: DBActions.DELETE + LocationModel.name,
+                    data: data.id
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send({error: LocationModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+            }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("delete location - " + e.toString());
-            res.status(500).send({error: "Error eliminando"});
+            ErrorUtil.handleError(res, e, LocationsController.name + ' - ' + DBActions.DELETE)
         }
     };
 }
+
 const locationsController = new LocationsController();
 export default locationsController;

@@ -54,7 +54,7 @@ class LocationsTypesController extends BaseController {
             // if not has result, send not found error
             queryResult && !queryResult.deletedAt
                 ? res.status(HttpStatus.OK).send(queryResult)
-                : res.status(HttpStatus.NOT_FOUND).send({error: LocationTypeModel.className + " " + GenericErrors.NOT_FOUND_ERROR});
+                : res.status(HttpStatus.NOT_FOUND).send({error: LocationTypeModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
             ErrorUtil.handleError(res, e, LocationsTypesController.name + ' - ' + DBActions.GET_BY_ID)
         }

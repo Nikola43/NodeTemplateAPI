@@ -1,8 +1,8 @@
 import {Router} from "express";
-import PanicButtonsController from "../controllers/PanicButtonsController";
+import MultimediaContentsController from "../controllers/MultimediaContentsController";
 import {checkJwt} from "../middlewares/CheckJwt";
 
-export class PanicButtonsRoutes {
+export class MultimediaContentsRoutes {
     router: Router;
 
     constructor() {
@@ -11,22 +11,22 @@ export class PanicButtonsRoutes {
 
     init() {
         /* GET ALL PANICBUTTONS */
-        this.router.get("/", [checkJwt], PanicButtonsController.getAll);
+        this.router.get("/", [checkJwt], MultimediaContentsController.getAll);
 
         /* GET PANICBUTTON BY ID */
-        this.router.get("/:id", [checkJwt], PanicButtonsController.getById);
+        this.router.get("/:id", [checkJwt], MultimediaContentsController.getById);
 
         /* INSERT PANICBUTTON */
-        this.router.post("/", [checkJwt], PanicButtonsController.insert);
+        this.router.post("/", [checkJwt], MultimediaContentsController.insert);
 
         /* UPDATE PANICBUTTON BY ID*/
-        this.router.patch("/:id", [checkJwt], PanicButtonsController.update);
+        this.router.patch("/:id", [checkJwt], MultimediaContentsController.update);
 
         /* DELETE PANICBUTTON BY ID*/
-        this.router.delete("/:id", [checkJwt], PanicButtonsController.delete);
+        this.router.delete("/:id", [checkJwt], MultimediaContentsController.delete);
     }
 }
 
-let panicButtonsRoutes = new PanicButtonsRoutes();
-panicButtonsRoutes.init();
-export default panicButtonsRoutes.router;
+let multimediaContentsRoutes = new MultimediaContentsRoutes();
+multimediaContentsRoutes.init();
+export default multimediaContentsRoutes.router;

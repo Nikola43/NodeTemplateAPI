@@ -84,7 +84,7 @@ class CentersController extends BaseController {
         // check if field callet 'name' are set
         // if field not are set, then send empty required field error
         if (!data.name) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: CenterModel.name + " " + CenterErrors.CENTER_NAME_EMPTY_ERROR});
+            res.status(HttpStatus.BAD_REQUEST).send({error: CenterModel.name + " " + GenericErrors.NAME_EMPTY_ERROR});
             return;
         }
 

@@ -1,69 +1,93 @@
 import {Request, Response} from "express";
 import {DeviceModel} from "../db/models/DeviceModel";
-import ServerErrors from "../constants/errors/ServerErrors";
-import Messages from "../constants/messages/Messages";
-import DeviceErrors from "../constants/errors/DeviceErrors";
-import {UserModel} from "../db/models/UserModel";
-import {LOGUtil} from "../utils/LOGUtil";
 import BaseController from "./BaseController";
+import {ErrorUtil} from "../utils/ErrorUtil";
+import Messages from "../constants/messages/Messages";
+import server from "../server";
+import GenericErrors from "../constants/errors/GenericErrors";
+import DBActions from "../constants/DBActions";
 
+const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class DevicesController extends BaseController {
-     getAll = async (req: Request, res: Response, next: Function) => {
+    // functions
+    // GET ALL
+    getAll = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        // find all records
         try {
-            res.status(200).send(await DeviceModel.findAll());
-        } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get all device - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
-        }
-    };
-
-     getById = async (req: Request, res: Response, next: Function) => {
-        try {
-            const device = await DeviceModel.findByPk(req.params.id);
-
-            if (device) {
-                res.status(200).send(device);
-            } else {
-                res.status(404).send(DeviceErrors.DEVICE_NOT_FOUND_ERROR);
-            }
-        } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get device by ID - " + e.toString());
-            res.status(500).send({error: "internal error"});
-        }
-    };
-
-     insert = async (req: Request, res: Response, next: Function) => {
-        // get device from request
-        let device: DeviceModel = req.body;
-
-        // check if deviceID are set
-        // if not are set, break execution
-        if (!device.type_id) {
-            res.status(400).send(DeviceErrors.DEVICE_TYPEID_EMPTY_ERROR);
-            return;
-        }
-
-        if (!device.name) {
-            res.status(400).send(DeviceErrors.DEVICE_NAME_EMPTY_ERROR);
-            return;
-        }
-
-        // find device in db for check if already exists
-        try {
-            const tempDevice = await DeviceModel.findOne({
-                attributes: [
-                    'name','type_id'
-                ], where: {
-                    type_id: {
+            queryResult = await DeviceModel.findAll({
+                where: {
+                    deletedAt: {
                         [Op.is]: null
-                    },
+                    }
+                }
+            });
+
+            // if has results, then send result data
+            // if not has result, send empty array
+            queryResult
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.OK).send([]);
+        } catch (e) {
+            ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.GET_ALL)
+        }
+    };
+
+    // GET BY ID
+    getById = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        // find record by pk
+        try {
+            queryResult = await DeviceModel.findByPk(req.params.id);
+
+            // if has results, then send result data
+            // if not has result, send not found error
+            queryResult && !queryResult.deletedAt
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.NOT_FOUND).send({error: DeviceModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+        } catch (e) {
+            ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.GET_BY_ID)
+        }
+    };
+
+    // INSERT
+    insert = async (req: Request, res: Response, next: Function) => {
+
+        // create model from request body data
+        const data: DeviceModel = req.body;
+        let tempData: any;
+
+        // check if field called 'type_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.type_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: DeviceModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
+            return;
+        }
+
+        // check if field callet 'location_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.name) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: DeviceModel.name + " " + GenericErrors.NAME_EMPTY_ERROR});
+            return;
+        }
+
+        // find if exists any record with same request value in type field
+        try {
+            tempData = await DeviceModel.findOne({
+                attributes: [
+                    'name',
+                ], where: {
                     name: {
-                        [Op.eq]: device.name
+                        [Op.eq]: data.name
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -71,52 +95,48 @@ class DevicesController extends BaseController {
                 }
             });
 
-            // check if device already exist
-            // break execution
-            if (tempDevice) {
-                res.status(400).send(DeviceErrors.DEVICE_ALREADY_EXIST_ERROR);
+            // if already exist
+            // send conflict error
+            if (tempData) {
+                res.status(HttpStatus.CONFLICT).send({error: DeviceModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
                 return;
             } else {
-                try {
-                    // Create user from request data
-                    const newDevice = await DeviceModel.create(device);
+                // create new record from request body data
+                const newData = await DeviceModel.create(data);
 
-                    res.status(200).send(newDevice);
-                } catch (e) {
-                    console.log(e);
-                    LOGUtil.saveLog("insert device - " + e.toString());
-                    res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
-                }
+                // emit new data
+                server.io.emit('DBEvent', {
+                    modelName: DeviceModel.name,
+                    action: DBActions.INSERT + DeviceModel.name,
+                    data: newData
+                });
+
+                // respond request
+                res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("insert device - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.INSERT);
         }
     };
 
-     update = async (req: Request, res: Response, next: Function) => {
-        // get deviceID from request
-        const deviceId = req.params.id;
+    // UPDATE
+    update = async (req: Request, res: Response, next: Function) => {
+        // create model from request body data
+        const data: DeviceModel = req.body;
 
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
 
-        // check if deviceId are set
-        // if not are set, break execution
-        if (!deviceId) {
-            res.status(400).send(DeviceErrors.DEVICE_TYPEID_EMPTY_ERROR);
-            return;
-        }
+        // set updated date
+        data.updatedAt = new Date();
 
+        // update
         try {
-            // created device from request data
-            let device: DeviceModel = req.body;
-            device.updatedAt = new Date();
-
-            const updatedDevice = await DeviceModel.update(device,
+            const updateResult = await DeviceModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: deviceId
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
@@ -124,56 +144,77 @@ class DevicesController extends BaseController {
                     }
                 });
 
-            // check if device are updated
-            if (updatedDevice[0] === 1) {
-               res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            // if it has affected one row
+            if (updateResult[0] === 1) {
+
+                // find updated data
+                const updatedData = await DeviceModel.findByPk(data.id);
+
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: DeviceModel.name,
+                    action: DBActions.UPDATE + DeviceModel.name,
+                    data: updatedData
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(updatedData);
+
             } else {
-                res.status(404).send(DeviceErrors.DEVICE_NOT_FOUND_ERROR);
+                res.status(HttpStatus.NOT_FOUND).send({error: DeviceModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("update device  - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.UPDATE);
         }
     };
 
-     delete = async (req: Request, res: Response, next: Function) => {
-        // get userID from request
-        const deviceId = req.params.id;
+    // DELETE
+    delete = async (req: Request, res: Response, next: Function) => {
 
-        // check if deviceId are set
-        // if not are set, break execution
-        if (!deviceId) {
-            res.status(400).send(DeviceErrors.DEVICE_TYPEID_EMPTY_ERROR);
-            return;
-        }
+        // create model from request body data
+        const data: DeviceModel = req.body;
 
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
+
+        // set deleted date
+        data.deletedAt = new Date();
+
+        // delete
         try {
-            const device = await DeviceModel.update({deletedAt: new Date()},
+            const deleteResult = await DeviceModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: deviceId
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
-                            [Op.eq]: null
+                            [Op.is]: null
                         }
                     }
                 });
 
-            // check if device are deleted
-            if (device[0] === 1) {
-                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            // if it has affected one row
+            if (deleteResult[0] === 1) {
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: DeviceModel.name,
+                    action: DBActions.DELETE + DeviceModel.name,
+                    data: data.id
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
-                res.status(404).send(DeviceErrors.DEVICE_NOT_FOUND_ERROR);
+                res.status(HttpStatus.NOT_FOUND).send({error: DeviceModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("Delete device - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.DELETE)
         }
     };
 }
 
-const deviceController = new DevicesController();
-export default deviceController;
+const devicesController = new DevicesController();
+export default devicesController;

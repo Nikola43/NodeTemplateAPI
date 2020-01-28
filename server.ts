@@ -27,8 +27,8 @@ export class Server {
 
         io.on('connection', (socket: any) => {
             console.log('Socket ON');
-            socket.on('eventDB', (emit: EmitModel) => {
-                io.emit('eventDB', emit)
+            socket.on('DBEvent', (emit: EmitModel) => {
+                io.emit('DBEvent', emit)
             });
 
             socket.on('nuevo mensaje', function (msj: any) {

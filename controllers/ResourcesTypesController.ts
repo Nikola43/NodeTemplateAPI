@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
-import ResourceErrors from "../errors/ResourceTypeErrors";
+import ResourceErrors from "../constants/errors/ResourceTypeErrors";
 import {ResourceTypeModel} from "../db/models/ResourceTypeModel";
-import ServerErrors from "../errors/ServerErrors";
-import Messages from "../messages/Messages";
+import ServerErrors from "../constants/errors/ServerErrors";
+import Messages from "../constants/messages/Messages";
 import {LOGUtil} from "../utils/LOGUtil";
 
 const Sequelize = require('sequelize');

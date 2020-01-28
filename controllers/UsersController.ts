@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
 import {UserModel} from "../db/models/UserModel";
-import ServerErrors from "../errors/ServerErrors";
-import Messages from "../messages/Messages";
-import UserErrors from "../errors/UserErrors";
+import ServerErrors from "../constants/errors/ServerErrors";
+import Messages from "../constants/messages/Messages";
+import UserErrors from "../constants/errors/UserErrors";
 import {LOGUtil} from "../utils/LOGUtil";
 
 const Sequelize = require('sequelize');

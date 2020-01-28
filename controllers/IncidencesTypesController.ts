@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { IncidenceTypeModel } from "../db/models/IncidenceTypeModel";
-import IncidenceTypeErrors from "../errors/IncidenceTypeErrors";
+import IncidenceTypeErrors from "../constants/errors/IncidenceTypeErrors";
 import {ErrorUtil} from "../utils/ErrorUtil";
-import Messages from "../messages/Messages";
+import Messages from "../constants/messages/Messages";
 import BaseController from "./BaseController";
 
 

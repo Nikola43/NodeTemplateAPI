@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
 import * as jwt from "jsonwebtoken";
 import Config from "../config/Config";
-import UserErrors from "../errors/UserErrors";
-import ServerErrors from "../errors/ServerErrors";
-import Messages from "../messages/Messages";
+import UserErrors from "../constants/errors/UserErrors";
+import ServerErrors from "../constants/errors/ServerErrors";
+import Messages from "../constants/messages/Messages";
 import {UserModel} from "../db/models/UserModel";
 import {Op} from "sequelize";
 import bcrypt from "bcrypt"

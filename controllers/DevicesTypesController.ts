@@ -2,14 +2,16 @@ import {Request, Response} from "express";
 import {DeviceTypeModel} from "../db/models/DeviceTypeModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
-import DeviceTypeErrors from "../errors/DeviceTypeErrors";
-import Messages from "../messages/Messages";
+import Messages from "../constants/messages/Messages";
+import DeviceTypeErrors from "../constants/errors/DeviceTypeErrors";
+import server from "../server";
+
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-class DeviceTypesController extends BaseController {
+class DevicesTypesController extends BaseController {
     getAll = async (req: Request, res: Response, next: Function) => {
         try {
             const data = await DeviceTypeModel.findAll();
@@ -19,7 +21,7 @@ class DeviceTypesController extends BaseController {
         }
     };
 
-    getById = async (req: Request, res: Response, next: any) => {
+    getById = async (req: Request, res: Response, next: Function) => {
         try {
             const data = await DeviceTypeModel.findByPk(req.params.id);
             data ? res.status(HttpStatus.OK).send(data) : res.status(HttpStatus.NOT_FOUND).send({error: "device type not found"});
@@ -28,13 +30,13 @@ class DeviceTypesController extends BaseController {
         }
     };
 
-    insert = async (req: Request, res: Response, next: any) => {
-        // get center from request
+    insert = async (req: Request, res: Response, next: Function) => {
+        // get device from request
         const data: DeviceTypeModel = req.body;
 
         // check if type id are set
         if (!data.type) {
-            res.status(HttpStatus.BAD_REQUEST).send(DeviceTypeErrors.DEVICE_TYPE_ID_EMPTY_ERROR);
+            res.status(HttpStatus.BAD_REQUEST).send(DeviceTypeErrors.DEVICE_TYPE_EMPTY);
             return;
         }
 
@@ -57,20 +59,26 @@ class DeviceTypesController extends BaseController {
                 res.status(HttpStatus.CONFLICT).send(DeviceTypeErrors.DEVICE_TYPE_ALREADY_EXIST_ERROR);
                 return;
             } else {
-                // Create device type from request data
-                res.status(HttpStatus.CREATED).send(await DeviceTypeModel.create(data))
+                // Create device from request data
+                const newData = await DeviceTypeModel.create(data);
+                server.io.emit('DBEvent', {
+                    modelName: 'DeviceTypeModel',
+                    action: "insert",
+                    data: newData
+                });
+                res.status(HttpStatus.CREATED).send(newData);
             }
         } catch (e) {
             ErrorUtil.handleError(res, e, 'insert device type');
         }
     };
 
-    update = async (req: Request, res: Response, next: any) => {
+    update = async (req: Request, res: Response, next: Function) => {
         let data: DeviceTypeModel = req.body;
         data.id = Number(req.params.id);
         data.updatedAt = new Date();
 
-        //update
+        // update
         try {
             const updatedData = await DeviceTypeModel.update(data,
                 {
@@ -84,6 +92,11 @@ class DeviceTypesController extends BaseController {
                     }
                 });
             if (updatedData[0] === 1) {
+                server.io.emit('DBEvent', {
+                    modelName: 'DeviceTypeModel',
+                    action: "update",
+                    data: Messages.SUCCESS_REQUEST_MESSAGE
+                });
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
                 res.status(HttpStatus.NOT_FOUND).send(DeviceTypeErrors.DEVICE_TYPE_NOT_FOUND_ERROR);
@@ -94,7 +107,7 @@ class DeviceTypesController extends BaseController {
         }
     };
 
-    delete = async (req: Request, res: Response, next: any) => {
+    delete = async (req: Request, res: Response, next: Function) => {
         // create model from request data
         const data: DeviceTypeModel = req.body;
         data.id = Number(req.params.id);
@@ -114,16 +127,22 @@ class DeviceTypesController extends BaseController {
                     }
                 });
             if (updatedData[0] === 1) {
+                server.io.emit('DBEvent', {
+                    modelName: 'DeviceTypeModel',
+                    action: "delete",
+                    data: data.id
+                });
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
                 res.status(HttpStatus.NOT_FOUND).send(DeviceTypeErrors.DEVICE_TYPE_NOT_FOUND_ERROR);
             }
 
         } catch (e) {
-            ErrorUtil.handleError(res, e, 'deleted center type');
+            ErrorUtil.handleError(res, e, 'deleted device type');
         }
     };
 }
 
-const datasController = new DeviceTypesController();
-export default datasController;
+const devicesTypesController = new DevicesTypesController();
+export default devicesTypesController;
+

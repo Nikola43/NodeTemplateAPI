@@ -1,7 +1,8 @@
+import {DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
-import { Model, DataTypes } from 'sequelize';
+import {BaseTypeModel} from "./BaseTypeModel";
 
-export class CenterModel extends Model {
+export class CenterModel extends BaseTyp eModel {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public location_id!: number;
     public type_id!: number;

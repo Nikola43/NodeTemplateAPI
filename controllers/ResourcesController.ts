@@ -1,76 +1,108 @@
 import {Request, Response} from "express";
-import ResourceErrors from "../constants/errors/ResourceErrors";
 import {ResourceModel} from "../db/models/ResourceModel";
-import ServerErrors from "../constants/errors/ServerErrors";
-import Messages from "../constants/messages/Messages";
-import {LOGUtil} from "../utils/LOGUtil";
 import BaseController from "./BaseController";
+import {ErrorUtil} from "../utils/ErrorUtil";
+import Messages from "../constants/messages/Messages";
+import ResourceErrors from "../constants/errors/ResourceErrors";
+import server from "../server";
+import GenericErrors from "../constants/errors/GenericErrors";
+import DBActions from "../constants/DBActions";
 
-
+const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-class ResourcesController extends BaseController{
-    getAll = async (req: Request, res: Response, next: any) => {
+class ResourcesController extends BaseController {
+    // functions
+    // GET ALL
+    getAll = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        // find all records
         try {
-            const resources = await ResourceModel.findAll();
-            res.status(200).send(resources);
+            queryResult = await ResourceModel.findAll({
+                where: {
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // if has results, then send result data
+            // if not has result, send empty array
+            queryResult
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("Get all resource - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, ResourcesController.name + ' - ' + DBActions.GET_ALL)
         }
     };
 
-    getById = async (req: Request, res: Response, next: any) => {
-        try {
-            const resource = await ResourceModel.findByPk(req.params.id);
-            console.log(req.params.id);
+    // GET BY ID
+    getById = async (req: Request, res: Response, next: Function) => {
 
-            if (resource) {
-                res.status(200).send(resource);
-            } else {
-                res.status(404).send(ResourceErrors.RESOURCE_NOT_FOUND_ERROR);
-            }
+        // create variable for store query result
+        let queryResult: any;
+
+        // find record by pk
+        try {
+            queryResult = await ResourceModel.findByPk(req.params.id);
+
+            // if has results, then send result data
+            // if not has result, send not found error
+            queryResult && !queryResult.deletedAt
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.NOT_FOUND).send({error: ResourceModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("Get resource by ID - " + e.toString());
-            res.status(500).send({error: "internal error"});
+            ErrorUtil.handleError(res, e, ResourcesController.name + ' - ' + DBActions.GET_BY_ID)
         }
     };
 
-    insert = async (req: Request, res: Response, next: any) => {
-        // get resource data from request
-        const centerId = req.body.center_id;
-        const typeId = req.body.type_id;
-        const name = req.body.name;
+    // INSERT
+    insert = async (req: Request, res: Response, next: Function) => {
 
-        // check if centerID are set
-        // if not are set, break execution
-        if (!centerId) {
-            // todo cambiar tipo de error
-            res.status(400).send(ResourceErrors.RESOURCE_ALREADY_HAS_ASIGNED_CENTER_ERROR);
+        // create model from request body data
+        const data: ResourceModel = req.body;
+        let tempData: any;
+
+        // check if field callet 'location_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.center_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: ResourceModel.name + " " + ResourceErrors.RESOURCE_CENTER_ID_EMPTY_ERROR});
             return;
         }
 
-        if (!typeId) {
-            res.status(400).send(ResourceErrors.TYPE_ID_EMPTY_ERROR);
+        // check if field called 'type_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.type_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: ResourceModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
             return;
         }
 
-        if (!name) {
-            res.status(400).send(ResourceErrors.NAME_EMPTY_ERROR);
+        // check if field callet 'name' are set
+        // if field not are set, then send empty required field error
+        if (!data.name) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: ResourceModel.name + " " + GenericErrors.NAME_EMPTY_ERROR});
             return;
         }
 
-        // find resource in db for check if already exists
+        // check if field callet 'status' are set
+        // if field not are set, then send empty required field error
+        if (!data.status) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: ResourceModel.name + " " + ResourceErrors.STATUS_EMPTY_ERROR});
+            return;
+        }
+
+        // find if exists any record with same request value in type field
         try {
-            const tempResource = await ResourceModel.findOne({
+            tempData = await ResourceModel.findOne({
                 attributes: [
                     'name',
                 ], where: {
                     name: {
-                        [Op.eq]: name
+                        [Op.eq]: data.name
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -78,54 +110,48 @@ class ResourcesController extends BaseController{
                 }
             });
 
-            // check if resource already have center
-            // break execution
-            if (tempResource) {
-                res.status(400).send(ResourceErrors.RESOURCE_ALREADY_EXIST_ERROR);
+            // if already exist
+            // send conflict error
+            if (tempData) {
+                res.status(HttpStatus.CONFLICT).send({error: ResourceModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
                 return;
             } else {
+                // create new record from request body data
+                const newData = await ResourceModel.create(data);
 
-                const newResourceData: ResourceModel = req.body;
-                newResourceData.status = 1;
+                // emit new data
+                server.io.emit('DBEvent', {
+                    modelName: ResourceModel.name,
+                    action: DBActions.INSERT + ResourceModel.name,
+                    data: newData
+                });
 
-                try {
-                    // Create resource from request data
-                    const newResource = await ResourceModel.create(newResourceData);
-
-                    res.status(200).send(newResource);
-                } catch (e) {
-                    console.log(e);
-                    LOGUtil.saveLog("insert resource - " + e.toString());
-                    res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
-                }
+                // respond request
+                res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
-            console.log(e);
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, ResourcesController.name + ' - ' + DBActions.INSERT);
         }
     };
 
-    update = async (req: Request, res: Response, next: any) => {
-        // get resourceID from request
-        const resourceId = req.params.id;
+    // UPDATE
+    update = async (req: Request, res: Response, next: Function) => {
+        // create model from request body data
+        const data: ResourceModel = req.body;
 
-        // check if resourceId are set
-        // if not are set, break execution
-        if (!resourceId) {
-            res.status(400).send(ResourceErrors.RESOURCE_ID_EMPTY_ERROR);
-            return;
-        }
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
 
+        // set updated date
+        data.updatedAt = new Date();
+
+        // update
         try {
-            // create resource from request data
-            let resource: ResourceModel = req.body;
-            resource.updatedAt = new Date();
-
-            const updatedResource = await ResourceModel.update(resource,
+            const updateResult = await ResourceModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: resourceId
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
@@ -133,57 +159,77 @@ class ResourcesController extends BaseController{
                     }
                 });
 
-            // check if resource are updated
-            if (updatedResource[0] === 1) {
-                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
-                //res.status(200).send(updatedResource);
+            // if it has affected one row
+            if (updateResult[0] === 1) {
+
+                // find updated data
+                const updatedData = await ResourceModel.findByPk(data.id);
+
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: ResourceModel.name,
+                    action: DBActions.UPDATE + ResourceModel.name,
+                    data: updatedData
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(updatedData);
 
             } else {
-                res.status(404).send(ResourceErrors.RESOURCE_NOT_FOUND_ERROR);
+                res.status(HttpStatus.NOT_FOUND).send({error: ResourceModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("updated resource - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, ResourcesController.name + ' - ' + DBActions.UPDATE);
         }
     };
 
-    delete = async (req: Request, res: Response, next: any) => {
-        // get resourceID from request
-        const resourceId = req.params.id;
+    // DELETE
+    delete = async (req: Request, res: Response, next: Function) => {
 
-        // check if resourceId are set
-        // if not are set, break execution
-        if (!resourceId) {
-            res.status(400).send(ResourceErrors.RESOURCE_ID_EMPTY_ERROR);
-            return;
-        }
+        // create model from request body data
+        const data: ResourceModel = req.body;
 
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
+
+        // set deleted date
+        data.deletedAt = new Date();
+
+        // delete
         try {
-            const resource = await ResourceModel.update({deletedAt: new Date()},
+            const deleteResult = await ResourceModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: resourceId
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
-                            [Op.eq]: null
+                            [Op.is]: null
                         }
                     }
                 });
 
-            // check if resource are deleted
-            if (resource[0] === 1) {
-                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            // if it has affected one row
+            if (deleteResult[0] === 1) {
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: ResourceModel.name,
+                    action: DBActions.DELETE + ResourceModel.name,
+                    data: data.id
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
-                res.status(404).send(ResourceErrors.RESOURCE_NOT_FOUND_ERROR);
+                res.status(HttpStatus.NOT_FOUND).send({error: ResourceModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("delete resource - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, ResourcesController.name + ' - ' + DBActions.DELETE)
         }
     };
 }
+
 const resourcesController = new ResourcesController();
 export default resourcesController;

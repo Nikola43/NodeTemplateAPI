@@ -4,7 +4,6 @@ import dbConnection from "../../utils/DBUtil";
 export class UserModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public center_id!: number | null;
-    public username!: string;
     public password!: string;
     public token!: string | null;
     public name!: string | null;
@@ -39,10 +38,6 @@ UserModel.init({
     center_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true,
-    },
-    username: {
-        type: new DataTypes.STRING(64),
-        allowNull: false,
     },
     password: {
         type: new DataTypes.STRING(256),

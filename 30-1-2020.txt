@@ -1,0 +1,10 @@
+30-1-2020 16:45:41 - ResourcesController - Insert
+SequelizeValidationError: notNull Violation: ResourceModel.status cannot be null
+30-1-2020 16:49:7 - ResourcesController - Update
+SequelizeUniqueConstraintError: Validation error
+30-1-2020 16:49:15 - ResourcesController - Update
+SequelizeUniqueConstraintError: Validation error
+30-1-2020 16:49:47 - ResourcesController - Update
+SequelizeUniqueConstraintError: Validation error
+30-1-2020 17:38:40 - UsersController - Update
+SequelizeUniqueConstraintError: Validation error

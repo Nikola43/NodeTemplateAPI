@@ -10,18 +10,18 @@ import bcrypt from "bcrypt"
 
 class AuthController {
     static login = async (req: Request, res: Response) => {
-        const username = req.body.username;
+        const email = req.body.email;
         const password = req.body.password;
         let user: UserModel | null;
 
-        // check if username are set
+        // check if email are set
         // if not are set, then stop execution
-        if (!username) {
+        if (!email) {
             res.status(400).send(UserErrors.USERNAME_EMPTY_ERROR);
             return;
         }
 
-        // check if username and password are set
+        // check if email and password are set
         // if not are set, then stop execution
         if (!password) {
             res.status(400).send(UserErrors.PASSWORD_EMPTY_ERROR);
@@ -33,11 +33,11 @@ class AuthController {
             user = await UserModel.findOne({
                 attributes: [
                     'id',
-                    'username',
+                    'email',
                     'password'
                 ], where: {
-                    username: {
-                        [Op.eq]: username
+                    email: {
+                        [Op.eq]: email
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -56,9 +56,9 @@ class AuthController {
 
                 // create and sing JWT, valid for 1 hour
                 const token = jwt.sign(
-                    {userId: user.id, username: user.username},
+                    {userId: user.id, email: user.email},
                      Config.jwtSecret,
-                    {expiresIn: "24h"}
+                    {expiresIn: "128h"}
                 );
 
                 // clear user password and set token
@@ -68,7 +68,7 @@ class AuthController {
                 // update user token
                 await UserModel.update({token: token}, {
                     where: {
-                        username: username
+                        email: email
                     }
                 });
                 res.status(200).send(user);
@@ -82,8 +82,8 @@ class AuthController {
     };
 
     static changePassword = async (req: Request, res: Response) => {
-        // get username from JWT
-        const username = res.locals.jwtPayload.username;
+        // get email from JWT
+        const email = res.locals.jwtPayload.email;
 
         // check if password are set
         if (!req.body.password) {
@@ -92,7 +92,7 @@ class AuthController {
         }
 
         try {
-            const user = await UserModel.findOne({where: {username: username}});
+            const user = await UserModel.findOne({where: {email: email}});
 
             if (user) {
                 //Generate new password
@@ -101,7 +101,7 @@ class AuthController {
                 //Update user token
                 const updatedUser = await UserModel.update({password: password}, {
                     where: {
-                        username: username
+                        email: email
                     }
                 });
 

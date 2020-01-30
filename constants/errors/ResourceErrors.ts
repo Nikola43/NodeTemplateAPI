@@ -2,7 +2,9 @@ export default {
 
     RESOURCE_NOT_FOUND_ERROR: {error: "resource not found"},
     USERID_EMPTY_ERROR: {error: "user id from resource can not be empty"},
+    STATUS_EMPTY_ERROR: {error: "user id from resource can not be empty"},
     RESOURCE_ID_EMPTY_ERROR: {error: " resource Id can not be empty"},
+    RESOURCE_CENTER_ID_EMPTY_ERROR: {error: "Center Id from resource can not be empty"},
     USED_RESOURCE_TYPE_ERROR: {error: " The resource type is in use, can't be deleted"},
     TYPE_ID_EMPTY_ERROR: {error: " Type Id can not be empty"},
     NAME_EMPTY_ERROR: {error: " Name can not be empty"},

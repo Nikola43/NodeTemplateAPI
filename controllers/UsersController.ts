@@ -1,63 +1,109 @@
 import {Request, Response} from "express";
 import {UserModel} from "../db/models/UserModel";
-import ServerErrors from "../constants/errors/ServerErrors";
+import BaseController from "./BaseController";
+import {ErrorUtil} from "../utils/ErrorUtil";
 import Messages from "../constants/messages/Messages";
 import UserErrors from "../constants/errors/UserErrors";
-import {LOGUtil} from "../utils/LOGUtil";
+import server from "../server";
+import GenericErrors from "../constants/errors/GenericErrors";
+import DBActions from "../constants/DBActions";
 
+const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-class UsersController {
-     getAll = async (req: Request, res: Response, next: any) => {
+class UsersController extends BaseController {
+    // functions
+    // GET ALL
+    getAll = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        // find all records
         try {
-            const users = await UserModel.findAll();
-            res.status(200).send(users);
+            queryResult = await UserModel.findAll({
+                where: {
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // if has results, then send result data
+            // if not has result, send empty array
+            queryResult
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.OK).send([]);
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get all user- " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.GET_ALL)
         }
     };
 
-     getById = async (req: Request, res: Response, next: any) => {
+    // GET BY ID
+    getById = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        // find record by pk
         try {
-            const user = await UserModel.findByPk(req.params.id);
-            if (user) {
-                user.password = "";
-                user.token = "";
-                res.status(200).send(user);
-            } else {
-                res.status(404).send({error: "user not found"});
-            }
+            queryResult = await UserModel.findByPk(req.params.id);
+
+            // if has results, then send result data
+            // if not has result, send not found error
+            queryResult && !queryResult.deletedAt
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.NOT_FOUND).send({error: UserModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("get user by ID - " + e.toString());
-            res.status(500).send({error: "internal error"});
+            ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.GET_BY_ID)
         }
     };
 
-     insert = async (req: Request, res: Response, next: any) => {
-        // get user data from request
-        const username = req.body.username;
-        const password = req.body.password;
-        const email = req.body.email;
+    // INSERT
+    insert = async (req: Request, res: Response, next: Function) => {
 
-        // check if username, email and password are set
-        // if not are set, break execution
-        if (!(username && password && email)) {
-            res.status(400).send({error: "username, email or password are empty"});
+        // create model from request body data
+        const data: UserModel = req.body;
+        let tempData: any;
+
+        // check if field callet 'password' are set
+        // if field not are set, then send empty required field error
+        if (!data.password) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.PASSWORD_EMPTY_ERROR});
             return;
         }
 
-        // find user in db for check if already exists
+        // check if field callet 'status' are set
+        // if field not are set, then send empty required field error
+        if (!data.status) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.STATUS_EMPTY_ERROR});
+            return;
+        }
+
+        // check if field callet 'email' are set
+        // if field not are set, then send empty required field error
+        if (!data.email) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.EMAIL_EMPTY_ERROR});
+            return;
+        }
+
+        // check if field callet 'available' are set
+        // if field not are set, then send empty required field error
+        if (!data.available) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.AVAILABLE_EMPTY_ERROR});
+            return;
+        }
+
+
+        // find if exists any record with same request value in type field
         try {
-            const tempUser = await UserModel.findOne({
+            tempData = await UserModel.findOne({
                 attributes: [
                     'email',
                 ], where: {
                     email: {
-                        [Op.eq]: email
+                        [Op.eq]: data.email
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -65,47 +111,48 @@ class UsersController {
                 }
             });
 
-            // check if user already exists on db
-            // if exists, break execution
-            if (tempUser) {
-                res.status(400).send(UserErrors.USER_ALREADY_EXISTS_ERROR);
+            // if already exist
+            // send conflict error
+            if (tempData) {
+                res.status(HttpStatus.CONFLICT).send({error: UserModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
                 return;
             } else {
-                try {
-                    // Create user from request data
-                    const newUser = await UserModel.create({
-                        username: username,
-                        password: password,
-                        email: email,
-                        available: 1,
-                        status: 1,
-                    });
+                // create new record from request body data
+                const newData = await UserModel.create(data);
 
-                    res.status(200).send(newUser);
-                } catch (e) {
-                    console.log(e);
-                    LOGUtil.saveLog("insert user - " + e.toString());
-                    res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
-                }
+                // emit new data
+                server.io.emit('DBEvent', {
+                    modelName: UserModel.name,
+                    action: DBActions.INSERT + UserModel.name,
+                    data: newData
+                });
+
+                // respond request
+                res.status(HttpStatus.CREATED).send(newData)
             }
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("insert user - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.INSERT);
         }
     };
 
-     update = async (req: Request, res: Response, next: any) => {
-        try {
-            // create user from request data
-            let user: UserModel = req.body;
-            user.updatedAt = new Date();
+    // UPDATE
+    update = async (req: Request, res: Response, next: Function) => {
+        // create model from request body data
+        const data: UserModel = req.body;
 
-            const updatedUser = await UserModel.update(user,
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
+
+        // set updated date
+        data.updatedAt = new Date();
+
+        // update
+        try {
+            const updateResult = await UserModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: req.params.id
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
                             [Op.is]: null
@@ -113,46 +160,77 @@ class UsersController {
                     }
                 });
 
-            // check if user are updated
-            if (updatedUser[0] === 1) {
-                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            // if it has affected one row
+            if (updateResult[0] === 1) {
+
+                // find updated data
+                const updatedData = await UserModel.findByPk(data.id);
+
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: UserModel.name,
+                    action: DBActions.UPDATE + UserModel.name,
+                    data: updatedData
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(updatedData);
+
             } else {
-                res.status(404).send(UserErrors.USER_NOT_FOUND_ERROR);
+                res.status(HttpStatus.NOT_FOUND).send({error: UserModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("update user - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.UPDATE);
         }
     };
 
-     delete = async (req: Request, res: Response, next: any) => {
+    // DELETE
+    delete = async (req: Request, res: Response, next: Function) => {
+
+        // create model from request body data
+        const data: UserModel = req.body;
+
+        // get record id(pk) from request params
+        data.id = Number(req.params.id);
+
+        // set deleted date
+        data.deletedAt = new Date();
+
+        // delete
         try {
-            const userID = req.params.id;
-            const user = await UserModel.update({deletedAt: new Date()},
+            const deleteResult = await UserModel.update(data,
                 {
                     where: {
                         id: {
-                            [Op.eq]: userID
+                            [Op.eq]: data.id
                         },
                         deletedAt: {
-                            [Op.eq]: null
+                            [Op.is]: null
                         }
                     }
                 });
 
-            // check if user are deleted
-            if (user[0] === 1) {
-                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            // if it has affected one row
+            if (deleteResult[0] === 1) {
+                // emit updated data
+                server.io.emit('DBEvent', {
+                    modelName: UserModel.name,
+                    action: DBActions.DELETE + UserModel.name,
+                    data: data.id
+                });
+
+                // respond request
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
-                res.status(404).send(UserErrors.USER_NOT_FOUND_ERROR);
+                res.status(HttpStatus.NOT_FOUND).send({error: UserModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
+
         } catch (e) {
-            console.log(e);
-            LOGUtil.saveLog("delete user - " + e.toString());
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+            ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.DELETE)
         }
     };
 }
+
 const usersController = new UsersController();
 export default usersController;

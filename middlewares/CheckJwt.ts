@@ -21,15 +21,15 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
 
     //The token is valid for 1 hour
     //We want to send a new token on every request
-    const {userId, username} = jwtPayload;
-    const newToken = jwt.sign({userId, username}, config.jwtSecret, {
+    const {userId, email} = jwtPayload;
+    const newToken = jwt.sign({userId, email}, config.jwtSecret, {
         expiresIn: "168h"
     });
 
     //Update user token
     await UserModel.update({token: newToken}, {
         where: {
-            username: username
+            email: email
         }
     });
 

@@ -3,11 +3,14 @@ import App from './app';
 import socketIO from 'socket.io'
 import {EmitModel} from "./db/models/EmitModel";
 
+var colors = require('colors');
+
 
 export class Server {
     public port: any;
     public server: any;
     public io: any;
+    public ioRooms: any = [];
 
     constructor() {
         this.port = this.normalizePort(process.env.PORT || 3000);
@@ -26,19 +29,43 @@ export class Server {
         const io = this.io;
 
         io.on('connection', (socket: any) => {
-            console.log('Socket ON');
-            socket.on('DBEvent', (emit: EmitModel) => {
-                io.emit('DBEvent', emit)
-            });
+            console.log(colors.green('Socket ON'));
 
-            socket.on('nuevo mensaje', function (msj: any) {
-                io.emit('nuevo mensaje', msj);
+
+            socket.on('mensaje', function (msj: any) {
+                console.log('emit');
+                console.log(msj);
+                io.emit('mensaje', msj);
             });
 
             socket.on('disconnect', function () {
                 console.log('Usuario desconectado');
             });
+
+            socket.on('DBEvent', (eventData: any) => {
+                console.log(colors.yellow('DBEvent'));
+                console.log(colors.yellow(eventData));
+                io.emit('mensaje', "sdfdsfsdfsdfsf");
+            });
+
+
         });
+
+        /*
+        io.on('DBEvent', (eventData: any) => {
+            const data: EmitModel = eventData;
+            console.log(colors.yellow('DBEvent'));
+            console.log(colors.yellow(data));
+            if (eventData.action === 'InsertCenterTypeModel') {
+                console.log('New Center Created Successfully');
+                console.log(colors.blue(eventData.data));
+
+                // socket.join(emit.data.incidenceRoomId);
+            }
+            io.emit('DBEvent', eventData);
+        });
+
+        */
     }
 
     normalizePort(val: number | string): number | string | boolean {

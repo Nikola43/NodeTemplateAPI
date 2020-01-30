@@ -137,6 +137,31 @@ class IncidencesController extends BaseController {
                 res.status(HttpStatus.CONFLICT).send({error: IncidenceModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
                 return;
             } else {
+                // create incidence room id
+                let incidenceRoom = [...Array(128)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
+
+                do {
+                    // check if exist any incidence with this room id
+                    tempData = await IncidenceModel.findOne({
+                        attributes: [
+                            'incidence_room',
+                        ], where: {
+                            incidence_room: {
+                                [Op.eq]: data.incidence_room
+                            },
+                            deletedAt: {
+                                [Op.is]: null
+                            }
+                        }
+                    });
+
+                    if (tempData) {
+                        incidenceRoom =  [...Array(128)].map(i=>(~~(Math.random()*36)).toString(36)).join('')
+                    }
+                } while (tempData);
+
+                data.incidence_room = incidenceRoom;
+
                 // create new record from request body data
                 const newData = await IncidenceModel.create(data);
 

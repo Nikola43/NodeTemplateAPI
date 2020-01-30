@@ -1,11 +1,12 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
+import {BaseModel} from "./baseModels/BaseModel";
 
-export class IncidenceModel extends Model {
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
+export class IncidenceModel extends BaseModel {
     public user_id!: number;
     public location_id!: number;
     public type_id!: number;
+    public incidence_room!: string;
     public name!: string;
     public description!: string | null;
     public subtype!: number;
@@ -17,11 +18,6 @@ export class IncidenceModel extends Model {
     public tactic!: string | null;
     public maneuver!: string | null;
     public endAt!: Date | null;
-
-    // timestamps!
-    public readonly createdAt!: Date;
-    public updatedAt!: Date | null;
-    public deletedAt!: Date | null;
 }
 
 IncidenceModel.init({
@@ -42,6 +38,10 @@ IncidenceModel.init({
     type_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
+    },
+    incidence_room: {
+        type: new DataTypes.STRING(128),
+        allowNull: true,
     },
     name: {
         type: new DataTypes.STRING(32),

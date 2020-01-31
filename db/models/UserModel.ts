@@ -1,9 +1,10 @@
-import {Model, DataTypes} from 'sequelize';
+import { DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
+import {BaseModel} from "./baseModels/BaseModel";
 
-export class UserModel extends Model {
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
+export class UserModel extends BaseModel {
     public center_id!: number | null;
+    public email!: string;
     public password!: string;
     public token!: string | null;
     public name!: string | null;
@@ -11,9 +12,8 @@ export class UserModel extends Model {
     public status!: boolean;
     public rank!: string | null;
     public role!: string | null;
-    public email!: string;
     public phone!: string | null;
-    public available!: boolean;
+    public available!: number;
     public gender!: string | null;
     public age!: number | null;
     public weight!: number | null;
@@ -21,11 +21,6 @@ export class UserModel extends Model {
     public blood_type!: string | null;
     public pulsations_max_rest!: number | null;
     public vo2_max!: number | null;
-
-    // timestamps!
-    public createdAt!: Date;
-    public updatedAt!: Date | null;
-    public deletedAt!: Date | null;
 }
 
 UserModel.init({
@@ -38,6 +33,10 @@ UserModel.init({
     center_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true,
+    },
+    email: {
+        type: new DataTypes.STRING(100),
+        allowNull: false
     },
     password: {
         type: new DataTypes.STRING(256),
@@ -56,8 +55,9 @@ UserModel.init({
         allowNull: true
     },
     status: {
-        type: DataTypes.TINYINT,
-        allowNull: false
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     },
     rank: {
         type: new DataTypes.STRING(32),
@@ -67,17 +67,14 @@ UserModel.init({
         type: new DataTypes.STRING(32),
         allowNull: true
     },
-    email: {
-        type: new DataTypes.STRING(100),
-        allowNull: false
-    },
     phone: {
         type: new DataTypes.STRING(15),
         allowNull: true
     },
     available: {
         type: DataTypes.TINYINT,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     },
     gender: {
         type: new DataTypes.STRING(32),

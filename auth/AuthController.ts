@@ -10,34 +10,28 @@ import bcrypt from "bcrypt"
 
 class AuthController {
     static login = async (req: Request, res: Response) => {
-        const email = req.body.email;
-        const password = req.body.password;
-        let user: UserModel | null;
+        let user: UserModel = req.body;
 
         // check if email are set
         // if not are set, then stop execution
-        if (!email) {
+        if (!user.email) {
             res.status(400).send(UserErrors.USERNAME_EMPTY_ERROR);
             return;
         }
 
         // check if email and password are set
         // if not are set, then stop execution
-        if (!password) {
+        if (!user.password) {
             res.status(400).send(UserErrors.PASSWORD_EMPTY_ERROR);
             return;
         }
 
         // find user on db
         try {
-            user = await UserModel.findOne({
-                attributes: [
-                    'id',
-                    'email',
-                    'password'
-                ], where: {
+            const tempUser = await UserModel.findOne({
+                where: {
                     email: {
-                        [Op.eq]: email
+                        [Op.eq]: user.email
                     },
                     deletedAt: {
                         [Op.is]: null
@@ -46,32 +40,33 @@ class AuthController {
             });
 
             // check if user exists
-            if (user) {
+            if (tempUser) {
 
                 // check if encrypted password match
-                if (await bcrypt.compare(password, user.password)) {
+                if (await bcrypt.compare(user.password, tempUser.password)) {
+
+                    // create and sing JWT, valid for 1 hour
+                    const token = jwt.sign(
+                        {userId: user.id, email: user.email},
+                        Config.jwtSecret,
+                        {expiresIn: "128h"}
+                    );
+
+                    // clear user password and set token
+                    tempUser.password = "";
+                    tempUser.token = token;
+
+                    // update user token
+                    await UserModel.update({token: token}, {
+                        where: {
+                            email: tempUser.email
+                        }
+                    });
+                    res.status(200).send(tempUser);
+                } else {
                     res.status(404).send(UserErrors.USER_NOT_FOUND_ERROR);
                     return;
                 }
-
-                // create and sing JWT, valid for 1 hour
-                const token = jwt.sign(
-                    {userId: user.id, email: user.email},
-                     Config.jwtSecret,
-                    {expiresIn: "128h"}
-                );
-
-                // clear user password and set token
-                user.password = "";
-                user.token = token;
-
-                // update user token
-                await UserModel.update({token: token}, {
-                    where: {
-                        email: email
-                    }
-                });
-                res.status(200).send(user);
             } else {
                 res.status(404).send(UserErrors.USER_NOT_FOUND_ERROR);
             }
@@ -96,7 +91,7 @@ class AuthController {
 
             if (user) {
                 //Generate new password
-                const password = await bcrypt.hash(req.body.password, 10);
+                const password = await bcrypt.hashSync(req.body.password, 10);
 
                 //Update user token
                 const updatedUser = await UserModel.update({password: password}, {

@@ -7,6 +7,7 @@ import UserErrors from "../constants/errors/UserErrors";
 import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
+import bcrypt from "bcrypt";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -74,27 +75,12 @@ class UsersController extends BaseController {
             return;
         }
 
-        // check if field callet 'status' are set
-        // if field not are set, then send empty required field error
-        if (!data.status) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.STATUS_EMPTY_ERROR});
-            return;
-        }
-
         // check if field callet 'email' are set
         // if field not are set, then send empty required field error
         if (!data.email) {
             res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.EMAIL_EMPTY_ERROR});
             return;
         }
-
-        // check if field callet 'available' are set
-        // if field not are set, then send empty required field error
-        if (!data.available) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.AVAILABLE_EMPTY_ERROR});
-            return;
-        }
-
 
         // find if exists any record with same request value in type field
         try {
@@ -117,6 +103,9 @@ class UsersController extends BaseController {
                 res.status(HttpStatus.CONFLICT).send({error: UserModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
                 return;
             } else {
+                //Generate new password
+                data.password = await bcrypt.hashSync(data.password, 10);
+
                 // create new record from request body data
                 const newData = await UserModel.create(data);
 
@@ -126,6 +115,9 @@ class UsersController extends BaseController {
                     action: DBActions.INSERT + UserModel.name,
                     data: newData
                 });
+
+                // clear password before send
+                newData.password = "";
 
                 // respond request
                 res.status(HttpStatus.CREATED).send(newData)

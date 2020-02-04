@@ -95,3 +95,10 @@ IncidenceModel.init({
     tableName: 'incidences',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+IncidenceModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
+    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
+)
+.then(() => 
+    console.log("Tabla de incidencias creada o ya existe.")
+);

@@ -45,3 +45,10 @@ ResourceModel.init({
     tableName: 'resources',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+ResourceModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
+    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
+)
+.then(() => 
+    console.log("Tabla de recursos creada o ya existe.")
+);

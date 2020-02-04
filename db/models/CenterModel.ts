@@ -1,6 +1,7 @@
 import {DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 import {BaseModel} from "./baseModels/BaseModel";
+import {CenterTypeModel} from "./typesModels/CenterTypeModel"
 
 export class CenterModel extends BaseModel {
     public location_id!: number;
@@ -65,3 +66,10 @@ CenterModel.init({
     tableName: 'centers',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+CenterModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
+        { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
+    )
+    .then(() => 
+        console.log("Tabla de centros creada o ya existe.")
+    );

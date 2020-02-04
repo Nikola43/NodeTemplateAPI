@@ -50,3 +50,10 @@ PanicButtonModel.init({
     tableName: 'panic_buttons',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+PanicButtonModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
+    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
+)
+.then(() => 
+    console.log("Tabla de panicbutton creada o ya existe.")
+);

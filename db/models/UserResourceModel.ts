@@ -35,3 +35,11 @@ UserResourceModel.init({
     tableName: 'users_resources',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+
+UserResourceModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
+    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
+)
+.then(() => 
+    console.log("Tabla de recursos del usuario creada o ya existe.")
+);

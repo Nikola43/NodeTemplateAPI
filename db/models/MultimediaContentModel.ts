@@ -55,3 +55,10 @@ MultimediaContentModel.init({
     tableName: 'multimedia_contents',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+MultimediaContentModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
+    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
+)
+.then(() => 
+    console.log("Tabla de localizaciones creada o ya existe.")
+);

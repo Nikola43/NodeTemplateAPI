@@ -55,3 +55,10 @@ DocumentModel.init({
     tableName: 'documents',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+DocumentModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
+    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
+)
+.then(() => 
+    console.log("Tabla de documentos creada o ya existe.")
+);

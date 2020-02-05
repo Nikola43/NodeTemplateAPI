@@ -5,7 +5,7 @@ import path from 'path';
 import logger from 'morgan';
 import bodyParser from "body-parser";
 import cors from "cors";
-import indexRouter from './routes';
+import indexRouter from './routes/Index';
 import usersRouter from './routes/Users';
 import panicButtonsRouter from './routes/PanicButtons';
 import centersRouter from './routes/Centers';

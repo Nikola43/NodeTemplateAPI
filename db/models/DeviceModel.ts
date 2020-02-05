@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
+import { DeviceTypeModel } from './typesModels/DeviceTypeModel';
 
 export class DeviceModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
@@ -45,6 +46,9 @@ DeviceModel.init({
     tableName: 'devices',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+DeviceModel.hasOne(DeviceTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'Type'});
+
 
 DeviceModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
     { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)

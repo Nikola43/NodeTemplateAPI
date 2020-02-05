@@ -6,6 +6,7 @@ import Messages from "../constants/messages/Messages";
 import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
+import { DeviceTypeModel } from "../db/models/typesModels/DeviceTypeModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -47,7 +48,9 @@ class DevicesController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await DeviceModel.findByPk(req.params.id);
+            queryResult = await DeviceModel.findByPk(req.params.id,{
+                include: [{model: DeviceTypeModel, as: 'Type'}]
+            });
 
             // if has results, then send result data
             // if not has result, send not found error

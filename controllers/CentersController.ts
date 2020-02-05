@@ -9,6 +9,7 @@ import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import { CenterTypeModel } from "../db/models/typesModels/CenterTypeModel";
 import { LocationModel } from "../db/models/LocationModel";
+import { UserModel } from "../db/models/UserModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -52,7 +53,7 @@ class CentersController extends BaseController {
         // find record by pk
         try {
             queryResult = await CenterModel.findByPk(req.params.id,{
-                include: [{model: CenterTypeModel, as: 'Type'},{model: LocationModel, as: 'Location'}],
+                include: [{model: CenterTypeModel, as: 'Type'},{model: LocationModel, as: 'Location'},{model: UserModel, as: 'Usuarios'}],
                 rejectOnEmpty: true,
             });
            

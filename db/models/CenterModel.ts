@@ -3,6 +3,7 @@ import dbConnection from "../../utils/DBUtil";
 import {BaseModel} from "./baseModels/BaseModel";
 import {CenterTypeModel} from "./typesModels/CenterTypeModel"
 import { LocationModel } from './LocationModel';
+import { UserModel } from './UserModel';
 
 export class CenterModel extends BaseModel {
     public location_id!: number;
@@ -70,6 +71,7 @@ CenterModel.init({
 
 CenterModel.hasOne(CenterTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'Type'});
 CenterModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'Location'});
+CenterModel.hasMany(UserModel, {sourceKey: 'id', foreignKey: 'center_id', as: 'Usuarios'});
 
   
 

@@ -19,7 +19,7 @@ UserDeviceModel.init({
         allowNull: false,
     },
     device_id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
         allowNull: false,
     },

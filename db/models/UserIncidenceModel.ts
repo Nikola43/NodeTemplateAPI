@@ -19,7 +19,7 @@ UserIncidenceModel.init({
         allowNull: false,
     },
     incidence_id: {
-        type: new DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
         allowNull: false,
     },

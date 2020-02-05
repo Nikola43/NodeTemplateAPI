@@ -110,9 +110,9 @@ class UsersController extends BaseController {
                 const newData = await UserModel.create(data);
 
                 // emit new data
-                server.io.emit('DBEvent', {
-                    modelName: UserModel.name,
-                    action: DBActions.INSERT + UserModel.name,
+                server.io.emit('UserDBEvent', {
+                    modelName: 'ignorar',
+                    action: DBActions.INSERT,
                     data: newData
                 });
 
@@ -159,9 +159,9 @@ class UsersController extends BaseController {
                 const updatedData = await UserModel.findByPk(data.id);
 
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: UserModel.name,
-                    action: DBActions.UPDATE + UserModel.name,
+                server.io.emit('UserDBEvent', {
+                    modelName: 'ignorar',
+                    action: DBActions.UPDATE,
                     data: updatedData
                 });
 
@@ -206,10 +206,10 @@ class UsersController extends BaseController {
             // if it has affected one row
             if (deleteResult[0] === 1) {
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: UserModel.name,
-                    action: DBActions.DELETE + UserModel.name,
-                    data: data.id
+                server.io.emit('UserDBEvent', {
+                    modelName: 'ignorar',
+                    action: DBActions.DELETE,
+                    data: {id: data.id}
                 });
 
                 // respond request

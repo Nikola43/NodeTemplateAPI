@@ -10,6 +10,7 @@ import DBActions from "../constants/DBActions";
 import { CenterTypeModel } from "../db/models/typesModels/CenterTypeModel";
 import { LocationModel } from "../db/models/LocationModel";
 import { UserModel } from "../db/models/UserModel";
+import { ResourceModel } from "../db/models/ResourceModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -56,14 +57,15 @@ class CentersController extends BaseController {
                 include: [
                     {model: CenterTypeModel, as: 'Type'},
                     {model: LocationModel, as: 'Location'},
-                    {model: UserModel, as: 'Usuarios', 
+                    {model: UserModel, as: 'Users', 
                         attributes: [
                             'id',
                             'email',
                             'name',
                             'role'
                         ]
-                    }
+                    },
+                    {model: ResourceModel, as: 'Resources'},
                 ],
                 rejectOnEmpty: true,
             });

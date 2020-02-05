@@ -1,6 +1,13 @@
 import { DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 import {BaseModel} from "./baseModels/BaseModel";
+import { DocumentModel } from './DocumentModel';
+import { IncidenceModel } from './IncidenceModel';
+import { MultimediaContentModel } from './MultimediaContentModel';
+import { PanicButtonModel } from './PanicButtonModel';
+import { UserDeviceModel } from './UserDeviceModel';
+import { UserIncidenceModel } from './UserIncidenceModel';
+import { UserResourceModel } from './UserResourceModel';
 
 export class UserModel extends BaseModel {
     public center_id!: number | null;
@@ -112,6 +119,13 @@ UserModel.init({
     tableName: 'users',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+UserModel.hasMany(DocumentModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Documents'});
+UserModel.hasMany(MultimediaContentModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Multimedia'});
+UserModel.hasMany(PanicButtonModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Panics'});
+UserModel.hasMany(UserDeviceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Devices'});
+UserModel.hasMany(UserIncidenceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Incidences'});
+UserModel.hasMany(UserResourceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Resources'});
 
 
 UserModel.sync( //Crea la tabla de centros en la base de datos desde sequelize

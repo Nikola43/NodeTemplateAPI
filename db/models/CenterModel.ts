@@ -13,6 +13,7 @@ export class CenterModel extends BaseModel {
     public leader!: string | null;
     public schedule!: string | null;
     public endAt!: Date | null;
+    static associate: (models: any) => void;
 }
 
 CenterModel.init({
@@ -66,6 +67,11 @@ CenterModel.init({
     tableName: 'centers',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+CenterModel.associate = (models) => {
+    CenterModel.hasOne(models.CenterTypeModel, {foreignKey: 'type_id', as: 'type'});
+};
+  
 
 CenterModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
         { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)

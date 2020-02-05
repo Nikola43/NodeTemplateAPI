@@ -7,6 +7,7 @@ import CenterErrors from "../constants/errors/CenterErrors";
 import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
+import { CenterTypeModel } from "../db/models/typesModels/CenterTypeModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -27,7 +28,8 @@ class CentersController extends BaseController {
                     deletedAt: {
                         [Op.is]: null
                     }
-                }
+                },
+                //include: [CenterModel.associations.CenterTypeModel]
             });
 
             // if has results, then send result data
@@ -48,9 +50,12 @@ class CentersController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await CenterModel.findByPk(req.params.id);
-
-            // if has results, then send result data
+            queryResult = await CenterModel.findByPk(req.params.id,{
+                // include: [CenterModel.associations.CenterTypeModel],
+                // rejectOnEmpty: true,
+            });
+           
+            // // if has results, then send result data
             // if not has result, send not found error
             queryResult && !queryResult.deletedAt
                 ? res.status(HttpStatus.OK).send(queryResult)

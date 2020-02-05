@@ -5,7 +5,6 @@ import { CenterModel } from '../CenterModel';
 
 export class CenterTypeModel extends BaseTypeModel {
     public temporary!: number;
-    static associate: (models: any) => void;
 }
 
 CenterTypeModel.init({
@@ -32,9 +31,6 @@ CenterTypeModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
-CenterTypeModel.associate = (models) => {
-    CenterTypeModel.belongsTo(models.CenterModel, {targetKey: 'type_id',foreignKey: 'id', as: 'centers'});
-  };
 
 CenterTypeModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
     { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)

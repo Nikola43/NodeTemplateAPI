@@ -8,6 +8,7 @@ import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import { CenterTypeModel } from "../db/models/typesModels/CenterTypeModel";
+import { LocationModel } from "../db/models/LocationModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -51,8 +52,8 @@ class CentersController extends BaseController {
         // find record by pk
         try {
             queryResult = await CenterModel.findByPk(req.params.id,{
-                // include: [CenterModel.associations.CenterTypeModel],
-                // rejectOnEmpty: true,
+                include: [{model: CenterTypeModel, as: 'Type'},{model: LocationModel, as: 'Location'}],
+                rejectOnEmpty: true,
             });
            
             // // if has results, then send result data

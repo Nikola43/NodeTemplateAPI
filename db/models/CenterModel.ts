@@ -2,6 +2,7 @@ import {DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 import {BaseModel} from "./baseModels/BaseModel";
 import {CenterTypeModel} from "./typesModels/CenterTypeModel"
+import { LocationModel } from './LocationModel';
 
 export class CenterModel extends BaseModel {
     public location_id!: number;
@@ -13,7 +14,6 @@ export class CenterModel extends BaseModel {
     public leader!: string | null;
     public schedule!: string | null;
     public endAt!: Date | null;
-    static associate: (models: any) => void;
 }
 
 CenterModel.init({
@@ -68,9 +68,9 @@ CenterModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
-CenterModel.associate = (models) => {
-    CenterModel.hasOne(models.CenterTypeModel, {foreignKey: 'type_id', as: 'type'});
-};
+CenterModel.hasOne(CenterTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'Type'});
+CenterModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'Location'});
+
   
 
 CenterModel.sync( //Crea la tabla de centros en la base de datos desde sequelize

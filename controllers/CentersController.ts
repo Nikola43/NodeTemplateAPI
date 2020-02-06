@@ -58,7 +58,7 @@ class CentersController extends BaseController {
                     {model: CenterTypeModel, as: 'Type'},
                     {model: LocationModel, as: 'Location'},
                     {model: UserModel, as: 'Users', 
-                        attributes: [
+                        attributes: [ //Campos que se muestran en la relación
                             'id',
                             'email',
                             'name',

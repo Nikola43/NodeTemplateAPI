@@ -8,6 +8,11 @@ import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import bcrypt from "bcrypt";
+import { DocumentModel } from "../db/models/DocumentModel";
+import { MultimediaContentModel } from "../db/models/MultimediaContentModel";
+import { UserDeviceModel } from "../db/models/UserDeviceModel";
+import { UserResourceModel } from "../db/models/UserResourceModel";
+import { UserIncidenceModel } from "../db/models/UserIncidenceModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -49,7 +54,15 @@ class UsersController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await UserModel.findByPk(req.params.id);
+            queryResult = await UserModel.findByPk(req.params.id,{
+                include:[
+                    {model: DocumentModel, as: 'Documents'},
+                    {model: MultimediaContentModel, as: 'Multimedia'},
+                    {model: UserDeviceModel, as: 'Devices'},
+                    {model: UserResourceModel, as: 'Resources'},
+                    {model: UserIncidenceModel, as: 'Incidences'}
+                ]
+            });
 
             // if has results, then send result data
             // if not has result, send not found error

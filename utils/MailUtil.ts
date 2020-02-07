@@ -21,8 +21,8 @@ class MailUtil {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'pauloxti@gmail.com',
-                pass: '-Hromi2020'
+                user: process.env.EMAIL,
+                pass: process.env.EMAIL_PASSWORD
             }
         });
 

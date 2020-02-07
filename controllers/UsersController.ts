@@ -13,6 +13,7 @@ import { MultimediaContentModel } from "../db/models/MultimediaContentModel";
 import { UserDeviceModel } from "../db/models/UserDeviceModel";
 import { UserResourceModel } from "../db/models/UserResourceModel";
 import { UserIncidenceModel } from "../db/models/UserIncidenceModel";
+import MailUtil from "../utils/MailUtil";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -128,6 +129,14 @@ class UsersController extends BaseController {
                     action: DBActions.INSERT,
                     data: newData
                 });
+
+
+
+                MailUtil.to = data.email;
+                MailUtil.subject = 'Bienvenido a Signis';
+                MailUtil.message = `<h1 style="color: red">Su contraseña es: ${newData.password}</h1>`;
+                let result = MailUtil.sendMail();
+                console.log(result);
 
                 // clear password before send
                 newData.password = "";

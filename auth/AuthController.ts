@@ -7,18 +7,10 @@ import Messages from "../constants/messages/Messages";
 import {UserModel} from "../db/models/UserModel";
 import {Op} from "sequelize";
 import bcrypt from "bcrypt"
-import MailUtil from "../utils/MailUtil";
+
 
 class AuthController {
     static login = async (req: Request, res: Response) => {
-
-        MailUtil.to = 'pauloxti@gmail.com';
-        MailUtil.subject = 'Hola';
-        MailUtil.message = '<h1 style="color: red">Hola men</h1>';
-        let result = MailUtil.sendMail();
-        console.log(result);
-
-
         let user: UserModel = req.body;
 
         // check if email are set

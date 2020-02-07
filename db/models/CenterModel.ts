@@ -72,9 +72,9 @@ CenterModel.init({
 
 CenterModel.hasOne(CenterTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'Type'});
 CenterModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'Location'});
-CenterModel.hasMany(UserModel, {sourceKey: 'id', foreignKey: 'center_id', as: 'Users'});
 CenterModel.hasMany(ResourceModel, {sourceKey: 'id', foreignKey: 'center_id', as: 'Resources'});
-
+CenterModel.hasMany(UserModel, {sourceKey: 'id', foreignKey: 'center_id', as: 'Users'});
+UserModel.belongsTo(CenterModel, {targetKey: 'id', foreignKey: 'center_id', as: 'Center'});
   
 
 CenterModel.sync( //Crea la tabla de centros en la base de datos desde sequelize

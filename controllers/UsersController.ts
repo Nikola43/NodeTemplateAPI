@@ -118,6 +118,7 @@ class UsersController extends BaseController {
                 return;
             } else {
                 //Generate new password
+                let passwordCopy = data.password;
                 data.password = await bcrypt.hashSync(data.password, 10);
 
                 // create new record from request body data
@@ -134,7 +135,7 @@ class UsersController extends BaseController {
 
                 MailUtil.to = data.email;
                 MailUtil.subject = 'Bienvenido a Signis';
-                MailUtil.message = `<h1 style="color: red">Su contraseña es: ${data.password}</h1>`;
+                MailUtil.message = `<h1 style="color: red">Su contraseña es: ${passwordCopy}</h1>`;
                 let result = MailUtil.sendMail();
                 console.log(result);
 

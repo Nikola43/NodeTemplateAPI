@@ -49,10 +49,8 @@ DeviceModel.init({
 
 DeviceModel.hasOne(DeviceTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'Type'});
 
+DeviceModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));
 
-DeviceModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
-    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
-)
-.then(() => 
-    console.log("Tabla de coordenadas creada o ya existe.")
-);
+DeviceTypeModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));

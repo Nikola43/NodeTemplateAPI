@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
+import { ResourceTypeModel } from './typesModels/ResourceTypeModel';
 
 export class ResourceModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
@@ -46,9 +47,7 @@ ResourceModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
-ResourceModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
-    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
-)
-.then(() => 
-    console.log("Tabla de recursos creada o ya existe.")
-);
+ResourceModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));
+ResourceTypeModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));

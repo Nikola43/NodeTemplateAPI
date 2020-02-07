@@ -75,11 +75,9 @@ CenterModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', a
 CenterModel.hasMany(ResourceModel, {sourceKey: 'id', foreignKey: 'center_id', as: 'Resources'});
 CenterModel.hasMany(UserModel, {sourceKey: 'id', foreignKey: 'center_id', as: 'Users'});
 UserModel.belongsTo(CenterModel, {targetKey: 'id', foreignKey: 'center_id', as: 'Center'});
-  
 
-CenterModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
-        { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
-    )
-    .then(() => 
-        console.log("Tabla de centros creada o ya existe.")
-    );
+CenterModel.sync({ force: false })
+    .then(() => console.log("Tabla de centros creada o ya existe."));
+
+CenterTypeModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));

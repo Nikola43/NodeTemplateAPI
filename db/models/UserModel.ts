@@ -2,12 +2,13 @@ import { DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 import {BaseModel} from "./baseModels/BaseModel";
 import { DocumentModel } from './DocumentModel';
-import { IncidenceModel } from './IncidenceModel';
 import { MultimediaContentModel } from './MultimediaContentModel';
 import { PanicButtonModel } from './PanicButtonModel';
 import { UserDeviceModel } from './UserDeviceModel';
 import { UserIncidenceModel } from './UserIncidenceModel';
 import { UserResourceModel } from './UserResourceModel';
+import { LocationModel } from './LocationModel';
+import { LocationTypeModel } from './typesModels/LocationTypeModel';
 
 export class UserModel extends BaseModel {
     public center_id!: number | null;
@@ -127,10 +128,15 @@ UserModel.hasMany(UserDeviceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 
 UserModel.hasMany(UserIncidenceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Incidences'});
 UserModel.hasMany(UserResourceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Resources'});
 
-
-UserModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
-    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
-)
-.then(() => 
-    console.log("Tabla de usuario creada o ya existe.")
-);
+UserModel.sync({ force: false })
+    .then(() => console.log("Tabla de usuario creada o ya existe."));
+UserDeviceModel.sync({ force: false })
+    .then(() => console.log("Tabla de dispositivos creada o ya existe."));
+UserIncidenceModel.sync({ force: false })
+    .then(() => console.log("Tabla de incidencias creada o ya existe."));
+UserResourceModel.sync({ force: false })
+    .then(() => console.log("Tabla de incidencias creada o ya existe."));
+LocationModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));
+LocationTypeModel.sync({ force: false })
+        .then(() => console.log("Tabla de tipos centros creada o ya existe."));

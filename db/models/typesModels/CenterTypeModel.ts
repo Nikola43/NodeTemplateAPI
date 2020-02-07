@@ -30,11 +30,3 @@ CenterTypeModel.init({
     tableName: 'centers_types',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
-
-
-CenterTypeModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
-    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
-)
-.then(() => 
-    console.log("Tabla de tipos centros creada o ya existe.")
-);

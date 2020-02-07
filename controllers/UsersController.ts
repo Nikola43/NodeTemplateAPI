@@ -134,7 +134,7 @@ class UsersController extends BaseController {
 
                 MailUtil.to = data.email;
                 MailUtil.subject = 'Bienvenido a Signis';
-                MailUtil.message = `<h1 style="color: red">Su contraseña es: ${newData.password}</h1>`;
+                MailUtil.message = `<h1 style="color: red">Su contraseña es: ${data.password}</h1>`;
                 let result = MailUtil.sendMail();
                 console.log(result);
 

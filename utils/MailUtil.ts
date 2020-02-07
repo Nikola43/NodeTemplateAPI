@@ -1,4 +1,5 @@
 import * as nodemailer from "nodemailer";
+require('dotenv').config();
 
 class MailUtil {
 
@@ -12,14 +13,16 @@ class MailUtil {
     sendMail() {
 
         let mailOptions = {
-            from: "pauloxti@gmail.com",
+            from: "info@stelast.com",
             to: this.to,
             subject: this.subject,
             html: this.message
         };
 
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: "ssl0.ovh.net",
+            port: 465,
+            secure: true, // true for 465, false for other ports
             auth: {
                 user: process.env.EMAIL,
                 pass: process.env.EMAIL_PASSWORD

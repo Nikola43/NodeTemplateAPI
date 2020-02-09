@@ -1,6 +1,7 @@
 import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 import {BaseModel} from "./baseModels/BaseModel";
+import { MultimediaContentTypeModel } from './typesModels/MultimediaContentTypeModel';
 
 export class MultimediaContentModel extends BaseModel {
     public user_id!: number;
@@ -56,9 +57,7 @@ MultimediaContentModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
-MultimediaContentModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
-    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
-)
-.then(() => 
-    console.log("Tabla de localizaciones creada o ya existe.")
-);
+MultimediaContentModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));
+MultimediaContentTypeModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));

@@ -177,3 +177,6 @@ class UsersDevicesController {
         }
     };
 }
+
+const usersDevicesController = new UsersDevicesController();
+export default usersDevicesController;

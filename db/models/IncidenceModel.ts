@@ -1,6 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 import {BaseModel} from "./baseModels/BaseModel";
+import { IncidenceTypeModel } from './typesModels/IncidenceTypeModel';
 
 export class IncidenceModel extends BaseModel {
     public user_id!: number;
@@ -96,9 +97,8 @@ IncidenceModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
-IncidenceModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
-    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
-)
-.then(() => 
-    console.log("Tabla de incidencias creada o ya existe.")
-);
+
+IncidenceModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));
+IncidenceTypeModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));

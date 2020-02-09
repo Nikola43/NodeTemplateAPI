@@ -1,5 +1,6 @@
 import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
+import { LocationTypeModel } from './typesModels/LocationTypeModel';
 
 export class LocationModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
@@ -105,10 +106,3 @@ LocationModel.init({
     tableName: 'locations',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
-
-LocationModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
-    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
-)
-.then(() => 
-    console.log("Tabla de localizaciones creada o ya existe.")
-);

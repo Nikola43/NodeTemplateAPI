@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
+import { DocumentTypeModel } from './typesModels/DocumentTypeModel';
 
 export class DocumentModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
@@ -56,9 +57,8 @@ DocumentModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
-DocumentModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
-    { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
-)
-.then(() => 
-    console.log("Tabla de documentos creada o ya existe.")
-);
+DocumentModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));
+    
+DocumentTypeModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));

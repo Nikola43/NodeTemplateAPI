@@ -124,9 +124,9 @@ UserModel.init({
 UserModel.hasMany(DocumentModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Documents'});
 UserModel.hasMany(MultimediaContentModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Multimedia'});
 UserModel.hasMany(PanicButtonModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Panics'});
-UserModel.hasMany(UserDeviceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Devices'});
-UserModel.hasMany(UserIncidenceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Incidences'});
-UserModel.hasMany(UserResourceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Resources'});
+UserModel.hasMany(UserDeviceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'UsersDevices'});
+UserModel.hasMany(UserIncidenceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'UsersIncidences'});
+UserModel.hasMany(UserResourceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'UsersResources'});
 
 UserModel.sync({ force: false })
     .then(() => console.log("Tabla de usuario creada o ya existe."));

@@ -14,6 +14,7 @@ import { UserDeviceModel } from "../db/models/UserDeviceModel";
 import { UserResourceModel } from "../db/models/UserResourceModel";
 import { UserIncidenceModel } from "../db/models/UserIncidenceModel";
 import MailUtil from "../utils/MailUtil";
+import { CenterModel } from "../db/models/CenterModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -59,9 +60,10 @@ class UsersController extends BaseController {
                 include:[
                     {model: DocumentModel, as: 'Documents'},
                     {model: MultimediaContentModel, as: 'Multimedia'},
-                    {model: UserDeviceModel, as: 'Devices'},
-                    {model: UserResourceModel, as: 'Resources'},
-                    {model: UserIncidenceModel, as: 'Incidences'}
+                    {model: UserDeviceModel, as: 'UsersDevices'},
+                    {model: UserResourceModel, as: 'UsersResources'},
+                    {model: UserIncidenceModel, as: 'UsersIncidences'},
+                    {model: CenterModel, as: 'Center'}
                 ]
             });
 

@@ -16,14 +16,14 @@ class AuthController {
         // check if email are set
         // if not are set, then stop execution
         if (!user.email) {
-            res.status(400).send(UserErrors.USERNAME_EMPTY_ERROR);
+            res.status(400).send(UserErrors.EMPTY_USERNAME_ERROR);
             return;
         }
 
         // check if email and password are set
         // if not are set, then stop execution
         if (!user.password) {
-            res.status(400).send(UserErrors.PASSWORD_EMPTY_ERROR);
+            res.status(400).send(UserErrors.EMPTY_PASSWORD_ERROR);
             return;
         }
 
@@ -75,43 +75,6 @@ class AuthController {
             }
         } catch (e) {
             console.log(e);
-            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
-        }
-    };
-
-    static changePassword = async (req: Request, res: Response) => {
-        // get email from JWT
-        const email = res.locals.jwtPayload.email;
-
-        // check if password are set
-        if (!req.body.password) {
-            res.status(400).send(UserErrors.PASSWORD_EMPTY_ERROR);
-            return;
-        }
-
-        try {
-            const user = await UserModel.findOne({where: {email: email}});
-
-            if (user) {
-                //Generate new password
-                const password = await bcrypt.hashSync(req.body.password, 10);
-
-                //Update user token
-                const updatedUser = await UserModel.update({password: password}, {
-                    where: {
-                        email: email
-                    }
-                });
-
-                if (updatedUser) {
-                    res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
-                } else {
-                    res.status(500).send({error: "error updating user password"});
-                }
-            } else {
-                res.status(404).send(UserErrors.USER_NOT_FOUND_ERROR);
-            }
-        } catch (e) {
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };

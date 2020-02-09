@@ -8,13 +8,15 @@ import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import bcrypt from "bcrypt";
-import { DocumentModel } from "../db/models/DocumentModel";
-import { MultimediaContentModel } from "../db/models/MultimediaContentModel";
-import { UserDeviceModel } from "../db/models/UserDeviceModel";
-import { UserResourceModel } from "../db/models/UserResourceModel";
-import { UserIncidenceModel } from "../db/models/UserIncidenceModel";
+import {DocumentModel} from "../db/models/DocumentModel";
+import {MultimediaContentModel} from "../db/models/MultimediaContentModel";
+import {UserDeviceModel} from "../db/models/UserDeviceModel";
+import {UserResourceModel} from "../db/models/UserResourceModel";
+import {UserIncidenceModel} from "../db/models/UserIncidenceModel";
 import MailUtil from "../utils/MailUtil";
+import ServerErrors from "../constants/errors/ServerErrors";
 
+const crypto = require('crypto');
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -55,8 +57,8 @@ class UsersController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await UserModel.findByPk(req.params.id,{
-                include:[
+            queryResult = await UserModel.findByPk(req.params.id, {
+                include: [
                     {model: DocumentModel, as: 'Documents'},
                     {model: MultimediaContentModel, as: 'Multimedia'},
                     {model: UserDeviceModel, as: 'Devices'},
@@ -85,7 +87,7 @@ class UsersController extends BaseController {
         // check if field callet 'password' are set
         // if field not are set, then send empty required field error
         if (!data.password) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.PASSWORD_EMPTY_ERROR});
+            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.EMPTY_PASSWORD_ERROR});
             return;
         }
 
@@ -131,13 +133,6 @@ class UsersController extends BaseController {
                     data: newData
                 });
 
-
-
-                MailUtil.to = data.email;
-                MailUtil.subject = 'Bienvenido a Signis';
-                MailUtil.message = `<h1 style="color: red">Su contraseña es: ${passwordCopy}</h1>`;
-                let result = MailUtil.sendMail();
-                console.log(result);
 
                 // clear password before send
                 newData.password = "";
@@ -243,6 +238,96 @@ class UsersController extends BaseController {
 
         } catch (e) {
             ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.DELETE)
+        }
+    };
+
+    // RECOVERY PASSWORD
+    recoveryPassword = async (req: Request, res: Response, next: Function) => {
+
+        // create model from request body data
+        const data: UserModel = req.body;
+
+        // check if field callet 'email' are set
+        // if field not are set, then send empty required field error
+        if (!data.email) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.EMAIL_EMPTY_ERROR});
+            return;
+        }
+
+        try {
+            const tempData = await UserModel.findOne({
+                attributes: [
+                    'email',
+                ], where: {
+                    email: {
+                        [Op.eq]: data.email
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // if already exist
+            // send recovery email
+            if (tempData) {
+                let passwordRecoveryToken = crypto.randomBytes(20).toString('hex');
+
+                MailUtil.to = data.email;
+                MailUtil.subject = 'Cambio de contraseña';
+                MailUtil.message = `<h1 style="color: red">Puede cambiar la contraseña pulsando el siguiente enlace http://localhost:3000/recovery?token=${passwordRecoveryToken}</h1>`;
+                let result = MailUtil.sendMail();
+                console.log(result);
+                return;
+            } else {
+                res.status(HttpStatus.CONFLICT).send({error: UserModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+            }
+
+
+        } catch (e) {
+            ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.DELETE)
+        }
+        res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+    };
+
+    changePassword = async (req: Request, res: Response) => {
+        // get email and password from request body
+        const email = req.body.recoveryPasswordToken;
+        const password = req.body.password;
+        let newPassword;
+
+        // check if email are set
+        if (!email) {
+            res.status(HttpStatus.BAD_REQUEST).send(UserErrors.EMPTY_PASSWORD_ERROR);
+            return;
+        }
+
+        // check if password are set
+        if (!password) {
+            res.status(HttpStatus.BAD_REQUEST).send(UserErrors.EMPTY_PASSWORD_ERROR);
+            return;
+        }
+
+        // find if exist any user with recived email
+        // if user exists, generate new password
+        try {
+            const user = await UserModel.findOne({where: {email: email}});
+
+            if (user) {
+                newPassword = await bcrypt.hashSync(req.body.password, 10);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send({error: UserModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
+            }
+        } catch (e) {
+            ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.GET_BY_EMAIL)
+        }
+
+        // update user password on db
+        try {
+            await UserModel.update({password: newPassword}, {where: {email: email}});
+            res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+        } catch (e) {
+            ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.UPDATE)
         }
     };
 }

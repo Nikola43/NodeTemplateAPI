@@ -24,6 +24,9 @@ export class UsersRoutes {
 
         /* DELETE USER BY ID*/
         this.router.delete("/:id", UsersController.delete);
+
+        /* RECOVERY USER PASSWORD*/
+        this.router.post("/recovery", UsersController.recoveryPassword);
     }
 }
 

@@ -2,36 +2,41 @@ import {Request, Response, NextFunction} from "express";
 import * as jwt from "jsonwebtoken";
 import config from "../config/Config";
 import {UserModel} from "../db/models/UserModel";
+import GenericConstants from "../constants/GenericConstants";
+const HttpStatus = require('http-status-codes');
 
 export const checkJwt = async (req: Request, res: Response, next: NextFunction) => {
     //Get the jwt token from the head
-    let token = <string>req.headers['authorization'];
-    let jwtPayload;
+    let token: string = <string>req.headers['authorization'];
+    let newToken: string;
 
     //Try to validate the token and get data
     try {
+        // remove Bearer prefix
         token = token.replace('Bearer ', '');
-        jwtPayload = <any>jwt.verify(token, config.jwtSecret);
-        res.locals.jwtPayload = jwtPayload;
+
+        // verify token and save it on response
+        res.locals.jwtPayload = <any>jwt.verify(token, config.jwtSecret);
+
+        //The token is valid for 1 week
+        //We want to send a new token on every request
+        const {userId, email} = res.locals.jwtPayload;
+        newToken = jwt.sign({userId, email}, config.jwtSecret, {
+            expiresIn: GenericConstants.TOKEN_TIME_EXPIRATION
+        });
+
+        //Update user token on db
+        await UserModel.update({token: newToken}, {
+            where: {
+                userId: userId
+            }
+        });
     } catch (error) {
         //If token is not valid, respond with 401 (unauthorized)
-        res.status(401).send({error: "unauthorized"});
+        res.status(HttpStatus.UNAUTHORIZED).send({error: "unauthorized"});
         return;
     }
 
-    //The token is valid for 1 hour
-    //We want to send a new token on every request
-    const {userId, email} = jwtPayload;
-    const newToken = jwt.sign({userId, email}, config.jwtSecret, {
-        expiresIn: "168h"
-    });
-
-    //Update user token
-    await UserModel.update({token: newToken}, {
-        where: {
-            email: email
-        }
-    });
 
     // set new token in header
     res.setHeader("token", newToken);

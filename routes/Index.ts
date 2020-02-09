@@ -16,6 +16,13 @@ export class IndexRoutes {
             res.render('index', {title: 'Express'});
         });
 
+        /* GET home page. */
+        this.router.get('/recovery', function (req: Request, res: Response, next: any) {
+            const passwordRecoveryToken = req.query.token;
+            console.log(passwordRecoveryToken);
+            res.render('PasswordRecovery', {title: 'Express'});
+        });
+
         /* AUTH */
         this.router.post('/login', AuthController.login);
         this.router.post('/signup', UserController.insert);

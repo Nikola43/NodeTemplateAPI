@@ -49,7 +49,7 @@ export class App {
         this.express.use(cookieParser());
         this.express.use(express.static(path.join(__dirname, '../public')));
 
-        this.express.use(this.apiBaseUrl, indexRouter);
+        this.express.use(indexRouter);
         this.express.use(this.apiBaseUrl + "/users", usersRouter);
         this.express.use(this.apiBaseUrl + "/panic_buttons", panicButtonsRouter);
         this.express.use(this.apiBaseUrl + '/centers', centersRouter);

@@ -1,6 +1,6 @@
 export default {
-    USERNAME_EMPTY_ERROR: {error: "username are empty"},
-    PASSWORD_EMPTY_ERROR: {error: "password are empty"},
+    EMPTY_USERNAME_ERROR: {error: "username are empty"},
+    EMPTY_PASSWORD_ERROR: {error: "password are empty"},
     STATUS_EMPTY_ERROR: {error: "password are empty"},
     EMAIL_EMPTY_ERROR: {error: "email are empty"},
     AVAILABLE_EMPTY_ERROR: {error: "available are empty"},

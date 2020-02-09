@@ -59,9 +59,7 @@ class UsersController extends BaseController {
                 include:[
                     {model: DocumentModel, as: 'Documents'},
                     {model: MultimediaContentModel, as: 'Multimedia'},
-                    {model: UserDeviceModel, as: 'Devices'},
                     {model: UserResourceModel, as: 'Resources'},
-                    {model: UserIncidenceModel, as: 'Incidences'}
                 ]
             });
 

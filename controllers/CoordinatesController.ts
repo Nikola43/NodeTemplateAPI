@@ -2,11 +2,11 @@ import {Request, Response} from "express";
 import {Position} from "../db/models/Position";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
-import Messages from "../constants/messages/Messages";
-import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import CoordinateErrors from "../constants/errors/CoordinateErrors";
+import {DBUtil} from "../utils/DBUtil";
+import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -62,145 +62,61 @@ class CoordinatesController extends BaseController {
 
     // INSERT
     insert = async (req: Request, res: Response, next: Function) => {
-
         // create model from request body data
         const data: Position = req.body;
 
+        // check if request is valid and if user doesn't exists
         if (this.validateInsert(data, res)) {
-            try {
-                // create new record from request body data
-                const newData = await Position.create(data);
 
-                // emit new data
+            // insert
+            const result = await DBUtil.insertModel(this, Position, data);
 
-
-                // respond request
-                res.status(HttpStatus.CREATED).send(newData)
-
-            } catch (e) {
-                ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.INSERT);
-            }
+            // respond request
+            HttpComunicationUtil.respondInsertRequest(this, Position, result, res);
         }
     };
 
     // UPDATE
     update = async (req: Request, res: Response, next: Function) => {
-        // create model from request body data
-        const data: Position = req.body;
-
-        // get record id(pk) from request params
-        data.Id = Number(req.params.id);
-
-        // set updated date
-        data.updatedAt = new Date();
+        const data: Position = req.body; // create model from request body data
+        data.Id = Number(req.params.id);    // get model id(pk) from request params
+        data.updatedAt = new Date();        // set updated date
 
         // update
-        try {
-            const updateResult = await Position.update(data,
-                {
-                    where: {
-                        id: {
-                            [Op.eq]: data.Id
-                        },
-                        deletedAt: {
-                            [Op.is]: null
-                        }
-                    }
-                });
+        const result = await DBUtil.updateModel(this, Position, data, DBActions.UPDATE);
 
-            // if it has affected one row
-            if (updateResult[0] === 1) {
-
-                // find updated data
-                const updatedData = await Position.findByPk(data.Id);
-
-                // emit updated data
-
-
-                // respond request
-                res.status(HttpStatus.OK).send(updatedData);
-
-            } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: Position.name + " " + GenericErrors.NOT_FOUND_ERROR});
-            }
-
-        } catch (e) {
-            ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.UPDATE);
-        }
+        // check query result and respond
+        await HttpComunicationUtil.respondUpdateRequest(this, Position, result, data.Id, res);
     };
 
     // DELETE
     delete = async (req: Request, res: Response, next: Function) => {
+        const data: Position = req.body; // create model from request body data
+        data.Id = Number(req.params.id);    // get model id(pk) from request params
+        data.deletedAt = new Date();        // set deleteAt date
 
-        // create model from request body data
-        const data: Position = req.body;
+        // update
+        const result = await DBUtil.updateModel(this, Position, data, DBActions.DELETE);
 
-        // get record id(pk) from request params
-        data.Id = Number(req.params.id);
-
-        // set deleted date
-        data.deletedAt = new Date();
-
-        // delete
-        try {
-            const deleteResult = await Position.update(data,
-                {
-                    where: {
-                        id: {
-                            [Op.eq]: data.Id
-                        },
-                        deletedAt: {
-                            [Op.is]: null
-                        }
-                    }
-                });
-
-            // if it has affected one row
-            if (deleteResult[0] === 1) {
-                // emit updated data
-
-
-                // respond request
-                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
-            } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: Position.name + " " + GenericErrors.NOT_FOUND_ERROR});
-            }
-
-        } catch (e) {
-            ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.DELETE)
-        }
+        // check query result and respond
+        await HttpComunicationUtil.respondDeleteRequest(this, Position, result, data.Id, res);
     };
 
     validateInsert = (data: any, res: Response): boolean => {
-        let valid = false;
-
         // check if field called 'Latitude' are set
         // if field not are set, then send empty required field error
         if (!data.Latitude) {
             res.status(HttpStatus.BAD_REQUEST).send({error: Position.name + " " + CoordinateErrors.COORDINATE_LAT_EMPTY_ERROR});
-            valid = false;
+            return false;
         }
 
         // check if field callet 'Longitude' are set
         // if field not are set, then send empty required field error
         if (!data.Longitude) {
             res.status(HttpStatus.BAD_REQUEST).send({error: Position.name + " " + CoordinateErrors.COORDINATE_LON_EMPTY_ERROR});
-            valid = false;
+            return false;
         }
-        return valid;
-    };
-
-
-    respondInsertRequest = (result: any, res: Response) => {
-
-    };
-
-    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
-
-    };
-
-    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
-
+        return true;
     };
 }
 

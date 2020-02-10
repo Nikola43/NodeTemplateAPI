@@ -2,12 +2,11 @@ import {Request, Response} from "express";
 import {DocumentModel} from "../db/models/DocumentModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
-import Messages from "../constants/messages/Messages";
 import DocumentErrors from "../constants/errors/DocumentErrors";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
-import socketManager from "../managers/SocketManager";
 import {DBUtil} from "../utils/DBUtil";
+import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -66,111 +65,44 @@ class DocumentsController extends BaseController {
         // create model from request body data
         const data: DocumentModel = req.body;
 
-        // check if request is valid
-        // check if user exists
+        // check if request is valid and if user doesn't exists
         if (this.validateInsert(data, res)
             && !await DBUtil.checkIfExistsByField(this, DocumentModel, 'name', data.name)) {
-            try {
-                // create new record from request body data
-                const newData = await DocumentModel.create(data);
 
-                socketManager.emitSocketEvent('UserDBEvent', DBActions.INSERT, newData);
+            // insert
+            const result = await DBUtil.insertModel(this, DocumentModel, data);
 
-                // respond request
-                res.status(HttpStatus.CREATED).send(newData)
-            } catch (e) {
-                ErrorUtil.handleError(res, e, DocumentModel.name + ' - ' + DBActions.INSERT);
-            }
+            // respond request
+            HttpComunicationUtil.respondInsertRequest(this, DocumentModel, result, res);
         }
     };
 
     // UPDATE
     update = async (req: Request, res: Response, next: Function) => {
-        // create model from request body data
-        const data: DocumentModel = req.body;
-
-        // get record id(pk) from request params
-        data.id = Number(req.params.id);
-
-        // set updated date
-        data.updatedAt = new Date();
+        const data: DocumentModel = req.body; // create model from request body data
+        data.id = Number(req.params.id);    // get model id(pk) from request params
+        data.updatedAt = new Date();        // set updated date
 
         // update
-        try {
-            const updateResult = await DocumentModel.update(data,
-                {
-                    where: {
-                        id: {
-                            [Op.eq]: data.id
-                        },
-                        deletedAt: {
-                            [Op.is]: null
-                        }
-                    }
-                });
+        const result = await DBUtil.updateModel(this, DocumentModel, data, DBActions.UPDATE);
 
-            // if it has affected one row
-            if (updateResult[0] === 1) {
-
-                // find updated data
-                const updatedData = await DocumentModel.findByPk(data.id);
-
-                // emit updated data
-
-
-                // respond request
-                res.status(HttpStatus.OK).send(updatedData);
-
-            } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: DocumentModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
-            }
-
-        } catch (e) {
-            ErrorUtil.handleError(res, e, DocumentsController.name + ' - ' + DBActions.UPDATE);
-        }
+        // check query result and respond
+        await HttpComunicationUtil.respondUpdateRequest(this, DocumentModel, result, data.id, res);
     };
 
     // DELETE
     delete = async (req: Request, res: Response, next: Function) => {
+        const data: DocumentModel = req.body; // create model from request body data
+        data.id = Number(req.params.id);    // get model id(pk) from request params
+        data.deletedAt = new Date();        // set deleteAt date
 
-        // create model from request body data
-        const data: DocumentModel = req.body;
+        // update
+        const result = await DBUtil.updateModel(this, DocumentModel, data, DBActions.DELETE);
 
-        // get record id(pk) from request params
-        data.id = Number(req.params.id);
-
-        // set deleted date
-        data.deletedAt = new Date();
-
-        // delete
-        try {
-            const deleteResult = await DocumentModel.update(data,
-                {
-                    where: {
-                        id: {
-                            [Op.eq]: data.id
-                        },
-                        deletedAt: {
-                            [Op.is]: null
-                        }
-                    }
-                });
-
-            // if it has affected one row
-            if (deleteResult[0] === 1) {
-                // emit updated data
-
-
-                // respond request
-                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
-            } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: DocumentModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
-            }
-
-        } catch (e) {
-            ErrorUtil.handleError(res, e, DocumentsController.name + ' - ' + DBActions.DELETE)
-        }
+        // check query result and respond
+        await HttpComunicationUtil.respondDeleteRequest(this, DocumentModel, result, data.id, res);
     };
+    
     validateInsert = (data: any, res: Response): boolean => {
         // check if field called 'type_id' are set
         // if field not are set, then send empty required field error
@@ -194,18 +126,6 @@ class DocumentsController extends BaseController {
         }
 
         return true;
-    };
-
-    respondInsertRequest = (result: any, res: Response) => {
-
-    };
-
-    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
-
-    };
-
-    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
-
     };
 }
 

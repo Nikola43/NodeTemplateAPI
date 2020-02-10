@@ -2,11 +2,11 @@ import {Request, Response} from "express";
 import {ResourceModel} from "../db/models/ResourceModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
-import Messages from "../constants/messages/Messages";
 import ResourceErrors from "../constants/errors/ResourceErrors";
-import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
+import {DBUtil} from "../utils/DBUtil";
+import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -62,176 +62,76 @@ class ResourcesController extends BaseController {
 
     // INSERT
     insert = async (req: Request, res: Response, next: Function) => {
-
         // create model from request body data
         const data: ResourceModel = req.body;
-        let tempData: any;
 
+        // check if request is valid and if user doesn't exists
+        if (this.validateInsert(data, res)
+            && !await DBUtil.checkIfExistsByField(this, ResourceModel, 'name', data.name)) {
+
+            // insert
+            const result = await DBUtil.insertModel(this, ResourceModel, data);
+
+            // respond request
+            HttpComunicationUtil.respondInsertRequest(this, ResourceModel, result, res);
+        }
+    };
+
+    // UPDATE
+    update = async (req: Request, res: Response, next: Function) => {
+        const data: ResourceModel = req.body; // create model from request body data
+        data.id = Number(req.params.id);    // get model id(pk) from request params
+        data.updatedAt = new Date();        // set updated date
+
+        // update
+        const result = await DBUtil.updateModel(this, ResourceModel, data, DBActions.UPDATE);
+
+        // check query result and respond
+        await HttpComunicationUtil.respondUpdateRequest(this, ResourceModel, result, data.id, res);
+    };
+
+    // DELETE
+    delete = async (req: Request, res: Response, next: Function) => {
+        const data: ResourceModel = req.body; // create model from request body data
+        data.id = Number(req.params.id);    // get model id(pk) from request params
+        data.deletedAt = new Date();        // set deleteAt date
+
+        // update
+        const result = await DBUtil.updateModel(this, ResourceModel, data, DBActions.DELETE);
+
+        // check query result and respond
+        await HttpComunicationUtil.respondDeleteRequest(this, ResourceModel, result, data.id, res);
+    };
+
+    validateInsert = (data: any, res: Response): boolean => {
         // check if field callet 'location_id' are set
         // if field not are set, then send empty required field error
         if (!data.center_id) {
             res.status(HttpStatus.BAD_REQUEST).send({error: ResourceModel.name + " " + ResourceErrors.RESOURCE_CENTER_ID_EMPTY_ERROR});
-            return;
+            return false;
         }
 
         // check if field called 'type_id' are set
         // if field not are set, then send empty required field error
         if (!data.type_id) {
             res.status(HttpStatus.BAD_REQUEST).send({error: ResourceModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
-            return;
+            return false;
         }
 
         // check if field callet 'name' are set
         // if field not are set, then send empty required field error
         if (!data.name) {
             res.status(HttpStatus.BAD_REQUEST).send({error: ResourceModel.name + " " + GenericErrors.NAME_EMPTY_ERROR});
-            return;
+            return false;
         }
 
         // check if field callet 'status' are set
         // if field not are set, then send empty required field error
         if (!data.status) {
             res.status(HttpStatus.BAD_REQUEST).send({error: ResourceModel.name + " " + ResourceErrors.STATUS_EMPTY_ERROR});
-            return;
+            return false;
         }
-
-        // find if exists any record with same request value in type field
-        try {
-            tempData = await ResourceModel.findOne({
-                attributes: [
-                    'name',
-                ], where: {
-                    name: {
-                        [Op.eq]: data.name
-                    },
-                    deletedAt: {
-                        [Op.is]: null
-                    }
-                }
-            });
-
-            // if already exist
-            // send conflict error
-            if (tempData) {
-                res.status(HttpStatus.CONFLICT).send({error: ResourceModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
-                return;
-            } else {
-                // create new record from request body data
-                const newData = await ResourceModel.create(data);
-
-                // emit new data
-
-
-                // respond request
-                res.status(HttpStatus.CREATED).send(newData)
-            }
-        } catch (e) {
-            ErrorUtil.handleError(res, e, ResourcesController.name + ' - ' + DBActions.INSERT);
-        }
-    };
-
-    // UPDATE
-    update = async (req: Request, res: Response, next: Function) => {
-        // create model from request body data
-        const data: ResourceModel = req.body;
-
-        // get record id(pk) from request params
-        data.id = Number(req.params.id);
-
-        // set updated date
-        data.updatedAt = new Date();
-
-        // update
-        try {
-            const updateResult = await ResourceModel.update(data,
-                {
-                    where: {
-                        id: {
-                            [Op.eq]: data.id
-                        },
-                        deletedAt: {
-                            [Op.is]: null
-                        }
-                    }
-                });
-
-            // if it has affected one row
-            if (updateResult[0] === 1) {
-
-                // find updated data
-                const updatedData = await ResourceModel.findByPk(data.id);
-
-                // emit updated data
-
-
-                // respond request
-                res.status(HttpStatus.OK).send(updatedData);
-
-            } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: ResourceModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
-            }
-
-        } catch (e) {
-            ErrorUtil.handleError(res, e, ResourcesController.name + ' - ' + DBActions.UPDATE);
-        }
-    };
-
-    // DELETE
-    delete = async (req: Request, res: Response, next: Function) => {
-
-        // create model from request body data
-        const data: ResourceModel = req.body;
-
-        // get record id(pk) from request params
-        data.id = Number(req.params.id);
-
-        // set deleted date
-        data.deletedAt = new Date();
-
-        // delete
-        try {
-            const deleteResult = await ResourceModel.update(data,
-                {
-                    where: {
-                        id: {
-                            [Op.eq]: data.id
-                        },
-                        deletedAt: {
-                            [Op.is]: null
-                        }
-                    }
-                });
-
-            // if it has affected one row
-            if (deleteResult[0] === 1) {
-                // emit updated data
-
-
-                // respond request
-                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
-            } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: ResourceModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
-            }
-
-        } catch (e) {
-            ErrorUtil.handleError(res, e, ResourcesController.name + ' - ' + DBActions.DELETE)
-        }
-    };
-
-    validateInsert = (data: any, res: Response): boolean => {
         return true;
-    };
-
-    respondInsertRequest = (result: any, res: Response) => {
-
-    };
-
-    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
-
-    };
-
-    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
-
     };
 }
 

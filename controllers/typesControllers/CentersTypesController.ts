@@ -106,11 +106,7 @@ class CentersTypesController extends BaseController {
                 const newData = await CenterTypeModel.create(data);
 
                 // emit new data
-                server.io.emit('DBEvent', {
-                    modelName: CenterTypeModel.name,
-                    action: DBActions.INSERT + CenterTypeModel.name,
-                    data: newData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.CREATED).send(newData)
@@ -152,11 +148,7 @@ class CentersTypesController extends BaseController {
                 const updatedData = await CenterTypeModel.findByPk(data.id);
 
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: CenterTypeModel.name,
-                    action: DBActions.UPDATE + CenterTypeModel.name,
-                    data: updatedData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(updatedData);
@@ -199,11 +191,7 @@ class CentersTypesController extends BaseController {
             // if it has affected one row
             if (deleteResult[0] === 1) {
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: CenterTypeModel.name,
-                    action: DBActions.DELETE + CenterTypeModel.name,
-                    data: data.id
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
@@ -216,12 +204,20 @@ class CentersTypesController extends BaseController {
         }
     };
 
-    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+    validateInsert = (data: any, res: Response): boolean => {
         return true;
     };
 
-    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
-        return true;
+    respondInsertRequest = (result: any, res: Response) => {
+
+    };
+
+    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
+
+    };
+
+    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
+
     };
 }
 

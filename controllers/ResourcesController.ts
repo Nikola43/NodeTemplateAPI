@@ -120,11 +120,7 @@ class ResourcesController extends BaseController {
                 const newData = await ResourceModel.create(data);
 
                 // emit new data
-                server.io.emit('DBEvent', {
-                    modelName: ResourceModel.name,
-                    action: DBActions.INSERT + ResourceModel.name,
-                    data: newData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.CREATED).send(newData)
@@ -166,11 +162,7 @@ class ResourcesController extends BaseController {
                 const updatedData = await ResourceModel.findByPk(data.id);
 
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: ResourceModel.name,
-                    action: DBActions.UPDATE + ResourceModel.name,
-                    data: updatedData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(updatedData);
@@ -213,11 +205,7 @@ class ResourcesController extends BaseController {
             // if it has affected one row
             if (deleteResult[0] === 1) {
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: ResourceModel.name,
-                    action: DBActions.DELETE + ResourceModel.name,
-                    data: data.id
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
@@ -230,12 +218,20 @@ class ResourcesController extends BaseController {
         }
     };
 
-    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+    validateInsert = (data: any, res: Response): boolean => {
         return true;
     };
 
-    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
-        return true;
+    respondInsertRequest = (result: any, res: Response) => {
+
+    };
+
+    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
+
+    };
+
+    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
+
     };
 }
 

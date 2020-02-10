@@ -3,10 +3,8 @@ import {MultimediaContentModel} from "../db/models/MultimediaContentModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
 import Messages from "../constants/messages/Messages";
-import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
-
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -128,11 +126,7 @@ class MultimediaContentsController extends BaseController {
                 const newData = await MultimediaContentModel.create(data);
 
                 // emit new data
-                server.io.emit('DBEvent', {
-                    modelName: MultimediaContentModel.name,
-                    action: DBActions.INSERT + MultimediaContentModel.name,
-                    data: newData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.CREATED).send(newData)
@@ -174,11 +168,7 @@ class MultimediaContentsController extends BaseController {
                 const updatedData = await MultimediaContentModel.findByPk(data.id);
 
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: MultimediaContentModel.name,
-                    action: DBActions.UPDATE + MultimediaContentModel.name,
-                    data: updatedData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(updatedData);
@@ -221,11 +211,7 @@ class MultimediaContentsController extends BaseController {
             // if it has affected one row
             if (deleteResult[0] === 1) {
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: MultimediaContentModel.name,
-                    action: DBActions.DELETE + MultimediaContentModel.name,
-                    data: data.id
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
@@ -238,12 +224,20 @@ class MultimediaContentsController extends BaseController {
         }
     };
 
-    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+    validateInsert = (data: any, res: Response): boolean => {
         return true;
     };
 
-    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
-        return true;
+    respondInsertRequest = (result: any, res: Response) => {
+
+    };
+
+    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
+
+    };
+
+    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
+
     };
 }
 

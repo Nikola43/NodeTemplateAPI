@@ -5,8 +5,6 @@ import ServerErrors from "../constants/errors/ServerErrors";
 import Messages from "../constants/messages/Messages";
 import {LOGUtil} from "../utils/LOGUtil";
 
-
-
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -181,11 +179,19 @@ export default class UserIncidenceController {
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
-    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+    validateInsert = (data: any, res: Response): boolean => {
         return true;
     };
 
-    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
-        return true;
+    respondInsertRequest = (result: any, res: Response) => {
+
+    };
+
+    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
+
+    };
+
+    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
+
     };
 }

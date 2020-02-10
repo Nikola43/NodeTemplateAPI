@@ -8,6 +8,7 @@ import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import { DeviceTypeModel } from "../db/models/typesModels/DeviceTypeModel";
 import {CenterModel} from "../db/models/CenterModel";
+import {DBUtil} from "../utils/DBUtil";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -70,18 +71,14 @@ class DevicesController extends BaseController {
 
         // check if request is valid
         // check if user exists
-        if (this.validateInsert(data, req, res, next)
-            && !await this.checkIfExists(data, req, res, next)) {
+        if (this.validateInsert(data, res)
+            && !await DBUtil.checkIfExistsByField(this, DeviceModel, 'name', data.name)) {
             try {
                 // create new record from request body data
                 const newData = await DeviceModel.create(data);
 
                 // emit new data
-                server.io.emit('DBEvent', {
-                    modelName: DeviceModel.name,
-                    action: DBActions.INSERT + DeviceModel.name,
-                    data: newData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.CREATED).send(newData)
@@ -123,11 +120,7 @@ class DevicesController extends BaseController {
                 const updatedData = await DeviceModel.findByPk(data.id);
 
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: DeviceModel.name,
-                    action: DBActions.UPDATE + DeviceModel.name,
-                    data: updatedData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(updatedData);
@@ -168,11 +161,7 @@ class DevicesController extends BaseController {
             // if it has affected one row
             if (deleteResult[0] === 1) {
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: DeviceModel.name,
-                    action: DBActions.DELETE + DeviceModel.name,
-                    data: data.id
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
@@ -185,7 +174,7 @@ class DevicesController extends BaseController {
         }
     };
 
-    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+    validateInsert = (data: any, res: Response): boolean => {
         // check if field called 'type_id' are set
         // if field not are set, then send empty required field error
         if (!data.type_id) {
@@ -202,36 +191,18 @@ class DevicesController extends BaseController {
         return true;
     };
 
-    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
-        let exist = false;
+    respondInsertRequest = (result: any, res: Response) => {
 
-        // find if exists any record with same value in name field
-        try {
-            const tempData = await DeviceModel.findOne({
-                attributes: [
-                    'name',
-                ], where: {
-                    name: {
-                        [Op.eq]: data.name
-                    },
-                    deletedAt: {
-                        [Op.is]: null
-                    }
-                }
-            });
-
-            // if already exist
-            // send conflict error
-            if (tempData) {
-                res.status(HttpStatus.CONFLICT).send({error: DeviceModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
-                exist = false;
-            }
-        } catch (e) {
-            ErrorUtil.handleError(res, e, DeviceModel.name + ' - ' + DBActions.GET_BY_ID);
-            exist = false;
-        }
-        return exist;
     };
+
+    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
+
+    };
+
+    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
+
+    };
+
 }
 
 const devicesController = new DevicesController();

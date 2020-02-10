@@ -3,7 +3,6 @@ import {DocumentTypeModel} from "../../db/models/typesModels/DocumentTypeModel";
 import BaseController from "../BaseController";
 import {ErrorUtil} from "../../utils/ErrorUtil";
 import Messages from "../../constants/messages/Messages";
-import server from "../../server";
 import GenericErrors from "../../constants/errors/GenericErrors";
 import DBActions from "../../constants/DBActions";
 
@@ -98,11 +97,7 @@ class DocumentsTypesController extends BaseController {
                 const newData = await DocumentTypeModel.create(data);
 
                 // emit new data
-                server.io.emit('DBEvent', {
-                    modelName: DocumentTypeModel.name,
-                    action: DBActions.INSERT + DocumentTypeModel.name,
-                    data: newData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.CREATED).send(newData)
@@ -144,11 +139,7 @@ class DocumentsTypesController extends BaseController {
                 const updatedData = await DocumentTypeModel.findByPk(data.id);
 
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: DocumentTypeModel.name,
-                    action: DBActions.UPDATE + DocumentTypeModel.name,
-                    data: updatedData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(updatedData);
@@ -191,11 +182,7 @@ class DocumentsTypesController extends BaseController {
             // if it has affected one row
             if (deleteResult[0] === 1) {
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: DocumentTypeModel.name,
-                    action: DBActions.DELETE + DocumentTypeModel.name,
-                    data: data.id
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
@@ -208,12 +195,20 @@ class DocumentsTypesController extends BaseController {
         }
     };
 
-    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+    validateInsert = (data: any, res: Response): boolean => {
         return true;
     };
 
-    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
-        return true;
+    respondInsertRequest = (result: any, res: Response) => {
+
+    };
+
+    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
+
+    };
+
+    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
+
     };
 }
 

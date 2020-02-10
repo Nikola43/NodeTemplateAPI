@@ -9,8 +9,8 @@ import {CenterTypeModel} from "../db/models/typesModels/CenterTypeModel";
 import {LocationModel} from "../db/models/LocationModel";
 import {UserModel} from "../db/models/UserModel";
 import {ResourceModel} from "../db/models/ResourceModel";
-import socketManager from "../managers/SocketManager";
 import {DBUtil} from "../utils/DBUtil";
+import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -19,13 +19,9 @@ const Op = Sequelize.Op;
 class CentersController extends BaseController {
     // GET ALL
     getAll = async (req: Request, res: Response, next: Function) => {
-
-        // create variable for store query result
-        let queryResult: any;
-
         // find all records
         try {
-            queryResult = await CenterModel.findAll({
+            const queryResult = await CenterModel.findAll({
                 where: {
                     deletedAt: {
                         [Op.is]: null
@@ -46,13 +42,9 @@ class CentersController extends BaseController {
 
     // GET BY ID
     getById = async (req: Request, res: Response, next: Function) => {
-
-        // create variable for store query result
-        let queryResult: any;
-
         // find record by pk
         try {
-            queryResult = await CenterModel.findByPk(req.params.id, {
+            const queryResult = await CenterModel.findByPk(req.params.id, {
                 include: [
                     {model: CenterTypeModel, as: 'Type'},
                     {model: LocationModel, as: 'Location'},
@@ -82,12 +74,10 @@ class CentersController extends BaseController {
 
     // INSERT
     insert = async (req: Request, res: Response, next: Function) => {
-
         // create model from request body data
         const data: CenterModel = req.body;
 
-        // check if request is valid and
-        // if user exists
+        // check if request is valid and if user doesn't exists
         if (this.validateInsert(data, res)
             && !await DBUtil.checkIfExistsByField(this, CenterModel, 'name', data.name)) {
 
@@ -95,128 +85,62 @@ class CentersController extends BaseController {
             const result = await DBUtil.insertModel(this, CenterModel, data);
 
             // respond request
-            this.respondInsertRequest(result, res);
+            HttpComunicationUtil.respondInsertRequest(this, CenterModel, result, res);
         }
     };
 
     // UPDATE
     update = async (req: Request, res: Response, next: Function) => {
-
-        // create model from request body data
-        const data: CenterModel = req.body;
-
-        // get model id(pk) from request params
-        data.id = Number(req.params.id);
-
-        // set updated date
-        data.updatedAt = new Date();
+        const data: CenterModel = req.body; // create model from request body data
+        data.id = Number(req.params.id);    // get model id(pk) from request params
+        data.updatedAt = new Date();        // set updated date
 
         // update
-        const result = await DBUtil.updateModel(this, CenterModel, data);
+        const result = await DBUtil.updateModel(this, CenterModel, data, DBActions.UPDATE);
 
         // check query result and respond
-        this.respondUpdateRequest(result, data.id, res);
+        await HttpComunicationUtil.respondUpdateRequest(this, CenterModel, result, data.id, res);
     };
 
     // DELETE
     delete = async (req: Request, res: Response, next: Function) => {
+        const data: CenterModel = req.body; // create model from request body data
+        data.id = Number(req.params.id);    // get model id(pk) from request params
+        data.deletedAt = new Date();        // set deleteAt date
 
-        // create model from request body data
-        const data: CenterModel = req.body;
-
-        // get record id(pk) from request params
-        data.id = Number(req.params.id);
-
-        // set deleted date
-        data.deletedAt = new Date();
-
-        // delete
-        const result = DBUtil.updateModel(this, CenterModel, data);
+        // update
+        const result = await DBUtil.updateModel(this, CenterModel, data, DBActions.DELETE);
 
         // check query result and respond
-        this.respondDeleteRequest(result, data.id, res);
+        await HttpComunicationUtil.respondDeleteRequest(this, CenterModel, result, data.id, res);
     };
 
     validateInsert = (data: any, res: Response): boolean => {
-
-        let valid = true;
-
-        // check if field called 'type_id' are set
+        // check if field are set
         // if field not are set, then send empty required field error
         if (!data.type_id) {
             res.status(HttpStatus.BAD_REQUEST).send({error: CenterModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
-            valid = false;
+            return false;
         }
 
-        // check if field callet 'location_id' are set
+        // check if field are set
         // if field not are set, then send empty required field error
         if (!data.location_id) {
             res.status(HttpStatus.BAD_REQUEST).send({error: CenterModel.name + " " + CenterErrors.CENTER_LOCATION_ID_EMPTY_ERROR});
-            valid = false;
+            return false;
         }
 
-        // check if field callet 'name' are set
+        // check if field are set
         // if field not are set, then send empty required field error
         if (!data.name) {
             res.status(HttpStatus.BAD_REQUEST).send({error: CenterModel.name + " " + GenericErrors.NAME_EMPTY_ERROR});
-            valid = false;
+            return false;
         }
 
-        return valid;
+        // if pass all fields validations return true
+        return true;
     };
-
-    respondInsertRequest = (queryResult: any, res: Response) => {
-        if (queryResult instanceof CenterModel) {
-            socketManager.emitSocketEvent('CenterDBEvent', DBActions.INSERT, queryResult);
-            res.status(HttpStatus.CREATED).send(queryResult);
-        } else {
-            ErrorUtil.handleError(res, queryResult, CentersController.name + ' - ' + DBActions.GET_BY_ID);
-        }
-    };
-
-    respondUpdateRequest = async (queryResult: any, modelId: number, res: Response) => {
-        try {
-            // if it has affected one row
-            if (queryResult[0] === 1) {
-
-                // find updated data
-                const updatedData = await CenterModel.findByPk(modelId);
-
-                // emit updated data
-                socketManager.emitSocketEvent('CenterDBEvent', DBActions.UPDATE, updatedData);
-
-                // respond request
-                res.status(HttpStatus.OK).send(updatedData);
-            } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: CenterModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
-            }
-        } catch (e) {
-            ErrorUtil.handleError(res, e, CentersController.name + ' - ' + DBActions.UPDATE)
-        }
-    };
-
-    respondDeleteRequest = async (queryResult: any, modelId: number, res: Response) => {
-        try {
-            // if it has affected one row
-            if (queryResult[0] === 1) {
-
-                // find deleted data
-                const deletedData = await CenterModel.findByPk(modelId);
-
-                // emit deleted data
-                socketManager.emitSocketEvent('CenterDBEvent', DBActions.DELETE, deletedData);
-
-                // respond request
-                res.status(HttpStatus.OK).send(deletedData);
-            } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: CenterModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
-            }
-        } catch (e) {
-            ErrorUtil.handleError(res, e, CentersController.name + ' - ' + DBActions.UPDATE)
-        }
-    }
 }
 
-const
-    centersController = new CentersController();
+const centersController = new CentersController();
 export default centersController;

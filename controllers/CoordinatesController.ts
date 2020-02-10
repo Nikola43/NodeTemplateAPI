@@ -66,17 +66,13 @@ class CoordinatesController extends BaseController {
         // create model from request body data
         const data: Position = req.body;
 
-        if(this.validateInsert(data, req, res, next)) {
+        if (this.validateInsert(data, res)) {
             try {
                 // create new record from request body data
                 const newData = await Position.create(data);
 
                 // emit new data
-                server.io.emit('DBEvent', {
-                    modelName: Position.name,
-                    action: DBActions.INSERT + Position.name,
-                    data: newData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.CREATED).send(newData)
@@ -119,11 +115,7 @@ class CoordinatesController extends BaseController {
                 const updatedData = await Position.findByPk(data.Id);
 
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: Position.name,
-                    action: DBActions.UPDATE + Position.name,
-                    data: updatedData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(updatedData);
@@ -166,11 +158,7 @@ class CoordinatesController extends BaseController {
             // if it has affected one row
             if (deleteResult[0] === 1) {
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: Position.name,
-                    action: DBActions.DELETE + Position.name,
-                    data: data.Id
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
@@ -183,7 +171,7 @@ class CoordinatesController extends BaseController {
         }
     };
 
-    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+    validateInsert = (data: any, res: Response): boolean => {
         let valid = false;
 
         // check if field called 'Latitude' are set
@@ -202,8 +190,17 @@ class CoordinatesController extends BaseController {
         return valid;
     };
 
-    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
-        return false;
+
+    respondInsertRequest = (result: any, res: Response) => {
+
+    };
+
+    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
+
+    };
+
+    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
+
     };
 }
 

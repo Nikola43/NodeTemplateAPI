@@ -4,7 +4,6 @@ import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
 import Messages from "../constants/messages/Messages";
 import IncidenceErrors from "../constants/errors/IncidenceErrors";
-import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 
@@ -166,11 +165,7 @@ class IncidencesController extends BaseController {
                 const newData = await IncidenceModel.create(data);
 
                 // emit new data
-                server.io.emit('DBEvent', {
-                    modelName: IncidenceModel.name,
-                    action: DBActions.INSERT + IncidenceModel.name,
-                    data: newData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.CREATED).send(newData)
@@ -212,11 +207,7 @@ class IncidencesController extends BaseController {
                 const updatedData = await IncidenceModel.findByPk(data.id);
 
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: IncidenceModel.name,
-                    action: DBActions.UPDATE + IncidenceModel.name,
-                    data: updatedData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(updatedData);
@@ -259,11 +250,7 @@ class IncidencesController extends BaseController {
             // if it has affected one row
             if (deleteResult[0] === 1) {
                 // emit updated data
-                server.io.emit('DBEvent', {
-                    modelName: IncidenceModel.name,
-                    action: DBActions.DELETE + IncidenceModel.name,
-                    data: data.id
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
@@ -275,12 +262,21 @@ class IncidencesController extends BaseController {
             ErrorUtil.handleError(res, e, IncidencesController.name + ' - ' + DBActions.DELETE)
         }
     };
-    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+
+    validateInsert = (data: any, res: Response): boolean => {
         return true;
     };
 
-    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
-        return true;
+    respondInsertRequest = (result: any, res: Response) => {
+
+    };
+
+    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
+
+    };
+
+    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
+
     };
 }
 

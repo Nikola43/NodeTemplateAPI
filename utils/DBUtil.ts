@@ -1,12 +1,11 @@
 import DBActions from "../constants/DBActions";
 import {Op} from "sequelize";
 import {LOGUtil} from "./LOGUtil";
-import {CenterModel} from "../db/models/CenterModel";
 
 export class DBUtil {
     static async insertModel(controller: any, model: any, data: any) {
         try {
-            return await CenterModel.create(data);
+            return await model.create(data);
         } catch (e) {
             console.log(e);
             LOGUtil.saveLog(controller.name + ' - ' + DBActions.INSERT + '\r\n' + e);
@@ -14,7 +13,7 @@ export class DBUtil {
         }
     }
 
-    static async updateModel(controller: any, model: any, data: any) {
+    static async updateModel(controller: any, model: any, data: any, action: string) {
         try {
             return await model.update(data,
                 {
@@ -29,7 +28,7 @@ export class DBUtil {
                 });
         } catch (e) {
             console.log(e);
-            LOGUtil.saveLog(controller.name + ' - ' + DBActions.DELETE + '\r\n' + e);
+            LOGUtil.saveLog(controller.name + ' - ' + action + '\r\n' + e);
             return e;
         }
     }
@@ -41,7 +40,7 @@ export class DBUtil {
         try {
             const tempData = await model.findOne({
                 attributes: [
-                    fieldName,
+                    fieldName.valueOf(),
                 ], where: {
                     fieldName: {
                         [Op.eq]: fieldValue
@@ -59,8 +58,8 @@ export class DBUtil {
             }
         } catch (e) {
             console.log(e);
-            LOGUtil.saveLog(controller.name + ' - ' + DBActions.DELETE + '\r\n' + e);
-            return e;
+            LOGUtil.saveLog(controller.name + ' - ' + DBActions.GET_BY_FIELD + '\r\n' + e);
+            return false;
         }
         return exists;
     }

@@ -16,6 +16,7 @@ import {UserIncidenceModel} from "../db/models/UserIncidenceModel";
 import MailUtil from "../utils/MailUtil";
 import {CenterModel} from "../db/models/CenterModel";
 import ServerErrors from "../constants/errors/ServerErrors";
+import socketManager from "../managers/SocketManager";
 
 const crypto = require('crypto');
 const HttpStatus = require('http-status-codes');
@@ -129,11 +130,6 @@ class UsersController extends BaseController {
                 const newData = await UserModel.create(data);
 
                 // emit new data
-                server.io.emit('UserDBEvent', {
-                    modelName: 'ignorar',
-                    action: DBActions.INSERT,
-                    data: newData
-                });
 
 
                 // clear password before send
@@ -179,11 +175,7 @@ class UsersController extends BaseController {
                 const updatedData = await UserModel.findByPk(data.id);
 
                 // emit updated data
-                server.io.emit('UserDBEvent', {
-                    modelName: 'ignorar',
-                    action: DBActions.UPDATE,
-                    data: updatedData
-                });
+
 
                 // respond request
                 res.status(HttpStatus.OK).send(updatedData);
@@ -226,12 +218,7 @@ class UsersController extends BaseController {
             // if it has affected one row
             if (deleteResult[0] === 1) {
                 // emit updated data
-                server.io.emit('UserDBEvent', {
-                    modelName: 'ignorar',
-                    action: DBActions.DELETE,
-                    data: {id: data.id}
-                });
-
+                socketManager.emitSocketEvent(CenterModel.name, DBActions.DELETE, deleteResult);
                 // respond request
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
@@ -385,12 +372,20 @@ class UsersController extends BaseController {
         res.status(200).send('sd');
     };
 
-    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+    validateInsert = (data: any, res: Response): boolean => {
         return true;
     };
 
-    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
-        return true;
+    respondInsertRequest = (result: any, res: Response) => {
+
+    };
+
+    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
+
+    };
+
+    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
+
     };
 }
 

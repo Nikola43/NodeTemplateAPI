@@ -7,6 +7,7 @@ import DocumentErrors from "../constants/errors/DocumentErrors";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import socketManager from "../managers/SocketManager";
+import {DBUtil} from "../utils/DBUtil";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -68,7 +69,7 @@ class DocumentsController extends BaseController {
         // check if request is valid
         // check if user exists
         if (this.validateInsert(data, res)
-            && !await this.checkIfExists(data, res)) {
+            && !await DBUtil.checkIfExistsByField(this, DocumentModel, 'name', data.name)) {
             try {
                 // create new record from request body data
                 const newData = await DocumentModel.create(data);
@@ -195,17 +196,17 @@ class DocumentsController extends BaseController {
         return true;
     };
 
-    checkIfExists = async (data: any, res: Response): Promise<boolean> => {
-        return true;
-    };
-
-    respondUpdateRequest = async (updateResult: any, modelId: number, res: Response) => {
+    respondInsertRequest = (result: any, res: Response) => {
 
     };
 
-    respondDeleteRequest = async (deleteResult: any, modelId: number, res: Response) => {
+    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
 
-    }
+    };
+
+    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
+
+    };
 }
 
 const documentsController = new DocumentsController();

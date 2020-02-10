@@ -20,13 +20,4 @@ export default abstract class BaseController {
     abstract validateInsert = (data: any, res: Response): boolean => {
         return false;
     };
-
-    abstract respondInsertRequest = (result: any, res: Response) => {
-    };
-
-    abstract respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
-    };
-
-    abstract respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
-    };
 }

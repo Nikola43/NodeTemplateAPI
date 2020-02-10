@@ -105,7 +105,7 @@ class CoordinatesController extends BaseController {
         const data: Position = req.body;
 
         // get record id(pk) from request params
-        data.id = Number(req.params.id);
+        data.Id = Number(req.params.id);
 
         // set updated date
         data.updatedAt = new Date();
@@ -116,7 +116,7 @@ class CoordinatesController extends BaseController {
                 {
                     where: {
                         id: {
-                            [Op.eq]: data.id
+                            [Op.eq]: data.Id
                         },
                         deletedAt: {
                             [Op.is]: null
@@ -128,7 +128,7 @@ class CoordinatesController extends BaseController {
             if (updateResult[0] === 1) {
 
                 // find updated data
-                const updatedData = await Position.findByPk(data.id);
+                const updatedData = await Position.findByPk(data.Id);
 
                 // emit updated data
                 server.io.emit('DBEvent', {
@@ -156,7 +156,7 @@ class CoordinatesController extends BaseController {
         const data: Position = req.body;
 
         // get record id(pk) from request params
-        data.id = Number(req.params.id);
+        data.Id = Number(req.params.id);
 
         // set deleted date
         data.deletedAt = new Date();
@@ -167,7 +167,7 @@ class CoordinatesController extends BaseController {
                 {
                     where: {
                         id: {
-                            [Op.eq]: data.id
+                            [Op.eq]: data.Id
                         },
                         deletedAt: {
                             [Op.is]: null
@@ -181,7 +181,7 @@ class CoordinatesController extends BaseController {
                 server.io.emit('DBEvent', {
                     modelName: Position.name,
                     action: DBActions.DELETE + Position.name,
-                    data: data.id
+                    data: data.Id
                 });
 
                 // respond request

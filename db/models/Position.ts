@@ -1,10 +1,10 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../utils/DBUtil";
 
-export class CoordinateModel extends Model {
-    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-    public lat!: number;
-    public lon!: number;
+export class Position extends Model {
+    public Id!: number; // Note that the `null assertion` `!` is required in strict mode.
+    public Latitude!: number;
+    public Longitude!: number;
 
     // timestamps!
     public readonly createdAt!: Date;
@@ -12,18 +12,18 @@ export class CoordinateModel extends Model {
     public deletedAt!: Date | null;
 }
 
-CoordinateModel.init({
-    id: {
+Position.init({
+    Id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
-    lat: {
+    Latitude: {
         type: new DataTypes.DOUBLE,
         allowNull: false,
     },
-    lon: {
+    Longitude: {
         type: new DataTypes.DOUBLE,
         allowNull: false,
     },
@@ -32,11 +32,11 @@ CoordinateModel.init({
         allowNull: true
     },
 }, {
-    tableName: 'coordinates',
+    tableName: 'positions',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
-CoordinateModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
+Position.sync( //Crea la tabla de centros en la base de datos desde sequelize
     { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
 )
 .then(() => 

@@ -24,9 +24,9 @@ export class IndexRoutes {
         });
 
         /* AUTH */
-        this.router.post('/login', AuthController.login);
-        this.router.post('/signup', UserController.insert);
-        this.router.post('/change-password', [checkJwt], AuthController.changePassword);
+        this.router.post('/api/v1/login', AuthController.login);
+        this.router.post('/api/v1/signup', UserController.insert);
+        this.router.post('/change-password', [checkJwt], UserController.changePassword);
     }
 }
 

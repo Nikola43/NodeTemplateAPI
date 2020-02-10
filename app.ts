@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import indexRouter from './routes/Index';
 import usersRouter from './routes/Users';
+import markersRouter from './routes/MarkersRoutes';
 import panicButtonsRouter from './routes/PanicButtons';
 import centersRouter from './routes/Centers';
 import coordinateRouter from './routes/Coordinates';
@@ -50,6 +51,7 @@ export class App {
         this.express.use(express.static(path.join(__dirname, '../public')));
 
         this.express.use(indexRouter);
+        this.express.use(this.apiBaseUrl + "/markers", markersRouter);
         this.express.use(this.apiBaseUrl + "/users", usersRouter);
         this.express.use(this.apiBaseUrl + "/panic_buttons", panicButtonsRouter);
         this.express.use(this.apiBaseUrl + '/centers', centersRouter);

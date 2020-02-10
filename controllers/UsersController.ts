@@ -14,7 +14,7 @@ import {UserDeviceModel} from "../db/models/UserDeviceModel";
 import {UserResourceModel} from "../db/models/UserResourceModel";
 import {UserIncidenceModel} from "../db/models/UserIncidenceModel";
 import MailUtil from "../utils/MailUtil";
-import { CenterModel } from "../db/models/CenterModel";
+import {CenterModel} from "../db/models/CenterModel";
 import ServerErrors from "../constants/errors/ServerErrors";
 
 const crypto = require('crypto');
@@ -332,6 +332,58 @@ class UsersController extends BaseController {
             ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.UPDATE)
         }
     };
+
+    getTracking = async (req: Request, res: Response) => {
+        // get user id from request params
+        const userId = Number(req.params.id);
+
+        try {
+            const tempData = await UserModel.findOne({
+                attributes: [
+                    'email',
+                ], where: {
+                    id: {
+                        [Op.eq]: userId
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // if already exist
+            // send recovery email
+            if (tempData) {
+
+            }
+
+            res.status(200).send([]);
+        } catch (e) {
+            ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.GET_BY_EMAIL)
+        }
+
+
+    };
+
+    newPosition = async (req: Request, res: Response) => {
+        // get email and password from request body
+        const Latitude = req.body.Latitude;
+        const Longitude = req.body.Longitude;
+
+        // check if email are set
+        if (!Latitude) {
+            res.status(HttpStatus.BAD_REQUEST).send(UserErrors.EMPTY_PASSWORD_ERROR);
+            return;
+        }
+
+        // check if email are set
+        if (!Longitude) {
+            res.status(HttpStatus.BAD_REQUEST).send(UserErrors.EMPTY_PASSWORD_ERROR);
+            return;
+        }
+
+        res.status(200).send('sd');
+    }
 }
 
 const usersController = new UsersController();

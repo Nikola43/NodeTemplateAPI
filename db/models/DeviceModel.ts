@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import dbConnection from "../../utils/DBUtil";
+import dbConnection from "../../managers/DBManager";
 import { DeviceTypeModel } from './typesModels/DeviceTypeModel';
 
 export class DeviceModel extends Model {

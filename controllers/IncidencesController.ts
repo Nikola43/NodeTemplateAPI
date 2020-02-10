@@ -275,6 +275,13 @@ class IncidencesController extends BaseController {
             ErrorUtil.handleError(res, e, IncidencesController.name + ' - ' + DBActions.DELETE)
         }
     };
+    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+        return true;
+    };
+
+    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
+        return true;
+    };
 }
 
 const incidencesController = new IncidencesController();

@@ -237,6 +237,14 @@ class MultimediaContentsController extends BaseController {
             ErrorUtil.handleError(res, e, MultimediaContentsController.name + ' - ' + DBActions.DELETE)
         }
     };
+
+    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+        return true;
+    };
+
+    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
+        return true;
+    };
 }
 
 const multimediaContentsController = new MultimediaContentsController();

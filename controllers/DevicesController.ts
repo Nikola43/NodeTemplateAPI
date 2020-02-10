@@ -7,6 +7,7 @@ import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import { DeviceTypeModel } from "../db/models/typesModels/DeviceTypeModel";
+import {CenterModel} from "../db/models/CenterModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -64,46 +65,14 @@ class DevicesController extends BaseController {
 
     // INSERT
     insert = async (req: Request, res: Response, next: Function) => {
-
         // create model from request body data
         const data: DeviceModel = req.body;
-        let tempData: any;
 
-        // check if field called 'type_id' are set
-        // if field not are set, then send empty required field error
-        if (!data.type_id) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: DeviceModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
-            return;
-        }
-
-        // check if field callet 'location_id' are set
-        // if field not are set, then send empty required field error
-        if (!data.name) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: DeviceModel.name + " " + GenericErrors.NAME_EMPTY_ERROR});
-            return;
-        }
-
-        // find if exists any record with same request value in type field
-        try {
-            tempData = await DeviceModel.findOne({
-                attributes: [
-                    'name',
-                ], where: {
-                    name: {
-                        [Op.eq]: data.name
-                    },
-                    deletedAt: {
-                        [Op.is]: null
-                    }
-                }
-            });
-
-            // if already exist
-            // send conflict error
-            if (tempData) {
-                res.status(HttpStatus.CONFLICT).send({error: DeviceModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
-                return;
-            } else {
+        // check if request is valid
+        // check if user exists
+        if (this.validateInsert(data, req, res, next)
+            && !await this.checkIfExists(data, req, res, next)) {
+            try {
                 // create new record from request body data
                 const newData = await DeviceModel.create(data);
 
@@ -116,9 +85,9 @@ class DevicesController extends BaseController {
 
                 // respond request
                 res.status(HttpStatus.CREATED).send(newData)
+            } catch (e) {
+                ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.INSERT);
             }
-        } catch (e) {
-            ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.INSERT);
         }
     };
 
@@ -166,7 +135,6 @@ class DevicesController extends BaseController {
             } else {
                 res.status(HttpStatus.NOT_FOUND).send({error: DeviceModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
-
         } catch (e) {
             ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.UPDATE);
         }
@@ -174,7 +142,6 @@ class DevicesController extends BaseController {
 
     // DELETE
     delete = async (req: Request, res: Response, next: Function) => {
-
         // create model from request body data
         const data: DeviceModel = req.body;
 
@@ -216,6 +183,54 @@ class DevicesController extends BaseController {
         } catch (e) {
             ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.DELETE)
         }
+    };
+
+    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+        // check if field called 'type_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.type_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: DeviceModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
+            return false;
+        }
+
+        // check if field callet 'location_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.name) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: DeviceModel.name + " " + GenericErrors.NAME_EMPTY_ERROR});
+            return false;
+        }
+        return true;
+    };
+
+    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
+        let exist = false;
+
+        // find if exists any record with same value in name field
+        try {
+            const tempData = await DeviceModel.findOne({
+                attributes: [
+                    'name',
+                ], where: {
+                    name: {
+                        [Op.eq]: data.name
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // if already exist
+            // send conflict error
+            if (tempData) {
+                res.status(HttpStatus.CONFLICT).send({error: DeviceModel.name + " " + GenericErrors.ALREADY_EXIST_ERROR});
+                exist = false;
+            }
+        } catch (e) {
+            ErrorUtil.handleError(res, e, DeviceModel.name + ' - ' + DBActions.GET_BY_ID);
+            exist = false;
+        }
+        return exist;
     };
 }
 

@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import dbConnection from "../../utils/DBUtil";
+import dbConnection from "../../managers/DBManager";
 
 export class Position extends Model {
     public Id!: number; // Note that the `null assertion` `!` is required in strict mode.

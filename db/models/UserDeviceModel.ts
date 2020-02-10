@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import dbConnection from "../../utils/DBUtil";
+import dbConnection from "../../managers/DBManager";
 
 export class UserDeviceModel extends Model {
     public user_id!: number; // Note that the `null assertion` `!` is required in strict mode.

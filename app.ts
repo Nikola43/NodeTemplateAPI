@@ -25,7 +25,7 @@ import multimediaContentsTypesRouter from './routes/MultimediaContentsType';
 import resourcesRouter from './routes/Resources';
 import resourcesTypesRouter from './routes/ResourcesType';
 import express from 'express';
-import dbConnection from "./utils/DBUtil";
+import dbConnection from "./managers/DBManager";
 
 
 export class App {

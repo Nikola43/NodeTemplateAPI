@@ -176,6 +176,13 @@ class UsersDevicesController {
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
     };
+    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+        return true;
+    };
+
+    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
+        return true;
+    };
 }
 
 const usersDevicesController = new UsersDevicesController();

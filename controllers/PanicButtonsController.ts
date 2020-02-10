@@ -210,6 +210,14 @@ class PanicButtonsController extends BaseController {
             ErrorUtil.handleError(res, e, PanicButtonsController.name + ' - ' + DBActions.DELETE)
         }
     };
+
+    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+        return true;
+    };
+
+    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
+        return true;
+    };
 }
 
 const panicButtonsController = new PanicButtonsController();

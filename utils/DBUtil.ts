@@ -1,31 +1,68 @@
- const Sequelize = require('sequelize');
+import DBActions from "../constants/DBActions";
+import {Op} from "sequelize";
+import {LOGUtil} from "./LOGUtil";
+import {CenterModel} from "../db/models/CenterModel";
 
-export class DBConnection {
-    private readonly sequelize: any;
-
-    constructor() {
-        this.sequelize = new Sequelize('signis', 'root', '', {
-            host: 'localhost',
-            dialect: 'mysql',
-        });
-        this.connect();
+export class DBUtil {
+    static async insertModel(controller: any, model: any, data: any) {
+        try {
+            return await CenterModel.create(data);
+        } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog(controller.name + ' - ' + DBActions.INSERT + '\r\n' + e);
+            return e;
+        }
     }
 
-    get getSequelize() {
-        return this.sequelize;
+    static async updateModel(controller: any, model: any, data: any) {
+        try {
+            return await model.update(data,
+                {
+                    where: {
+                        id: {
+                            [Op.eq]: data.id
+                        },
+                        deletedAt: {
+                            [Op.is]: null
+                        }
+                    }
+                });
+        } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog(controller.name + ' - ' + DBActions.DELETE + '\r\n' + e);
+            return e;
+        }
     }
 
-    connect() {
-        this.sequelize
-            .authenticate()
-            .then(() => {
-                console.log('Connection has been established successfully.');
-            })
-            .catch((err: Error) => {
-                console.error('Unable to connect to the database:', err);
+    static async checkIfExistsByField(controller: any, model: any, fieldName: string, fieldValue: any): Promise<boolean> {
+        let exists = false;
+
+        // find if exists any record with same value field
+        try {
+            const tempData = await model.findOne({
+                attributes: [
+                    fieldName,
+                ], where: {
+                    fieldName: {
+                        [Op.eq]: fieldValue
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
             });
+
+            // if already exist
+            // send conflict error
+            if (tempData) {
+                exists = true;
+            }
+        } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog(controller.name + ' - ' + DBActions.DELETE + '\r\n' + e);
+            return e;
+        }
+        return exists;
     }
 }
 
-let dbConnection = new DBConnection();
-export default dbConnection;

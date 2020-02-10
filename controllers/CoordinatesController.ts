@@ -65,37 +65,25 @@ class CoordinatesController extends BaseController {
 
         // create model from request body data
         const data: Position = req.body;
-        let tempData: any;
 
-        // check if field called 'type_id' are set
-        // if field not are set, then send empty required field error
-        if (!data.Latitude) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: Position.name + " " + CoordinateErrors.COORDINATE_LAT_EMPTY_ERROR});
-            return;
-        }
+        if(this.validateInsert(data, req, res, next)) {
+            try {
+                // create new record from request body data
+                const newData = await Position.create(data);
 
-        // check if field callet 'location_id' are set
-        // if field not are set, then send empty required field error
-        if (!data.Longitude) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: Position.name + " " + CoordinateErrors.COORDINATE_LON_EMPTY_ERROR});
-            return;
-        }
-        try {
-            // create new record from request body data
-            const newData = await Position.create(data);
+                // emit new data
+                server.io.emit('DBEvent', {
+                    modelName: Position.name,
+                    action: DBActions.INSERT + Position.name,
+                    data: newData
+                });
 
-            // emit new data
-            server.io.emit('DBEvent', {
-                modelName: Position.name,
-                action: DBActions.INSERT + Position.name,
-                data: newData
-            });
+                // respond request
+                res.status(HttpStatus.CREATED).send(newData)
 
-            // respond request
-            res.status(HttpStatus.CREATED).send(newData)
-
-        } catch (e) {
-            ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.INSERT);
+            } catch (e) {
+                ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.INSERT);
+            }
         }
     };
 
@@ -193,6 +181,29 @@ class CoordinatesController extends BaseController {
         } catch (e) {
             ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.DELETE)
         }
+    };
+
+    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+        let valid = false;
+
+        // check if field called 'Latitude' are set
+        // if field not are set, then send empty required field error
+        if (!data.Latitude) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: Position.name + " " + CoordinateErrors.COORDINATE_LAT_EMPTY_ERROR});
+            valid = false;
+        }
+
+        // check if field callet 'Longitude' are set
+        // if field not are set, then send empty required field error
+        if (!data.Longitude) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: Position.name + " " + CoordinateErrors.COORDINATE_LON_EMPTY_ERROR});
+            valid = false;
+        }
+        return valid;
+    };
+
+    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
+        return false;
     };
 }
 

@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import dbConnection from "../../utils/DBUtil";
+import dbConnection from "../../managers/DBManager";
 import { ResourceTypeModel } from './typesModels/ResourceTypeModel';
 
 export class ResourceModel extends Model {

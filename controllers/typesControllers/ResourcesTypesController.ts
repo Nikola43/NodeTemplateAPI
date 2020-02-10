@@ -207,6 +207,14 @@ class ResourcesTypesController extends BaseController {
             ErrorUtil.handleError(res, e, ResourcesTypesController.name + ' - ' + DBActions.DELETE)
         }
     };
+
+    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+        return true;
+    };
+
+    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
+        return true;
+    };
 }
 
 const centersTypesController = new ResourcesTypesController();

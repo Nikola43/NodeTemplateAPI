@@ -6,12 +6,11 @@ import Messages from "../constants/messages/Messages";
 import {LOGUtil} from "../utils/LOGUtil";
 
 
-
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 export default class UsersResourcesController {
-     getAll = async (req: Request, res: Response, next: any) => {
+    getAll = async (req: Request, res: Response, next: any) => {
         try {
             const userResource = await UserResourceModel.findAll();
             res.status(200).send(userResource);
@@ -22,7 +21,7 @@ export default class UsersResourcesController {
         }
     };
 
-     getUserResourceById = async (req: Request, res: Response, next: any) => {
+    getUserResourceById = async (req: Request, res: Response, next: any) => {
         try {
             const userResource = await UserResourceModel.findByPk(req.params.id);
             console.log(req.params.id);
@@ -39,7 +38,7 @@ export default class UsersResourcesController {
         }
     };
 
-     insertResource = async (req: Request, res: Response, next: any) => {
+    insertResource = async (req: Request, res: Response, next: any) => {
 
         // get userResource data from request
         const userId = req.body.user_id;
@@ -99,7 +98,7 @@ export default class UsersResourcesController {
         }
     };
 
-     updateResource = async (req: Request, res: Response, next: any) => {
+    updateResource = async (req: Request, res: Response, next: any) => {
         // get userResourceID from request
         const userResourceId = req.params.id;
 
@@ -129,8 +128,8 @@ export default class UsersResourcesController {
 
             // check if userResource are updated
             if (updatedUserResource[0] === 1) {
-               res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
-               //res.status(200).send(updatedUserResource);
+                res.status(200).send(Messages.SUCCESS_REQUEST_MESSAGE);
+                //res.status(200).send(updatedUserResource);
 
             } else {
                 res.status(404).send(UserResourceErrors.USER_RESOURCE_NOT_FOUND_ERROR);
@@ -142,7 +141,7 @@ export default class UsersResourcesController {
         }
     };
 
-     deleteResource = async (req: Request, res: Response, next: any) => {
+    deleteResource = async (req: Request, res: Response, next: any) => {
         // get userResourceID from request
         const userResourceId = req.params.id;
 
@@ -177,5 +176,12 @@ export default class UsersResourcesController {
             LOGUtil.saveLog("delete user resource - " + e.toString());
             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
         }
+    };
+    validateInsert = (data: any, req: Request, res: Response, next: Function): boolean => {
+        return true;
+    };
+
+    checkIfExists = async (data: any, req: Request, res: Response, next: Function): Promise<boolean> => {
+        return true;
     };
 }

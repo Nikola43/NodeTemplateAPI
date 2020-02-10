@@ -57,6 +57,9 @@ DocumentModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
+DocumentModel.hasOne(DocumentTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'Type'});
+
+
 DocumentModel.sync({ force: false })
     .then(() => console.log("Tabla de tipos centros creada o ya existe."));
     

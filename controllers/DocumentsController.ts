@@ -8,6 +8,7 @@ import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import socketManager from "../managers/SocketManager";
 import {DBUtil} from "../utils/DBUtil";
+import { DocumentTypeModel } from "../db/models/typesModels/DocumentTypeModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -49,7 +50,9 @@ class DocumentsController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await DocumentModel.findByPk(req.params.id);
+            queryResult = await DocumentModel.findByPk(req.params.id, {
+                include: [{model: DocumentTypeModel, as: 'Type'}]
+            });
 
             // if has results, then send result data
             // if not has result, send not found error

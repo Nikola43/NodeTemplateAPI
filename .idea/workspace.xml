@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ecf7feb5-b9d3-48ec-bfbb-792baf415e39" name="Default Changelist" comment="" />
+    <list default="true" id="ecf7feb5-b9d3-48ec-bfbb-792baf415e39" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/controllers/CoordinatesController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/CoordinatesController.ts" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -102,7 +104,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/db/models/CenterModel.ts" />
-        <option value="$PROJECT_DIR$/controllers/CoordinatesController.ts" />
         <option value="$PROJECT_DIR$/db/models/PositionModel.ts" />
         <option value="$PROJECT_DIR$/db/models/LocationModel.ts" />
         <option value="$PROJECT_DIR$/controllers/LocationsController.ts" />
@@ -114,6 +115,7 @@
         <option value="$PROJECT_DIR$/routes/UsersIncidencesRoutes.ts" />
         <option value="$PROJECT_DIR$/controllers/UsersIncidencesController.ts" />
         <option value="$PROJECT_DIR$/utils/DBUtil.ts" />
+        <option value="$PROJECT_DIR$/controllers/CoordinatesController.ts" />
       </list>
     </option>
   </component>
@@ -360,7 +362,7 @@
       <workItem from="1581090144170" duration="2476000" />
       <workItem from="1581500383420" duration="10120000" />
       <workItem from="1581511572963" duration="7007000" />
-      <workItem from="1581530513040" duration="621000" />
+      <workItem from="1581530513040" duration="903000" />
     </task>
     <servers />
   </component>
@@ -388,7 +390,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17748000" />
+    <option name="totallyTimeSpent" value="18030000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -412,7 +414,7 @@
       <window_info id="npm" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32946634" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32946634" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32946634" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -549,16 +551,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/controllers/BaseController.ts">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/CoordinatesController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="40" selection-start-line="40" selection-end-line="40" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/db/models/CenterModel.ts">
       <provider selected="true" editor-type-id="text-editor">
@@ -705,6 +697,16 @@
           <caret line="19" column="70" selection-start-line="19" selection-start-column="70" selection-end-line="19" selection-end-column="70" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/CoordinatesController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1826">
+          <caret line="83" lean-forward="true" selection-start-line="83" selection-end-line="83" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
           </folding>
         </state>
       </provider>

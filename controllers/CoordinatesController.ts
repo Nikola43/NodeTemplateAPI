@@ -2,7 +2,6 @@ import {Request, Response} from "express";
 import {PositionModel} from "../db/models/PositionModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
-import Messages from "../constants/messages/Messages";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import CoordinateErrors from "../constants/errors/CoordinateErrors";
@@ -70,37 +69,37 @@ class CoordinatesController extends BaseController {
         if (this.validateInsert(data, res)) {
 
             // insert
-            const result = await DBUtil.insertModel(this, Position, data);
+            const result = await DBUtil.insertModel(this, PositionModel, data);
 
             // respond request
-            HttpComunicationUtil.respondInsertRequest(this, Position, result, res);
+            HttpComunicationUtil.respondInsertRequest(this, PositionModel, result, res);
         }
     };
 
     // UPDATE
     update = async (req: Request, res: Response, next: Function) => {
-        const data: Position = req.body; // create model from request body data
+        const data: PositionModel = req.body; // create model from request body data
         data.Id = Number(req.params.id);    // get model id(pk) from request params
         data.updatedAt = new Date();        // set updated date
 
         // update
-        const result = await DBUtil.updateModel(this, Position, data, DBActions.UPDATE);
+        const result = await DBUtil.updateModel(this, PositionModel, data, DBActions.UPDATE);
 
         // check query result and respond
-        await HttpComunicationUtil.respondUpdateRequest(this, Position, result, data.Id, res);
+        await HttpComunicationUtil.respondUpdateRequest(this, PositionModel, result, data.Id, res);
     };
 
     // DELETE
     delete = async (req: Request, res: Response, next: Function) => {
-        const data: Position = req.body; // create model from request body data
+        const data: PositionModel = req.body; // create model from request body data
         data.Id = Number(req.params.id);    // get model id(pk) from request params
         data.deletedAt = new Date();        // set deleteAt date
 
         // update
-        const result = await DBUtil.updateModel(this, Position, data, DBActions.DELETE);
+        const result = await DBUtil.updateModel(this, PositionModel, data, DBActions.DELETE);
 
         // check query result and respond
-        await HttpComunicationUtil.respondDeleteRequest(this, Position, result, data.Id, res);
+        await HttpComunicationUtil.respondDeleteRequest(this, PositionModel, result, data.Id, res);
     };
 
     validateInsert = (data: any, res: Response): boolean => {
@@ -108,14 +107,14 @@ class CoordinatesController extends BaseController {
         // if field not are set, then send empty required field error
         if (!data.Latitude) {
             res.status(HttpStatus.BAD_REQUEST).send({error: PositionModel.name + " " + CoordinateErrors.COORDINATE_LAT_EMPTY_ERROR});
-            valid = false;
+            return false;
         }
 
         // check if field callet 'Longitude' are set
         // if field not are set, then send empty required field error
         if (!data.Longitude) {
             res.status(HttpStatus.BAD_REQUEST).send({error: PositionModel.name + " " + CoordinateErrors.COORDINATE_LON_EMPTY_ERROR});
-            valid = false;
+            return false;
         }
         return true;
     };

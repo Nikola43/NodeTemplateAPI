@@ -18,3 +18,14 @@ SequelizeEagerLoadingError: UserModel is associated to CenterModel using an alia
 SequelizeEagerLoadingError: ResourceModel is associated to CenterModel using an alias. You've included an alias (Resources), but it does not match the alias(es) defined in your association (resources).
 12-2-2020 12:25:55 - CentersController - GetById
 SequelizeEagerLoadingError: ResourceModel is associated to CenterModel using an alias. You've included an alias (Resources), but it does not match the alias(es) defined in your association (resources).
+12-2-2020 12:42:41 - CentersController - GetById
+SequelizeEagerLoadingError: ResourceModel is associated to CenterModel using an alias. You've included an alias (Resources), but it does not match the alias(es) defined in your association (resources).
+12-2-2020 16:51:43 - get all user incidence - SequelizeDatabaseError: Unknown column 'deletedAt' in 'field list'
+12-2-2020 18:1:48 - undefined - GetByField
+SequelizeDatabaseError: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '1 AND `UserIncidenceModel`.`endAt` IS NULL AND `UserIncidenceModel`.`deletedAt` ' at line 1
+12-2-2020 18:3:11 - undefined - GetByField
+SequelizeDatabaseError: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '1 AND `UserIncidenceModel`.`endAt` IS NULL AND `UserIncidenceModel`.`deletedAt` ' at line 1
+12-2-2020 18:10:24 - undefined - Insert
+SequelizeForeignKeyConstraintError: Cannot add or update a child row: a foreign key constraint fails (`signis`.`users_incidences`, CONSTRAINT `users_incidences_fk0` FOREIGN KEY (`incidence_id`) REFERENCES `incidences` (`id`))
+12-2-2020 18:10:24 - undefined - GetById
+SequelizeForeignKeyConstraintError: Cannot add or update a child row: a foreign key constraint fails (`signis`.`users_incidences`, CONSTRAINT `users_incidences_fk0` FOREIGN KEY (`incidence_id`) REFERENCES `incidences` (`id`))

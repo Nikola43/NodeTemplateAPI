@@ -33,6 +33,72 @@ export class DBUtil {
         }
     }
 
+    static async checkIfUserIsAsignedToAnIncidence(controller: any, model: any, userId: number): Promise<boolean> {
+        let exists = false;
+
+        // find if exists any record with same value field
+        try {
+            const tempData = await model.findOne({
+                attributes: [
+                    "user_id",
+                ], where: {
+                    user_id: {
+                        [Op.eq]: userId
+                    },
+                    endAt: {
+                        [Op.is]: null
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // if already exist
+            // send conflict error
+            if (tempData) {
+                exists = true;
+            }
+        } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog(controller.name + ' - ' + DBActions.GET_BY_FIELD + '\r\n' + e);
+            return false;
+        }
+        return exists;
+    }
+
+    static async checkIncidence(controller: any, model: any, incidenceId: number): Promise<boolean> {
+        // find if exists any record with same value field
+        try {
+            const tempData = await model.findOne({
+                attributes: [
+                    "incidence_id",
+                ], where: {
+                    incidence_id: {
+                        [Op.eq]: incidenceId
+                    },
+                    endAt: {
+                        [Op.is]: null
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
+
+            // if already exist
+            // send conflict error
+            if (tempData) {
+                return true;
+            }
+        } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog(controller.name + ' - ' + DBActions.GET_BY_FIELD + '\r\n' + e);
+            return false;
+        }
+        return false;
+    }
+
     static async checkIfExistsByField(controller: any, model: any, fieldName: string, fieldValue: any): Promise<boolean> {
         let exists = false;
 

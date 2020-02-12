@@ -21,7 +21,7 @@ export class UserModel extends BaseModel {
     public rank!: string | null;
     public role!: string | null;
     public phone!: string | null;
-    public available!: number;
+    public availability!: number;
     public gender!: string | null;
     public age!: number | null;
     public weight!: number | null;
@@ -79,7 +79,7 @@ UserModel.init({
         type: new DataTypes.STRING(15),
         allowNull: true
     },
-    available: {
+    availability: {
         type: DataTypes.TINYINT,
         allowNull: false,
         defaultValue: 0

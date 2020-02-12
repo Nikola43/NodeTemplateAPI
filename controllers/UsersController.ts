@@ -17,6 +17,11 @@ import MailUtil from "../utils/MailUtil";
 import {CenterModel} from "../db/models/CenterModel";
 import ServerErrors from "../constants/errors/ServerErrors";
 import socketManager from "../managers/SocketManager";
+import {CenterTypeModel} from "../db/models/typesModels/CenterTypeModel";
+import {LocationModel} from "../db/models/LocationModel";
+import {PositionModel} from "../db/models/PositionModel";
+import {IncidenceModel} from "../db/models/IncidenceModel";
+import {ResourceModel} from "../db/models/ResourceModel";
 
 const crypto = require('crypto');
 const HttpStatus = require('http-status-codes');
@@ -34,11 +39,19 @@ class UsersController extends BaseController {
         // find all records
         try {
             queryResult = await UserModel.findAll({
-                where: {
+                attributes: [
+                    'id',
+                    'name',
+                    'lastname',
+                    'status',
+                    'rank',
+                    'role',
+                    'availability',
+                ], where: {
                     deletedAt: {
                         [Op.is]: null
                     }
-                }
+                },
             });
 
             // if has results, then send result data
@@ -60,14 +73,42 @@ class UsersController extends BaseController {
         // find record by pk
         try {
             queryResult = await UserModel.findByPk(req.params.id, {
+                attributes: [
+                    'id',
+                    'email',
+                    'name',
+                    'lastname',
+                    'status',
+                    'rank',
+                    'role',
+                    'phone',
+                    'availability',
+                ],
                 include: [
-                    {model: DocumentModel, as: 'Documents'},
-                    {model: MultimediaContentModel, as: 'Multimedia'},
-                    {model: UserDeviceModel, as: 'UsersDevices'},
-                    {model: UserResourceModel, as: 'UsersResources'},
-                    {model: UserIncidenceModel, as: 'UsersIncidences'},
-                    {model: CenterModel, as: 'Center'}
-                ]
+                    {
+                        model: CenterModel, as: 'center',
+                        attributes: [ //Campos que se muestran en la relación
+                            'name'
+                        ]
+                    },
+                    {
+                        model: IncidenceModel, as: 'incidence',
+                        attributes: [ //Campos que se muestran en la relación
+                            'name'
+                        ],
+                        include: [
+                            {
+                                model: ResourceModel, as: 'resource',
+                                attributes: [ //Campos que se muestran en la relación
+                                    'Id',
+                                    'Latitude',
+                                    'Longitude'
+                                ]
+                            },
+                        ]
+                    },
+                ],
+                rejectOnEmpty: true,
             });
 
             // if has results, then send result data

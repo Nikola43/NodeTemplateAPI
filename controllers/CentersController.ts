@@ -79,19 +79,39 @@ class CentersController extends BaseController {
         // find record by pk
         try {
             const queryResult = await CenterModel.findByPk(req.params.id, {
+                attributes: [
+                    'id',
+                    'name',
+                    'description',
+                    'phone',
+                    'email',
+                    'leader',
+                    'schedule',
+                ],
                 include: [
-                    {model: CenterTypeModel, as: 'type'},
-                    {model: LocationModel, as: 'location'},
                     {
-                        model: UserModel, as: 'users',
+                        model: CenterTypeModel, as: 'type',
                         attributes: [ //Campos que se muestran en la relación
-                            'id',
-                            'email',
-                            'name',
-                            'role'
+                            ['type', 'name'],
+                            'temporary'
                         ]
                     },
-                    {model: ResourceModel, as: 'Resources'},
+                    {
+                        model: LocationModel, as: 'location',
+                        attributes: [ //Campos que se muestran en la relación
+                            'id',
+                        ],
+                        include: [
+                            {
+                                model: PositionModel, as: 'position',
+                                attributes: [ //Campos que se muestran en la relación
+                                    'Id',
+                                    'Latitude',
+                                    'Longitude'
+                                ]
+                            },
+                        ]
+                    },
                 ],
                 rejectOnEmpty: true,
             });

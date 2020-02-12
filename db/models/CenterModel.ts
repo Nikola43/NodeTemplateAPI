@@ -70,11 +70,11 @@ CenterModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
-CenterModel.hasOne(CenterTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'Type'});
-CenterModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'Location'});
-CenterModel.hasMany(ResourceModel, {sourceKey: 'id', foreignKey: 'center_id', as: 'Resources'});
-CenterModel.hasMany(UserModel, {sourceKey: 'id', foreignKey: 'center_id', as: 'Users'});
-UserModel.belongsTo(CenterModel, {targetKey: 'id', foreignKey: 'center_id', as: 'Center'});
+CenterModel.hasOne(CenterTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'type'});
+CenterModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'location'});
+CenterModel.hasMany(ResourceModel, {sourceKey: 'id', foreignKey: 'center_id', as: 'resources'});
+CenterModel.hasMany(UserModel, {sourceKey: 'id', foreignKey: 'center_id', as: 'users'});
+UserModel.belongsTo(CenterModel, {targetKey: 'id', foreignKey: 'center_id', as: 'center'});
 
 CenterModel.sync({ force: false })
     .then(() => console.log("Tabla de centros creada o ya existe."));

@@ -11,6 +11,7 @@ import {UserModel} from "../db/models/UserModel";
 import {ResourceModel} from "../db/models/ResourceModel";
 import {DBUtil} from "../utils/DBUtil";
 import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
+import {PositionModel} from "../db/models/PositionModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -22,12 +23,45 @@ class CentersController extends BaseController {
         // find all records
         try {
             const queryResult = await CenterModel.findAll({
+                attributes: [
+                    'id',
+                    'name',
+                    'description',
+                    'phone',
+                    'email',
+                    'leader',
+                    'schedule',
+                ],
                 where: {
                     deletedAt: {
                         [Op.is]: null
                     }
                 },
-                //include: [CenterModel.associations.CenterTypeModel]
+                include: [
+                    {
+                        model: CenterTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name'],
+                            'temporary'
+                        ]
+                    },
+                    {
+                        model: LocationModel, as: 'location',
+                        attributes: [ //Campos que se muestran en la relación
+                            'id',
+                        ],
+                        include: [
+                            {
+                                model: PositionModel, as: 'position',
+                                attributes: [ //Campos que se muestran en la relación
+                                    'Id',
+                                    'Latitude',
+                                    'Longitude'
+                                ]
+                            },
+                        ]
+                    },
+                ]
             });
 
             // if has results, then send result data
@@ -46,10 +80,10 @@ class CentersController extends BaseController {
         try {
             const queryResult = await CenterModel.findByPk(req.params.id, {
                 include: [
-                    {model: CenterTypeModel, as: 'Type'},
-                    {model: LocationModel, as: 'Location'},
+                    {model: CenterTypeModel, as: 'type'},
+                    {model: LocationModel, as: 'location'},
                     {
-                        model: UserModel, as: 'Users',
+                        model: UserModel, as: 'users',
                         attributes: [ //Campos que se muestran en la relación
                             'id',
                             'email',

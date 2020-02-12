@@ -1,0 +1,20 @@
+12-2-2020 10:57:15 - CentersController - GetAll
+SequelizeDatabaseError: Unknown column 'CenterModel.' in 'field list'
+12-2-2020 10:58:31 - CentersController - GetAll
+Error: Include unexpected. Element has to be either a Model, an Association or an object.
+12-2-2020 10:59:32 - CentersController - GetAll
+Error: Include unexpected. Element has to be either a Model, an Association or an object.
+12-2-2020 11:8:29 - CentersController - GetAll
+SequelizeEagerLoadingError: CenterTypeModel is associated to CenterModel using an alias. You've included an alias (type), but it does not match the alias(es) defined in your association (Type).
+12-2-2020 11:8:31 - CentersController - GetAll
+SequelizeEagerLoadingError: CenterTypeModel is associated to CenterModel using an alias. You've included an alias (type), but it does not match the alias(es) defined in your association (Type).
+12-2-2020 11:24:26 - LocationsController - GetAll
+SequelizeEagerLoadingError: LocationModel is not associated to LocationModel!
+12-2-2020 12:24:19 - CentersController - GetById
+SequelizeEagerLoadingError: CenterTypeModel is associated to CenterModel using an alias. You've included an alias (Type), but it does not match the alias(es) defined in your association (type).
+12-2-2020 12:25:21 - CentersController - GetById
+SequelizeEagerLoadingError: UserModel is associated to CenterModel using an alias. You've included an alias (Users), but it does not match the alias(es) defined in your association (users).
+12-2-2020 12:25:53 - CentersController - GetById
+SequelizeEagerLoadingError: ResourceModel is associated to CenterModel using an alias. You've included an alias (Resources), but it does not match the alias(es) defined in your association (resources).
+12-2-2020 12:25:55 - CentersController - GetById
+SequelizeEagerLoadingError: ResourceModel is associated to CenterModel using an alias. You've included an alias (Resources), but it does not match the alias(es) defined in your association (resources).

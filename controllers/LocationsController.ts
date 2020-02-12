@@ -4,9 +4,10 @@ import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
 import Messages from "../constants/messages/Messages";
 import LocationErrors from "../constants/errors/LocationErrors";
-import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
+import {CenterTypeModel} from "../db/models/typesModels/CenterTypeModel";
+import {PositionModel} from "../db/models/PositionModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -27,7 +28,15 @@ class LocationsController extends BaseController {
                     deletedAt: {
                         [Op.is]: null
                     }
-                }
+                },include: [
+                    {
+                        model: PositionModel, as: 'position',
+                        attributes: [ //Campos que se muestran en la relación
+                            'Latitude',
+                            'Longitude'
+                        ]
+                    },
+                ]
             });
 
             // if has results, then send result data
@@ -193,18 +202,6 @@ class LocationsController extends BaseController {
     };
     validateInsert = (data: any, res: Response): boolean => {
         return true;
-    };
-
-    respondInsertRequest = (result: any, res: Response) => {
-
-    };
-
-    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
-
-    };
-
-    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
-
     };
 }
 

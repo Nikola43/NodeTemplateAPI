@@ -1,5 +1,5 @@
 import {BaseModel} from "./baseModels/BaseModel";
-import {Position} from "./Position";
+import {PositionModel} from "./PositionModel";
 
 export class MarkerModel {
     public id: number;
@@ -7,9 +7,9 @@ export class MarkerModel {
     public title: string;
     public subtitle: string;
     public image: string;
-    public Position!: Position;
+    public Position!: PositionModel;
 
-    constructor(id: number, type: string, title: string, subtitle: string, image: string, Position: Position) {
+    constructor(id: number, type: string, title: string, subtitle: string, image: string, Position: PositionModel) {
         this.id = id;
         this.type = type;
         this.title = title;

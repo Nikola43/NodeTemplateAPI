@@ -1,9 +1,8 @@
 import {Request, Response} from "express";
-import {Position} from "../db/models/Position";
+import {PositionModel} from "../db/models/PositionModel";
 import BaseController from "./BaseController";
 import {ErrorUtil} from "../utils/ErrorUtil";
 import Messages from "../constants/messages/Messages";
-import server from "../server";
 import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import CoordinateErrors from "../constants/errors/CoordinateErrors";
@@ -22,7 +21,7 @@ class CoordinatesController extends BaseController {
 
         // find all records
         try {
-            queryResult = await Position.findAll({
+            queryResult = await PositionModel.findAll({
                 where: {
                     deletedAt: {
                         [Op.is]: null
@@ -48,13 +47,13 @@ class CoordinatesController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await Position.findByPk(req.params.id);
+            queryResult = await PositionModel.findByPk(req.params.id);
 
             // if has results, then send result data
             // if not has result, send not found error
             queryResult && !queryResult.deletedAt
                 ? res.status(HttpStatus.OK).send(queryResult)
-                : res.status(HttpStatus.NOT_FOUND).send({error: Position.name + " " + GenericErrors.NOT_FOUND_ERROR});
+                : res.status(HttpStatus.NOT_FOUND).send({error: PositionModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
         } catch (e) {
             ErrorUtil.handleError(res, e, CoordinatesController.name + ' - ' + DBActions.GET_BY_ID)
         }
@@ -64,12 +63,12 @@ class CoordinatesController extends BaseController {
     insert = async (req: Request, res: Response, next: Function) => {
 
         // create model from request body data
-        const data: Position = req.body;
+        const data: PositionModel = req.body;
 
         if (this.validateInsert(data, res)) {
             try {
                 // create new record from request body data
-                const newData = await Position.create(data);
+                const newData = await PositionModel.create(data);
 
                 // emit new data
 
@@ -86,7 +85,7 @@ class CoordinatesController extends BaseController {
     // UPDATE
     update = async (req: Request, res: Response, next: Function) => {
         // create model from request body data
-        const data: Position = req.body;
+        const data: PositionModel = req.body;
 
         // get record id(pk) from request params
         data.Id = Number(req.params.id);
@@ -96,7 +95,7 @@ class CoordinatesController extends BaseController {
 
         // update
         try {
-            const updateResult = await Position.update(data,
+            const updateResult = await PositionModel.update(data,
                 {
                     where: {
                         id: {
@@ -112,7 +111,7 @@ class CoordinatesController extends BaseController {
             if (updateResult[0] === 1) {
 
                 // find updated data
-                const updatedData = await Position.findByPk(data.Id);
+                const updatedData = await PositionModel.findByPk(data.Id);
 
                 // emit updated data
 
@@ -121,7 +120,7 @@ class CoordinatesController extends BaseController {
                 res.status(HttpStatus.OK).send(updatedData);
 
             } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: Position.name + " " + GenericErrors.NOT_FOUND_ERROR});
+                res.status(HttpStatus.NOT_FOUND).send({error: PositionModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
 
         } catch (e) {
@@ -133,7 +132,7 @@ class CoordinatesController extends BaseController {
     delete = async (req: Request, res: Response, next: Function) => {
 
         // create model from request body data
-        const data: Position = req.body;
+        const data: PositionModel = req.body;
 
         // get record id(pk) from request params
         data.Id = Number(req.params.id);
@@ -143,7 +142,7 @@ class CoordinatesController extends BaseController {
 
         // delete
         try {
-            const deleteResult = await Position.update(data,
+            const deleteResult = await PositionModel.update(data,
                 {
                     where: {
                         id: {
@@ -163,7 +162,7 @@ class CoordinatesController extends BaseController {
                 // respond request
                 res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
             } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: Position.name + " " + GenericErrors.NOT_FOUND_ERROR});
+                res.status(HttpStatus.NOT_FOUND).send({error: PositionModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
             }
 
         } catch (e) {
@@ -177,14 +176,14 @@ class CoordinatesController extends BaseController {
         // check if field called 'Latitude' are set
         // if field not are set, then send empty required field error
         if (!data.Latitude) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: Position.name + " " + CoordinateErrors.COORDINATE_LAT_EMPTY_ERROR});
+            res.status(HttpStatus.BAD_REQUEST).send({error: PositionModel.name + " " + CoordinateErrors.COORDINATE_LAT_EMPTY_ERROR});
             valid = false;
         }
 
         // check if field callet 'Longitude' are set
         // if field not are set, then send empty required field error
         if (!data.Longitude) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: Position.name + " " + CoordinateErrors.COORDINATE_LON_EMPTY_ERROR});
+            res.status(HttpStatus.BAD_REQUEST).send({error: PositionModel.name + " " + CoordinateErrors.COORDINATE_LON_EMPTY_ERROR});
             valid = false;
         }
         return valid;

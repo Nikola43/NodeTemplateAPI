@@ -9,6 +9,7 @@ import DBActions from "../constants/DBActions";
 import { DeviceTypeModel } from "../db/models/typesModels/DeviceTypeModel";
 import {CenterModel} from "../db/models/CenterModel";
 import {DBUtil} from "../utils/DBUtil";
+import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -67,111 +68,44 @@ class DevicesController extends BaseController {
     // INSERT
     insert = async (req: Request, res: Response, next: Function) => {
         // create model from request body data
-        const data: DeviceModel = req.body;
+        const data: CenterModel = req.body;
 
-        // check if request is valid
-        // check if user exists
+        // check if request is valid and if user doesn't exists
         if (this.validateInsert(data, res)
             && !await DBUtil.checkIfExistsByField(this, DeviceModel, 'name', data.name)) {
-            try {
-                // create new record from request body data
-                const newData = await DeviceModel.create(data);
 
-                // emit new data
+            // insert
+            const result = await DBUtil.insertModel(this, DeviceModel, data);
 
-
-                // respond request
-                res.status(HttpStatus.CREATED).send(newData)
-            } catch (e) {
-                ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.INSERT);
-            }
+            // respond request
+            HttpComunicationUtil.respondInsertRequest(this, DeviceModel, result, res);
         }
     };
 
     // UPDATE
     update = async (req: Request, res: Response, next: Function) => {
-        // create model from request body data
-        const data: DeviceModel = req.body;
-
-        // get record id(pk) from request params
-        data.id = Number(req.params.id);
-
-        // set updated date
-        data.updatedAt = new Date();
+        const data: DeviceModel = req.body; // create model from request body data
+        data.id = Number(req.params.id);    // get model id(pk) from request params
+        data.updatedAt = new Date();        // set updated date
 
         // update
-        try {
-            const updateResult = await DeviceModel.update(data,
-                {
-                    where: {
-                        id: {
-                            [Op.eq]: data.id
-                        },
-                        deletedAt: {
-                            [Op.is]: null
-                        }
-                    }
-                });
+        const result = await DBUtil.updateModel(this, DeviceModel, data, DBActions.UPDATE);
 
-            // if it has affected one row
-            if (updateResult[0] === 1) {
-
-                // find updated data
-                const updatedData = await DeviceModel.findByPk(data.id);
-
-                // emit updated data
-
-
-                // respond request
-                res.status(HttpStatus.OK).send(updatedData);
-
-            } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: DeviceModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
-            }
-        } catch (e) {
-            ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.UPDATE);
-        }
+        // check query result and respond
+        await HttpComunicationUtil.respondUpdateRequest(this, DeviceModel, result, data.id, res);
     };
 
     // DELETE
     delete = async (req: Request, res: Response, next: Function) => {
-        // create model from request body data
-        const data: DeviceModel = req.body;
+        const data: DeviceModel = req.body; // create model from request body data
+        data.id = Number(req.params.id);    // get model id(pk) from request params
+        data.deletedAt = new Date();        // set deleteAt date
 
-        // get record id(pk) from request params
-        data.id = Number(req.params.id);
+        // update
+        const result = await DBUtil.updateModel(this, DeviceModel, data, DBActions.DELETE);
 
-        // set deleted date
-        data.deletedAt = new Date();
-
-        // delete
-        try {
-            const deleteResult = await DeviceModel.update(data,
-                {
-                    where: {
-                        id: {
-                            [Op.eq]: data.id
-                        },
-                        deletedAt: {
-                            [Op.is]: null
-                        }
-                    }
-                });
-
-            // if it has affected one row
-            if (deleteResult[0] === 1) {
-                // emit updated data
-
-
-                // respond request
-                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
-            } else {
-                res.status(HttpStatus.NOT_FOUND).send({error: DeviceModel.name + " " + GenericErrors.NOT_FOUND_ERROR});
-            }
-
-        } catch (e) {
-            ErrorUtil.handleError(res, e, DevicesController.name + ' - ' + DBActions.DELETE)
-        }
+        // check query result and respond
+        await HttpComunicationUtil.respondDeleteRequest(this, DeviceModel, result, data.id, res);
     };
 
     validateInsert = (data: any, res: Response): boolean => {
@@ -190,19 +124,6 @@ class DevicesController extends BaseController {
         }
         return true;
     };
-
-    respondInsertRequest = (result: any, res: Response) => {
-
-    };
-
-    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
-
-    };
-
-    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
-
-    };
-
 }
 
 const devicesController = new DevicesController();

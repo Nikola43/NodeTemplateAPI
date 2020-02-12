@@ -1,11 +1,8 @@
 import * as http from 'http';
 import App from './app';
-import socketIO from 'socket.io'
-import {EmitModel} from "./db/models/EmitModel";
-import socketManager, {SocketManager} from "./managers/SocketManager";
+import socketManager from "./managers/SocketManager";
 
-var colors = require('colors');
-
+const colors = require('colors');
 
 export class Server {
     public port: any;

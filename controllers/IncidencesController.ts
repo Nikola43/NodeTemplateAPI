@@ -7,6 +7,9 @@ import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import {DBUtil} from "../utils/DBUtil";
 import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
+import {IncidenceTypeModel} from "../db/models/typesModels/IncidenceTypeModel";
+import {LocationModel} from "../db/models/LocationModel";
+import {PositionModel} from "../db/models/PositionModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -23,11 +26,28 @@ class IncidencesController extends BaseController {
         // find all records
         try {
             queryResult = await IncidenceModel.findAll({
+                attributes: [
+                    'id',
+                    'name',
+                    'subtype',
+                    'status',
+                    'level',
+                    'createdAt'
+                ],
                 where: {
                     deletedAt: {
                         [Op.is]: null
                     }
+                },
+                include: [
+                    {
+                        model: IncidenceTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name']
+                        ]
+
                 }
+            ]
             });
 
             // if has results, then send result data
@@ -48,7 +68,55 @@ class IncidencesController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await IncidenceModel.findByPk(req.params.id);
+            queryResult = await IncidenceModel.findByPk(req.params.id, {
+                attributes: [
+                    'id',
+                    'name',
+                    'description',
+                    'subtype',
+                    'status',
+                    'level',
+                    'perimeter',
+                    'area',
+                    'strategy',
+                    'tactic',
+                    'maneuver',
+                    'createdAt',
+                    'user_id'
+                ],
+                include: [
+                    {
+                        model: IncidenceTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name']
+                        ]
+
+                    },
+                    {
+                        model: IncidenceTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name']
+                        ]
+
+                    },
+                    {
+                        model: LocationModel, as: 'location',
+                        attributes: [ //Campos que se muestran en la relación
+                            'id',
+                        ],
+                        include: [
+                            {
+                                model: PositionModel, as: 'position',
+                                attributes: [ //Campos que se muestran en la relación
+                                    'Id',
+                                    'Latitude',
+                                    'Longitude'
+                                ]
+                            },
+                        ]
+                    },
+                ]
+            });
 
             // if has results, then send result data
             // if not has result, send not found error

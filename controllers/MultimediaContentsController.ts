@@ -6,6 +6,9 @@ import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import {DBUtil} from "../utils/DBUtil";
 import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
+import {MultimediaContentTypeModel} from "../db/models/typesModels/MultimediaContentTypeModel";
+import {LocationModel} from "../db/models/LocationModel";
+import {PositionModel} from "../db/models/PositionModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -22,11 +25,44 @@ class MultimediaContentsController extends BaseController {
         // find all records
         try {
             queryResult = await MultimediaContentModel.findAll({
+
+                attributes: [
+                    'id',
+                    'user_id',
+                    'name',
+                    'url',
+                    'size',
+                    'createdAt'
+                ],
                 where: {
                     deletedAt: {
                         [Op.is]: null
                     }
-                }
+                },
+                include: [
+                    {
+                        model: MultimediaContentTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name']
+                        ]
+                    },
+                    {
+                        model: LocationModel, as: 'location',
+                        attributes: [ //Campos que se muestran en la relación
+                            'id',
+                        ],
+                        include: [
+                            {
+                                model: PositionModel, as: 'position',
+                                attributes: [ //Campos que se muestran en la relación
+                                    'Id',
+                                    'Latitude',
+                                    'Longitude'
+                                ]
+                            },
+                        ]
+                    },
+                ]
             });
 
             // if has results, then send result data
@@ -47,7 +83,41 @@ class MultimediaContentsController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await MultimediaContentModel.findByPk(req.params.id);
+            queryResult = await MultimediaContentModel.findByPk(req.params.id,{
+
+                attributes: [
+                    'id',
+                    'user_id',
+                    'name',
+                    'url',
+                    'size',
+                    'createdAt'
+                ],
+                include: [
+                    {
+                        model: MultimediaContentTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name']
+                        ]
+                    },
+                    {
+                        model: LocationModel, as: 'location',
+                        attributes: [ //Campos que se muestran en la relación
+                            'id',
+                        ],
+                        include: [
+                            {
+                                model: PositionModel, as: 'position',
+                                attributes: [ //Campos que se muestran en la relación
+                                    'Id',
+                                    'Latitude',
+                                    'Longitude'
+                                ]
+                            },
+                        ]
+                    },
+                ]
+            });
 
             // if has results, then send result data
             // if not has result, send not found error

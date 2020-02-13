@@ -47,7 +47,7 @@ DeviceModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
-DeviceModel.hasOne(DeviceTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'Type'});
+DeviceModel.hasOne(DeviceTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'type'});
 
 DeviceModel.sync({ force: false })
     .then(() => console.log("Tabla de tipos centros creada o ya existe."));

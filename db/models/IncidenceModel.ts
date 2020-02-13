@@ -2,6 +2,10 @@ import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../managers/DBManager";
 import {BaseModel} from "./baseModels/BaseModel";
 import { IncidenceTypeModel } from './typesModels/IncidenceTypeModel';
+import {DeviceTypeModel} from "./typesModels/DeviceTypeModel";
+import {DeviceModel} from "./DeviceModel";
+import {LocationModel} from "./LocationModel";
+import {CenterModel} from "./CenterModel";
 
 export class IncidenceModel extends BaseModel {
     public user_id!: number;
@@ -57,11 +61,11 @@ IncidenceModel.init({
         allowNull: false,
     },
     status: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
     level: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
     perimeter: {
@@ -97,6 +101,8 @@ IncidenceModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
+IncidenceModel.hasOne(IncidenceTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'type'});
+IncidenceModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'location'});
 
 IncidenceModel.sync({ force: false })
     .then(() => console.log("Tabla de tipos centros creada o ya existe."));

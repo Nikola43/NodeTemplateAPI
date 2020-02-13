@@ -2,6 +2,9 @@ import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../managers/DBManager";
 import {BaseModel} from "./baseModels/BaseModel";
 import { MultimediaContentTypeModel } from './typesModels/MultimediaContentTypeModel';
+import {CenterTypeModel} from "./typesModels/CenterTypeModel";
+import {LocationModel} from "./LocationModel";
+import {CenterModel} from "./CenterModel";
 
 export class MultimediaContentModel extends BaseModel {
     public user_id!: number;
@@ -56,6 +59,9 @@ MultimediaContentModel.init({
     tableName: 'multimedia_contents',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+MultimediaContentModel.hasOne(MultimediaContentTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'type'});
+MultimediaContentModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'location'});
 
 MultimediaContentModel.sync({ force: false })
     .then(() => console.log("Tabla de tipos centros creada o ya existe."));

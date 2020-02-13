@@ -1,0 +1,8 @@
+13-2-2020 12:54:21 - DevicesController - GetAll
+SequelizeEagerLoadingError: DeviceTypeModel is associated to DeviceModel using an alias. You've included an alias (type), but it does not match the alias(es) defined in your association (Type).
+13-2-2020 13:17:40 - IncidencesController - GetAll
+SequelizeEagerLoadingError: IncidenceTypeModel is not associated to IncidenceModel!
+13-2-2020 13:25:49 - IncidencesController - GetById
+SequelizeEagerLoadingError: LocationModel is not associated to IncidenceModel!
+13-2-2020 13:44:45 - MultimediaContentsController - GetAll
+SequelizeDatabaseError: Unknown column 'type.temporary' in 'field list'

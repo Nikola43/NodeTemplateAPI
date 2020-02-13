@@ -1,5 +1,9 @@
 import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../managers/DBManager";
+import {UserModel} from "./UserModel";
+import {LocationModel} from "./LocationModel";
+
+
 
 export class PanicButtonModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
@@ -51,9 +55,15 @@ PanicButtonModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
+//UserModel.hasMany(PanicButtonModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'resources'});
+//PanicButtonModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'location'});
+PanicButtonModel.hasOne(UserModel, {sourceKey: 'user_id', foreignKey: 'id', as: 'user'});
+
+
 PanicButtonModel.sync( //Crea la tabla de centros en la base de datos desde sequelize
     { force: false } // Si la tabla existe no provoca error ya que no obliga a crearla (con true si lo haría)
 )
 .then(() => 
     console.log("Tabla de panicbutton creada o ya existe.")
 );
+

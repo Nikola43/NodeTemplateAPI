@@ -7,6 +7,9 @@ import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import {DBUtil} from "../utils/DBUtil";
 import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
+import {UserModel} from "../db/models/UserModel";
+import {LocationModel} from "../db/models/LocationModel";
+import {PositionModel} from "../db/models/PositionModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -23,11 +26,52 @@ class PanicButtonsController extends BaseController {
         // find all records
         try {
             queryResult = await PanicButtonModel.findAll({
+                attributes: [
+                    'id',
+                    'user_id',
+                    'description',
+                    'cause',
+                    'number',
+                    'createdAt',
+                ],
                 where: {
                     deletedAt: {
                         [Op.is]: null
                     }
-                }
+                },
+                include: [
+                    {
+                        model: UserModel, as: 'user',
+                        attributes: [ //Campos que se muestran en la relación
+                             'id',
+                             'name',
+                            'lastname',
+                            'phone',
+                            'weight',
+                            'height',
+                            'bloodtype',
+                            'pulsations_max_rest',
+                            'vo2_max'
+                        ]
+                    },
+                    {
+                        model: LocationModel, as: 'location',
+                        attributes: [ //Campos que se muestran en la relación
+                            'id',
+                            'user_id'
+                        ],
+                        include: [
+                            {
+                                model: PositionModel, as: 'position',
+                                attributes: [ //Campos que se muestran en la relación
+                                    'Id',
+                                    'Latitude',
+                                    'Longitude'
+                                ]
+                            },
+                        ]
+                    },
+                ]
             });
 
             // if has results, then send result data
@@ -48,7 +92,49 @@ class PanicButtonsController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await PanicButtonModel.findByPk(req.params.id);
+            queryResult = await PanicButtonModel.findByPk(req.params.id,{
+                attributes: [
+                    'id',
+                    'user_id',
+                    'description',
+                    'cause',
+                    'number',
+                    'createdAt',
+                ],
+                include: [
+                    {
+                        model: UserModel, as: 'user',
+                        attributes: [ //Campos que se muestran en la relación
+                            'id',
+                            'name',
+                            'lastname',
+                            'phone',
+                            'weight',
+                            'height',
+                            'bloodtype',
+                            'pulsations_max_rest',
+                            'vo2_max'
+                        ]
+                    },
+                    {
+                        model: LocationModel, as: 'location',
+                        attributes: [ //Campos que se muestran en la relación
+                            'id',
+                            'user_id'
+                        ],
+                        include: [
+                            {
+                                model: PositionModel, as: 'position',
+                                attributes: [ //Campos que se muestran en la relación
+                                    'Id',
+                                    'Latitude',
+                                    'Longitude'
+                                ]
+                            },
+                        ]
+                    },
+                ]
+            });
 
             // if has results, then send result data
             // if not has result, send not found error

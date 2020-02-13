@@ -10,6 +10,7 @@ import { DeviceTypeModel } from "../db/models/typesModels/DeviceTypeModel";
 import {CenterModel} from "../db/models/CenterModel";
 import {DBUtil} from "../utils/DBUtil";
 import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
+import {CenterTypeModel} from "../db/models/typesModels/CenterTypeModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -25,12 +26,26 @@ class DevicesController extends BaseController {
 
         // find all records
         try {
-            queryResult = await DeviceModel.findAll({
+            queryResult = await DeviceModel.findAll({ attributes: [
+                    'id',
+                    'name',
+                    'description',
+                    'phone',
+                ],
                 where: {
                     deletedAt: {
                         [Op.is]: null
                     }
-                }
+                },
+                include: [
+                    {
+                        model: DeviceTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name'],
+                        ]
+                    },
+                    ]
+
             });
 
             // if has results, then send result data
@@ -52,7 +67,21 @@ class DevicesController extends BaseController {
         // find record by pk
         try {
             queryResult = await DeviceModel.findByPk(req.params.id,{
-                include: [{model: DeviceTypeModel, as: 'Type'}]
+                attributes: [
+                    'id',
+                    'name',
+                    'description',
+                    'phone',
+                ],
+                include: [
+                    {
+                        model: DeviceTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name'],
+                        ]
+                    },
+                ]
+
             });
 
             // if has results, then send result data

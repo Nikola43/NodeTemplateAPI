@@ -57,7 +57,7 @@ DocumentModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
-DocumentModel.hasOne(DocumentTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'Type'});
+DocumentModel.hasOne(DocumentTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'type'});
 
 
 DocumentModel.sync({ force: false })

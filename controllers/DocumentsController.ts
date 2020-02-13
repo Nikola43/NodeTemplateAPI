@@ -8,6 +8,7 @@ import DBActions from "../constants/DBActions";
 import {DBUtil} from "../utils/DBUtil";
 import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
 import { DocumentTypeModel } from "../db/models/typesModels/DocumentTypeModel";
+import {CenterTypeModel} from "../db/models/typesModels/CenterTypeModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -24,11 +25,25 @@ class DocumentsController extends BaseController {
         // find all records
         try {
             queryResult = await DocumentModel.findAll({
+                attributes: [
+                    'id',
+                    'name',
+                    'description',
+                    'url'
+                ],
                 where: {
                     deletedAt: {
                         [Op.is]: null
                     }
-                }
+                },
+                include: [
+                    {
+                        model: DocumentTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name'],
+                        ]
+                    },
+                    ]
             });
 
             // if has results, then send result data
@@ -50,8 +65,22 @@ class DocumentsController extends BaseController {
         // find record by pk
         try {
             queryResult = await DocumentModel.findByPk(req.params.id, {
-                include: [{model: DocumentTypeModel, as: 'Type'}]
+                attributes: [
+                    'id',
+                    'name',
+                    'description',
+                    'url'
+                ],
+                include: [
+                    {
+                        model: DocumentTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name'],
+                        ]
+                    },
+                ]
             });
+
 
             // if has results, then send result data
             // if not has result, send not found error

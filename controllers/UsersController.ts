@@ -361,37 +361,44 @@ class UsersController extends BaseController {
         }
     };
 
-    getTracking = async (req: Request, res: Response) => {
-        // get user id from request params
-        const userId = Number(req.params.id);
+    getLastPosition = async (req: Request, res: Response, next: Function) => {
 
+        const user_id = req.params.id;
+
+
+        // check if user_id are set
+        if (!user_id) {
+            res.status(HttpStatus.BAD_REQUEST).send(GenericErrors.USER_ID_EMPTY_ERROR);
+            return;
+        }
         try {
-            const tempData = await UserModel.findOne({
-                attributes: [
-                    'email',
-                ], where: {
-                    id: {
-                        [Op.eq]: userId
+            const user = await LocationModel.findOne({
+                attributes: [ //Campos que se muestran en la relación
+                    'id',
+                ],
+                include: [
+                    {
+                        model: PositionModel, as: 'position',
+                        attributes: [ //Campos que se muestran en la relación
+                            'Id',
+                            'Latitude',
+                            'Longitude'
+                        ]
                     },
-                    deletedAt: {
-                        [Op.is]: null
+                ],
+                where: {
+                    user_id: {
+                        [Op.eq]: user_id
                     }
                 }
             });
-
-            // if already exist
-            // send recovery email
-            if (tempData) {
-
-            }
-
-            res.status(200).send([]);
+            res.status(200).send(user);
         } catch (e) {
             ErrorUtil.handleError(res, e, UsersController.name + ' - ' + DBActions.GET_BY_EMAIL)
         }
 
-
     };
+
 
     newPosition = async (req: Request, res: Response) => {
         // get email and password from request body

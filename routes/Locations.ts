@@ -24,6 +24,9 @@ export class LocationsRoutes {
 
         /* DELETE LOCATION BY ID*/
         this.router.delete("/:id", [checkJwt], LocationController.delete);
+
+
+        this.router.delete("/:id", [checkJwt], LocationController.delete);
     }
 }
 

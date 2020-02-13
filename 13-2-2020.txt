@@ -16,3 +16,29 @@ SequelizeEagerLoadingError: LocationModel is not associated to ResourceModel!
 SequelizeEagerLoadingError: CenterModel is not associated to ResourceModel!
 13-2-2020 17:50:54 - UsersController - GetById
 SequelizeEagerLoadingError: IncidenceModel is not associated to UserModel!
+13-2-2020 18:9:30 - UsersController - GetByUsername
+SequelizeEagerLoadingError: LocationModel is not associated to UserModel!
+13-2-2020 18:11:27 - UsersController - GetByUsername
+SequelizeDatabaseError: Unknown column 'location.location_id' in 'on clause'
+13-2-2020 18:24:27 - UsersController - GetByUsername
+SequelizeEagerLoadingError: LocationModel is not associated to UserModel!
+13-2-2020 18:25:28 - UsersController - GetByUsername
+SequelizeDatabaseError: Unknown column 'location.location_id' in 'on clause'
+13-2-2020 18:28:17 - UsersController - GetByUsername
+SequelizeDatabaseError: Unknown column 'UserModel.location_id' in 'field list'
+13-2-2020 18:40:10 - UsersController - GetByUsername
+SequelizeEagerLoadingError: UserModel is not associated to LocationModel!
+13-2-2020 18:40:58 - UsersController - GetByUsername
+Error: Include unexpected. Element has to be either a Model, an Association or an object.
+13-2-2020 18:41:53 - UsersController - GetByUsername
+Error: Include unexpected. Element has to be either a Model, an Association or an object.
+13-2-2020 18:42:30 - UsersController - GetByUsername
+SequelizeEagerLoadingError: UserModel is not associated to LocationModel!
+13-2-2020 18:49:20 - UsersController - GetByUsername
+SequelizeEagerLoadingError: PositionModel is not associated to UserModel!
+13-2-2020 18:53:45 - UsersController - GetByUsername
+SequelizeEagerLoadingError: LocationModel is not associated to LocationModel!
+13-2-2020 19:2:17 - UsersController - GetByUsername
+SequelizeEagerLoadingError: PositionModel is not associated to UserModel!
+13-2-2020 19:5:28 - UsersController - GetByUsername
+SequelizeDatabaseError: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''1' LIMIT 1' at line 1

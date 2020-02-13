@@ -51,7 +51,7 @@ ResourceModel.init({
 
 
 ResourceModel.hasOne(ResourceTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'type'});
-//ResourceModel.belongsTo(CenterModel, {targetKey: 'id', foreignKey: 'center_id', as: 'center'});
+// ResourceModel.belongsTo(CenterModel, {targetKey: 'id', foreignKey: 'center_id', as: 'center'});
 
 ResourceModel.sync({ force: false })
     .then(() => console.log("Tabla de tipos centros creada o ya existe."));

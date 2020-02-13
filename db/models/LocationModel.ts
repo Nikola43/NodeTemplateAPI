@@ -1,6 +1,10 @@
 import {Model, DataTypes} from 'sequelize';
 import dbConnection from "../../managers/DBManager";
 import {PositionModel} from "./PositionModel";
+import {UserModel} from "./UserModel";
+import {CenterTypeModel} from "./typesModels/CenterTypeModel";
+import LocationsType from "../../routes/LocationsType";
+import {LocationTypeModel} from "./typesModels/LocationTypeModel";
 
 export class LocationModel extends Model {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
@@ -107,6 +111,11 @@ LocationModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
+LocationModel.belongsTo(UserModel, {targetKey: 'id', foreignKey: 'user_id', as: 'user'});
 LocationModel.hasOne(PositionModel, {sourceKey: 'coordinates_id', foreignKey: 'id', as: 'position'});
+
 LocationModel.sync({ force: false })
     .then(() => console.log("Tabla de centros creada o ya existe."));
+
+LocationTypeModel.sync({ force: false })
+    .then(() => console.log("Tabla de tipos centros creada o ya existe."));

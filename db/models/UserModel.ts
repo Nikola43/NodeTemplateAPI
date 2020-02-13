@@ -136,7 +136,3 @@ UserIncidenceModel.sync({ force: false })
     .then(() => console.log("Tabla de incidencias creada o ya existe."));
 UserResourceModel.sync({ force: false })
     .then(() => console.log("Tabla de incidencias creada o ya existe."));
-LocationModel.sync({ force: false })
-    .then(() => console.log("Tabla de tipos centros creada o ya existe."));
-LocationTypeModel.sync({ force: false })
-        .then(() => console.log("Tabla de tipos centros creada o ya existe."));

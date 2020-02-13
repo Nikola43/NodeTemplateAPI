@@ -28,8 +28,8 @@ export class UsersRoutes {
         /* RECOVERY USER PASSWORD*/
         this.router.post("/recovery", UsersController.recoveryPassword);
 
-        /* GET USER TRACKING */
-        this.router.post("/:id/tracking", UsersController.getTracking);
+        /* GET USER LAST POSITION*/
+        this.router.get("/:id/last", UsersController.getLastPosition);
 
         /* UPDATE USER POSITION */
         this.router.post("/:id/position", UsersController.newPosition);

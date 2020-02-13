@@ -6,3 +6,13 @@ SequelizeEagerLoadingError: IncidenceTypeModel is not associated to IncidenceMod
 SequelizeEagerLoadingError: LocationModel is not associated to IncidenceModel!
 13-2-2020 13:44:45 - MultimediaContentsController - GetAll
 SequelizeDatabaseError: Unknown column 'type.temporary' in 'field list'
+13-2-2020 17:29:53 - PanicButtonsController - GetAll
+SequelizeEagerLoadingError: UserModel is not associated to PanicButtonModel!
+13-2-2020 17:30:14 - ResourcesController - GetAll
+SequelizeEagerLoadingError: ResourceTypeModel is not associated to ResourceModel!
+13-2-2020 17:33:36 - ResourcesController - GetAll
+SequelizeEagerLoadingError: LocationModel is not associated to ResourceModel!
+13-2-2020 17:35:39 - ResourcesController - GetById
+SequelizeEagerLoadingError: CenterModel is not associated to ResourceModel!
+13-2-2020 17:50:54 - UsersController - GetById
+SequelizeEagerLoadingError: IncidenceModel is not associated to UserModel!

@@ -1,8 +1,10 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../managers/DBManager";
 import { ResourceTypeModel } from './typesModels/ResourceTypeModel';
+import {CenterModel} from "./CenterModel";
+import {BaseModel} from "./baseModels/BaseModel";
 
-export class ResourceModel extends Model {
+export class ResourceModel extends BaseModel {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
     public center_id!: number;
     public type_id!: number;
@@ -46,6 +48,10 @@ ResourceModel.init({
     tableName: 'resources',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+
+ResourceModel.hasOne(ResourceTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'type'});
+//ResourceModel.belongsTo(CenterModel, {targetKey: 'id', foreignKey: 'center_id', as: 'center'});
 
 ResourceModel.sync({ force: false })
     .then(() => console.log("Tabla de tipos centros creada o ya existe."));

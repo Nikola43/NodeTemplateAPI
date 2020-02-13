@@ -57,7 +57,7 @@ PanicButtonModel.init({
 
 //UserModel.hasMany(PanicButtonModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'resources'});
 //PanicButtonModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'location'});
-PanicButtonModel.hasOne(UserModel, {sourceKey: 'user_id', foreignKey: 'id', as: 'user'});
+//PanicButtonModel.hasOne(UserModel, {sourceKey: 'user_id', foreignKey: 'id', as: 'user'});
 
 
 PanicButtonModel.sync( //Crea la tabla de centros en la base de datos desde sequelize

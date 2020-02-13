@@ -7,6 +7,10 @@ import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import {DBUtil} from "../utils/DBUtil";
 import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
+import {ResourceTypeModel} from "../db/models/typesModels/ResourceTypeModel";
+import {LocationModel} from "../db/models/LocationModel";
+import {PositionModel} from "../db/models/PositionModel";
+import {CenterModel} from "../db/models/CenterModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -23,11 +27,24 @@ class ResourcesController extends BaseController {
         // find all records
         try {
             queryResult = await ResourceModel.findAll({
+                attributes: [
+                    'id',
+                    'name',
+                    'status',
+                ],
                 where: {
                     deletedAt: {
                         [Op.is]: null
                     }
-                }
+                },
+                include: [
+                    {
+                        model: ResourceTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name'],
+                        ]
+                    },
+                ]
             });
 
             // if has results, then send result data
@@ -48,7 +65,21 @@ class ResourcesController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await ResourceModel.findByPk(req.params.id);
+            queryResult = await ResourceModel.findByPk(req.params.id,{
+                attributes: [
+                    'id',
+                    'name',
+                    'status'
+                ],
+                include: [
+                    {
+                        model: ResourceTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name'],
+                        ]
+                    },
+                ]
+            });
 
             // if has results, then send result data
             // if not has result, send not found error

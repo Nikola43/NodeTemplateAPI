@@ -32,7 +32,7 @@ PositionModel.init({
         allowNull: true
     },
 }, {
-    tableName: 'positions',
+    tableName: 'coordinates',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 

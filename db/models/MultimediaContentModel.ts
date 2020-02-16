@@ -61,7 +61,7 @@ MultimediaContentModel.init({
 });
 
 MultimediaContentModel.hasOne(MultimediaContentTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'type'});
-//MultimediaContentModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'location'});
+MultimediaContentModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'location'});
 
 MultimediaContentModel.sync({ force: false })
     .then(() => console.log("Tabla de tipos centros creada o ya existe."));

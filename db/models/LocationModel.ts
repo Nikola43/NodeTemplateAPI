@@ -111,7 +111,7 @@ LocationModel.init({
     sequelize: dbConnection.getSequelize, // this bit is important
 });
 
-LocationModel.belongsTo(UserModel, {targetKey: 'id', foreignKey: 'user_id', as: 'user'});
+//LocationModel.belongsTo(UserModel, {targetKey: 'id', foreignKey: 'user_id', as: 'user'});
 LocationModel.hasOne(PositionModel, {sourceKey: 'coordinates_id', foreignKey: 'id', as: 'position'});
 
 LocationModel.sync({ force: false })

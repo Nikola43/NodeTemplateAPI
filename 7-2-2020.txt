@@ -1,2 +1,0 @@
-7-2-2020 16:50:26 - UsersController - Insert
-SequelizeConnectionRefusedError: connect ECONNREFUSED 127.0.0.1:3306

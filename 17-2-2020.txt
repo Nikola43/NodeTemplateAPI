@@ -1,0 +1,54 @@
+17-2-2020 13:57:59 - undefined - GetByField
+SequelizeDatabaseError: Unknown column 'MultimediaContentModel.fieldName' in 'where clause'
+17-2-2020 13:57:59 - undefined - Insert
+SequelizeValidationError: notNull Violation: MultimediaContentModel.user_id cannot be null,
+notNull Violation: MultimediaContentModel.type_id cannot be null,
+notNull Violation: MultimediaContentModel.name cannot be null,
+notNull Violation: MultimediaContentModel.url cannot be null,
+notNull Violation: MultimediaContentModel.size cannot be null
+17-2-2020 13:57:59 - undefined - GetById
+SequelizeValidationError: notNull Violation: MultimediaContentModel.user_id cannot be null,
+notNull Violation: MultimediaContentModel.type_id cannot be null,
+notNull Violation: MultimediaContentModel.name cannot be null,
+notNull Violation: MultimediaContentModel.url cannot be null,
+notNull Violation: MultimediaContentModel.size cannot be null
+17-2-2020 14:0:32 - undefined - GetByField
+SequelizeDatabaseError: Unknown column 'MultimediaContentModel.fieldName' in 'where clause'
+17-2-2020 14:0:32 - undefined - Insert
+SequelizeValidationError: notNull Violation: MultimediaContentModel.user_id cannot be null,
+notNull Violation: MultimediaContentModel.type_id cannot be null,
+notNull Violation: MultimediaContentModel.name cannot be null,
+notNull Violation: MultimediaContentModel.url cannot be null,
+notNull Violation: MultimediaContentModel.size cannot be null
+17-2-2020 14:0:32 - undefined - GetById
+SequelizeValidationError: notNull Violation: MultimediaContentModel.user_id cannot be null,
+notNull Violation: MultimediaContentModel.type_id cannot be null,
+notNull Violation: MultimediaContentModel.name cannot be null,
+notNull Violation: MultimediaContentModel.url cannot be null,
+notNull Violation: MultimediaContentModel.size cannot be null
+17-2-2020 14:1:20 - undefined - GetByField
+SequelizeDatabaseError: Unknown column 'MultimediaContentModel.fieldName' in 'where clause'
+17-2-2020 14:1:20 - undefined - Insert
+SequelizeValidationError: notNull Violation: MultimediaContentModel.user_id cannot be null,
+notNull Violation: MultimediaContentModel.type_id cannot be null,
+notNull Violation: MultimediaContentModel.name cannot be null,
+notNull Violation: MultimediaContentModel.url cannot be null,
+notNull Violation: MultimediaContentModel.size cannot be null
+17-2-2020 14:1:20 - undefined - GetById
+SequelizeValidationError: notNull Violation: MultimediaContentModel.user_id cannot be null,
+notNull Violation: MultimediaContentModel.type_id cannot be null,
+notNull Violation: MultimediaContentModel.name cannot be null,
+notNull Violation: MultimediaContentModel.url cannot be null,
+notNull Violation: MultimediaContentModel.size cannot be null
+17-2-2020 14:7:44 - undefined - Insert
+SequelizeValidationError: notNull Violation: MultimediaContentModel.user_id cannot be null,
+notNull Violation: MultimediaContentModel.type_id cannot be null,
+notNull Violation: MultimediaContentModel.name cannot be null,
+notNull Violation: MultimediaContentModel.url cannot be null,
+notNull Violation: MultimediaContentModel.size cannot be null
+17-2-2020 14:7:44 - undefined - GetById
+SequelizeValidationError: notNull Violation: MultimediaContentModel.user_id cannot be null,
+notNull Violation: MultimediaContentModel.type_id cannot be null,
+notNull Violation: MultimediaContentModel.name cannot be null,
+notNull Violation: MultimediaContentModel.url cannot be null,
+notNull Violation: MultimediaContentModel.size cannot be null

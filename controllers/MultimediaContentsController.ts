@@ -9,6 +9,8 @@ import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
 import {MultimediaContentTypeModel} from "../db/models/typesModels/MultimediaContentTypeModel";
 import {LocationModel} from "../db/models/LocationModel";
 import {PositionModel} from "../db/models/PositionModel";
+import * as jwt from "jsonwebtoken";
+import config from "../config/Config";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -83,7 +85,7 @@ class MultimediaContentsController extends BaseController {
 
         // find record by pk
         try {
-            queryResult = await MultimediaContentModel.findByPk(req.params.id,{
+            queryResult = await MultimediaContentModel.findByPk(req.params.id, {
 
                 attributes: [
                     'id',
@@ -95,14 +97,14 @@ class MultimediaContentsController extends BaseController {
                 ],
                 include: [
                     {
-                        model: MultimediaContentTypeModel, as: 'type', attributes: [ [ 'type', 'name'] ]
+                        model: MultimediaContentTypeModel, as: 'type', attributes: [['type', 'name']]
                     },
                     {
                         model: LocationModel, as: 'location',
                         attributes: [ //Campos que se muestran en la relación
                             'id',
                         ],
-                        include: [ { model: PositionModel, as: 'position', attributes: [ 'Id','Latitude','Longitude'] } ]
+                        include: [{model: PositionModel, as: 'position', attributes: ['Id', 'Latitude', 'Longitude']}]
                     }
                 ]
             });
@@ -161,10 +163,10 @@ class MultimediaContentsController extends BaseController {
     };
 
     validateInsert = (data: any, res: Response): boolean => {
-        // check if field called 'type_id' are set
+        // check if field called 'user_id' are set
         // if field not are set, then send empty required field error
-        if (!data.type_id) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
+        if (!data.user_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentModel.name + " " + GenericErrors.USER_ID_EMPTY_ERROR});
             return false;
         }
 
@@ -175,17 +177,17 @@ class MultimediaContentsController extends BaseController {
             return false;
         }
 
+        // check if field called 'type_id' are set
+        // if field not are set, then send empty required field error
+        if (!data.type_id) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentModel.name + " " + GenericErrors.TYPE_EMPTY_ERROR});
+            return false;
+        }
+
         // check if field callet 'name' are set
         // if field not are set, then send empty required field error
         if (!data.name) {
             res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentModel.name + " " + GenericErrors.NAME_EMPTY_ERROR});
-            return false;
-        }
-
-        // check if field called 'user_id' are set
-        // if field not are set, then send empty required field error
-        if (!data.user_id) {
-            res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentModel.name + " " + GenericErrors.USER_ID_EMPTY_ERROR});
             return false;
         }
 
@@ -197,6 +199,65 @@ class MultimediaContentsController extends BaseController {
         }
         return true;
     };
+
+    upload = async (req: any, res: any, next: any) => {
+        let token = <string>req.headers['authorization'];
+        let jwtPayload;
+
+        //Try to validate the token and get data
+        try {
+            token = token.replace('Bearer ', '');
+            jwtPayload = <any>jwt.verify(token, config.jwtSecret);
+        } catch (error) {
+            //If token is not valid, respond with 401 (unauthorized)
+            res.status(401).send({error: "unauthorized"});
+            return;
+        }
+
+        console.log(jwtPayload);
+
+        try {
+            console.log(req.files);
+            if (!req.files) {
+                res.send({
+                    status: false,
+                    message: 'No file uploaded'
+                });
+            } else {
+                //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
+                let uploadedFile = req.files.uploadedFile;
+
+                //Use the mv() method to place the file in upload directory (i.e. "uploads")
+                await uploadedFile.mv('./uploads/' + uploadedFile.name);
+
+                //TODO
+                // get type id
+                // get location id by user id
+                const multimediaContent = {
+                    user_id: 1,
+                    location_id: 1,
+                    type_id: 1,
+                    name: uploadedFile.name,
+                    url: 'https://signis.app/multimedia/' + uploadedFile.name,
+                    size: uploadedFile.size
+                };
+
+                console.log(multimediaContent);
+
+                // check if request is valid and if user doesn't exists
+                if (this.validateInsert(multimediaContent, res)) {
+
+                    // insert
+                    const result = await DBUtil.insertModel(this, MultimediaContentModel, multimediaContent);
+
+                    // respond request
+                    HttpComunicationUtil.respondInsertRequest(this, MultimediaContentModel, result, res);
+                }
+            }
+        } catch (err) {
+            res.status(500).send(err);
+        }
+    }
 }
 
 const multimediaContentsController = new MultimediaContentsController();

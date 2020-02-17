@@ -24,6 +24,9 @@ export class MultimediaContentsRoutes {
 
         /* DELETE PANICBUTTON BY ID*/
         this.router.delete("/:id", [checkJwt], MultimediaContentsController.delete);
+
+        /* UPLOAD FILE */
+        this.router.post("/upload", [checkJwt], MultimediaContentsController.upload);
     }
 }
 

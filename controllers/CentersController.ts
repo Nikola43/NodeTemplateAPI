@@ -7,8 +7,6 @@ import GenericErrors from "../constants/errors/GenericErrors";
 import DBActions from "../constants/DBActions";
 import {CenterTypeModel} from "../db/models/typesModels/CenterTypeModel";
 import {LocationModel} from "../db/models/LocationModel";
-import {UserModel} from "../db/models/UserModel";
-import {ResourceModel} from "../db/models/ResourceModel";
 import {DBUtil} from "../utils/DBUtil";
 import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
 import {PositionModel} from "../db/models/PositionModel";

@@ -102,6 +102,7 @@ export class DBUtil {
     static async checkIfExistsByField(controller: any, model: any, fieldName: string, fieldValue: any): Promise<boolean> {
         let exists = false;
 
+
         // find if exists any record with same value field
         try {
             const tempData = await model.findOne({

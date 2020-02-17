@@ -27,7 +27,7 @@ import resourcesTypesRouter from './routes/ResourcesType';
 import usersIncidencesRouter from './routes/UsersIncidencesRoutes';
 import express from 'express';
 import dbConnection from "./managers/DBManager";
-
+import fileUpload from 'express-fileupload';
 
 export class App {
     public express: express.Application;
@@ -50,6 +50,7 @@ export class App {
         this.express.use(logger('dev'));
         this.express.use(cookieParser());
         this.express.use(express.static(path.join(__dirname, '../public')));
+        this.express.use(fileUpload());
 
         this.express.use(indexRouter);
         this.express.use(this.apiBaseUrl + "/markers", markersRouter);

@@ -10,6 +10,7 @@ import {HttpComunicationUtil} from "../utils/HttpComunicationUtil";
 import {IncidenceTypeModel} from "../db/models/typesModels/IncidenceTypeModel";
 import {LocationModel} from "../db/models/LocationModel";
 import {PositionModel} from "../db/models/PositionModel";
+import {CenterModel} from "../db/models/CenterModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
@@ -220,6 +221,52 @@ class IncidencesController extends BaseController {
             return false;
         }
         return true;
+    };
+
+    getLastPosition = async (req: Request, res: Response, next: Function) => {
+
+        const incidence_id = req.params.id;
+
+
+        // check if incidence_id are set
+        if (!incidence_id) {
+            res.status(HttpStatus.BAD_REQUEST).send(GenericErrors.INCIDENCE_ID_EMPTY_ERROR);
+            return;
+        }
+        try {
+            const data = await IncidenceModel.findOne({
+                attributes: [ //Campos que se muestran en la relación
+                    'id',
+                ],
+                include: [
+                    {
+                        model: LocationModel, as: 'location',
+                        attributes: [ //Campos que se muestran en la relación
+                            'id',
+                        ],
+                        include: [
+                            {
+                                model: PositionModel, as: 'position',
+                                attributes: [ //Campos que se muestran en la relación
+                                    'Id',
+                                    'Latitude',
+                                    'Longitude'
+                                ]
+                            },
+                        ]
+                    },
+                ],
+                where: {
+                    id: {
+                        [Op.eq]: incidence_id
+                    }
+                }
+            });
+            res.status(200).send(data);
+        } catch (e) {
+            ErrorUtil.handleError(res, e, IncidencesController.name + ' - ' + DBActions.GET_BY_EMAIL)
+        }
+
     };
 }
 

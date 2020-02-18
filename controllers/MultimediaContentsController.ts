@@ -257,7 +257,77 @@ class MultimediaContentsController extends BaseController {
         } catch (err) {
             res.status(500).send(err);
         }
-    }
+    };
+
+    getAllbyUserID = async (req: Request, res: Response, next: Function) => {
+
+        // create variable for store query result
+        let queryResult: any;
+
+        const userId = req.params.id;
+
+        // check if field called 'type_id' are set
+        // if field not are set, then send empty required field error
+        if (!userId) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: MultimediaContentModel.name + " " + GenericErrors.USER_ID_EMPTY_ERROR});
+            return false;
+        }
+        // find all records
+        try {
+            queryResult = await MultimediaContentModel.findAll({
+
+                attributes: [
+                    'id',
+                    'user_id',
+                    'name',
+                    'url',
+                    'createdAt'
+                ],
+                where: {
+                    deletedAt: {
+                        [Op.is]: null
+                    },
+
+                    user_id: {
+                        [Op.eq]: userId
+                    }
+                },
+                include: [
+                    {
+                        model: MultimediaContentTypeModel, as: 'type',
+                        attributes: [ //Campos que se muestran en la relación
+                            ['type', 'name']
+                        ]
+                    },
+                    {
+                        model: LocationModel, as: 'location',
+                        attributes: [ //Campos que se muestran en la relación
+                            'id',
+                        ],
+                        include: [
+                            {
+                                model: PositionModel, as: 'position',
+                                attributes: [ //Campos que se muestran en la relación
+                                    'Id',
+                                    'Latitude',
+                                    'Longitude'
+                                ]
+                            },
+                        ]
+                    },
+                ]
+            });
+
+            // if has results, then send result data
+            // if not has result, send empty array
+            queryResult
+                ? res.status(HttpStatus.OK).send(queryResult)
+                : res.status(HttpStatus.OK).send([]);
+        } catch (e) {
+            ErrorUtil.handleError(res, e, MultimediaContentsController.name + ' - ' + DBActions.GET_ALL)
+        }
+    };
+
 }
 
 const multimediaContentsController = new MultimediaContentsController();

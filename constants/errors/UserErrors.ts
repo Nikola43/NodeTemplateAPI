@@ -3,6 +3,7 @@ export default {
     EMPTY_PASSWORD_ERROR: {error: "password are empty"},
     STATUS_EMPTY_ERROR: {error: "password are empty"},
     EMAIL_EMPTY_ERROR: {error: "email are empty"},
+    INVALID_EMAIL_ERROR: "email are invalid",
     AVAILABLE_EMPTY_ERROR: {error: "available are empty"},
     USER_NOT_FOUND_ERROR: {error: "user not found"},
     USER_ALREADY_EXISTS_ERROR: {error: "user already exists"},

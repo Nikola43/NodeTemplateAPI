@@ -1,0 +1,4 @@
+18-2-2020 11:9:5 - CentersController - GetByUsername
+SequelizeDatabaseError: Unknown column 'LocationModel.center_id' in 'where clause'
+18-2-2020 11:14:18 - CentersController - GetByUsername
+SequelizeDatabaseError: Unknown column 'CenterModel.center_id' in 'where clause'

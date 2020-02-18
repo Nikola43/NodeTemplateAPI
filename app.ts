@@ -6,7 +6,7 @@ import logger from 'morgan';
 import bodyParser from "body-parser";
 import cors from "cors";
 import indexRouter from './routes/Index';
-import usersRouter from './routes/Users';
+import usersRouter from './routes/UsersRoutes';
 import markersRouter from './routes/MarkersRoutes';
 import panicButtonsRouter from './routes/PanicButtons';
 import centersRouter from './routes/Centers';
@@ -50,7 +50,7 @@ export class App {
         this.express.use(logger('dev'));
         this.express.use(cookieParser());
         this.express.use(express.static(path.join(__dirname, '../public')));
-        this.express.use(fileUpload());
+        this.express.use(fileUpload({ limits: { fileSize: 100 * 1024 * 1024 },})); // upload files limit (100MB)
 
         this.express.use(indexRouter);
         this.express.use(this.apiBaseUrl + "/markers", markersRouter);

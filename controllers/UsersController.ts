@@ -27,6 +27,7 @@ const crypto = require('crypto');
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+import * as EmailValidator from 'email-validator';
 
 class UsersController extends BaseController {
     // functions
@@ -135,10 +136,19 @@ class UsersController extends BaseController {
             return;
         }
 
+
         // check if field callet 'email' are set
         // if field not are set, then send empty required field error
         if (!data.email) {
             res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.EMAIL_EMPTY_ERROR});
+            return;
+        }
+
+
+        // check if field callet 'email' are set
+        // if field not are set, then send empty required field error
+        if (!EmailValidator.validate(data.email) ) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.INVALID_EMAIL_ERROR});
             return;
         }
 
@@ -332,6 +342,13 @@ class UsersController extends BaseController {
             return;
         }
 
+        // check if field callet 'email' are set
+        // if field not are set, then send empty required field error
+        if (!EmailValidator.validate(email) ) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.INVALID_EMAIL_ERROR});
+            return;
+        }
+
         // check if password are set
         if (!password) {
             res.status(HttpStatus.BAD_REQUEST).send(UserErrors.EMPTY_PASSWORD_ERROR);
@@ -422,18 +439,6 @@ class UsersController extends BaseController {
 
     validateInsert = (data: any, res: Response): boolean => {
         return true;
-    };
-
-    respondInsertRequest = (result: any, res: Response) => {
-
-    };
-
-    respondDeleteRequest = async (result: any, modelId: number, res: Response) => {
-
-    };
-
-    respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
-
     };
 }
 

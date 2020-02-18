@@ -192,7 +192,55 @@ class CentersController extends BaseController {
         // if pass all fields validations return true
         return true;
     };
+
+    getLastPosition = async (req: Request, res: Response, next: Function) => {
+
+        const center_id = req.params.id;
+
+
+        // check if center_id are set
+        if (!center_id) {
+            res.status(HttpStatus.BAD_REQUEST).send(GenericErrors.CENTER_ID_EMPTY_ERROR);
+            return;
+        }
+        try {
+            const center = await CenterModel.findOne({
+                attributes: [ //Campos que se muestran en la relación
+                    'id',
+                ],
+                include: [
+                    {
+                        model: LocationModel, as: 'location',
+                        attributes: [ //Campos que se muestran en la relación
+                            'id',
+                        ],
+                        include: [
+                            {
+                                model: PositionModel, as: 'position',
+                                attributes: [ //Campos que se muestran en la relación
+                                    'Id',
+                                    'Latitude',
+                                    'Longitude'
+                                ]
+                            },
+                        ]
+                    },
+                ],
+                where: {
+                    id: {
+                        [Op.eq]: center_id
+                    }
+                }
+            });
+            res.status(200).send(center);
+        } catch (e) {
+            ErrorUtil.handleError(res, e, CentersController.name + ' - ' + DBActions.GET_BY_EMAIL)
+        }
+
+    };
 }
+
+
 
 const centersController = new CentersController();
 export default centersController;

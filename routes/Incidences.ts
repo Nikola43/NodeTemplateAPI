@@ -1,5 +1,7 @@
 import { Router } from "express";
 import IncidenceController from "../controllers/IncidencesController";
+import {checkJwt} from "../middlewares/CheckJwt";
+import CentersController from "../controllers/CentersController";
 
 export class IncidenceRoutes {
     router: Router;
@@ -23,6 +25,9 @@ export class IncidenceRoutes {
 
         /* DELETE DOCUMENTTYPE BY ID*/
         this.router.delete("/:id", IncidenceController.delete);
+
+        /* GET CENTER LAST POSITION*/
+        this.router.get("/:id/last",[checkJwt], IncidenceController.getLastPosition);
     }
 }
 

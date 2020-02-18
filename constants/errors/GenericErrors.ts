@@ -6,5 +6,7 @@ export default {
     NAME_EMPTY_ERROR: "name can not be empty",
     ALREADY_EXIST_ERROR: "already exists",
     LOCATION_ID_EMPTY_ERROR: "location id can not be empty",
-    USER_ID_EMPTY_ERROR: "user id can not be empty"
+    USER_ID_EMPTY_ERROR: "user id can not be empty",
+    CENTER_ID_EMPTY_ERROR: "center id can not be empty",
+    INCIDENCE_ID_EMPTY_ERROR: "incidence id can not be empty"
 };

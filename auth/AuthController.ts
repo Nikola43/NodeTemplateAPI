@@ -7,6 +7,9 @@ import Messages from "../constants/messages/Messages";
 import {UserModel} from "../db/models/UserModel";
 import {Op} from "sequelize";
 import bcrypt from "bcrypt"
+import * as EmailValidator from "email-validator";
+
+const HttpStatus = require('http-status-codes');
 
 
 class AuthController {
@@ -24,6 +27,13 @@ class AuthController {
         // if not are set, then stop execution
         if (!user.password) {
             res.status(400).send(UserErrors.EMPTY_PASSWORD_ERROR);
+            return;
+        }
+
+        // check if field callet 'email' are set
+        // if field not are set, then send empty required field error
+        if (!EmailValidator.validate(user.email) ) {
+            res.status(HttpStatus.BAD_REQUEST).send({error: UserModel.name + " " + UserErrors.INVALID_EMAIL_ERROR});
             return;
         }
 

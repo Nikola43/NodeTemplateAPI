@@ -11,6 +11,7 @@ import {ResourceTypeModel} from "../db/models/typesModels/ResourceTypeModel";
 import {LocationModel} from "../db/models/LocationModel";
 import {PositionModel} from "../db/models/PositionModel";
 import {CenterModel} from "../db/models/CenterModel";
+import {IncidenceModel} from "../db/models/IncidenceModel";
 
 const HttpStatus = require('http-status-codes');
 const Sequelize = require('sequelize');

@@ -1,6 +1,7 @@
 import {Router} from "express";
 import CentersController from "../controllers/CentersController";
 import {checkJwt} from "../middlewares/CheckJwt";
+import UsersController from "../controllers/UsersController";
 
 export class CentersRoutes {
     router: Router;
@@ -24,6 +25,9 @@ export class CentersRoutes {
 
         /* DELETE CENTER BY ID*/
         this.router.delete("/:id", [checkJwt], CentersController.delete);
+
+        /* GET CENTER LAST POSITION*/
+        this.router.get("/:id/last",[checkJwt], CentersController.getLastPosition);
     }
 }
 

@@ -125,14 +125,20 @@ UserModel.hasMany(DocumentModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'D
 UserModel.hasMany(MultimediaContentModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Multimedia'});
 UserModel.hasMany(PanicButtonModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'Panics'});
 UserModel.hasMany(UserDeviceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'UsersDevices'});
-UserModel.hasMany(UserIncidenceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'UsersIncidences'});
-UserModel.hasMany(UserResourceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'UsersResources'});
+
 
 UserIncidenceModel.belongsToMany(UserModel, {
     through: 'users_incidences',
     as: 'users',
     foreignKey: 'user_id',
     otherKey: 'incidence_id'
+});
+
+UserResourceModel.belongsToMany(UserModel, {
+    through: 'users_resources',
+    as: 'users',
+    foreignKey: 'user_id',
+    otherKey: 'resource_id'
 });
 
 UserModel.sync({ force: false })

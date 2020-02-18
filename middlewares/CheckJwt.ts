@@ -30,12 +30,19 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
                 expiresIn: "168h"
             });
 
+
+
+            // NO ACTUALIZA EL TOKEN EN LA BASE DE DATOS
+            // ESTO COMITEADO SOLO ES EN DESARROLLO
+            // EN LA VERSION DE PRODUCCION DEBE ACTUALIZAR EL TOKEN
+            /*
             //Update user token
             await UserModel.update({token: newToken}, {
                 where: {
                     email: email
                 }
             });
+            */
 
             // set new token in header
             res.setHeader("token", newToken);

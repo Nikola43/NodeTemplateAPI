@@ -25,6 +25,7 @@ import multimediaContentsTypesRouter from './routes/MultimediaContentsType';
 import resourcesRouter from './routes/Resources';
 import resourcesTypesRouter from './routes/ResourcesType';
 import usersIncidencesRouter from './routes/UsersIncidencesRoutes';
+import usersResourcesRouter from './routes/UsersResourcesRoutes';
 import express from 'express';
 import dbConnection from "./managers/DBManager";
 import fileUpload from 'express-fileupload';
@@ -72,6 +73,7 @@ export class App {
         this.express.use(this.apiBaseUrl + '/resources',resourcesRouter);
         this.express.use(this.apiBaseUrl + '/resources_types', resourcesTypesRouter);
         this.express.use(this.apiBaseUrl + '/users_incidences', usersIncidencesRouter);
+        this.express.use(this.apiBaseUrl + '/users_resources', usersResourcesRouter);
 
         // catch 404 and forward to error handler
         this.express.use(function (req, res, next) {

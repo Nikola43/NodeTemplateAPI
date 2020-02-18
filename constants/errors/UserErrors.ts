@@ -20,7 +20,7 @@ export default {
     USER_INCIDENCE_ID_EMPTY_ERROR: {error: "user incidence Id can not be empty"},
     //USER RESOURCES ERRORS
     USER_RESOURCE_NOT_FOUND_ERROR: {error: "user resource not found"}, //mejor "not assignated?"
-    RESOURCE_ID_EMPTY_ERROR: {error: "user Id from user resource can not be empty"},
+    RESOURCE_ID_EMPTY_ERROR: {error: "resource Id from user resource can not be empty"},
     USER_RESOURCE_ALREADY_EXIST_ERROR: {error: "resource already has asigned user"},
     USER_RESOURCE_ID_EMPTY_ERROR: {error: "user resource Id can not be empty"},
 };

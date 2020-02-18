@@ -1,7 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
 import dbConnection from "../../managers/DBManager";
-import {UserModel} from "./UserModel";
-import {IncidenceModel} from "./IncidenceModel";
 
 export class UserIncidenceModel extends Model {
     public user_id!: number; // Note that the `null assertion` `!` is required in strict mode.
@@ -37,6 +35,7 @@ UserIncidenceModel.init({
     tableName: 'users_incidences',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
 
 UserIncidenceModel.sync({ force: false })
     .then(() => console.log("Tabla de users_incidences creada o ya existe."));

@@ -3,6 +3,8 @@ import dbConnection from "../../managers/DBManager";
 import { ResourceTypeModel } from './typesModels/ResourceTypeModel';
 import {CenterModel} from "./CenterModel";
 import {BaseModel} from "./baseModels/BaseModel";
+import {UserResourceModel} from "./UserResourceModel";
+import {UserModel} from "./UserModel";
 
 export class ResourceModel extends BaseModel {
     public id!: number; // Note that the `null assertion` `!` is required in strict mode.
@@ -52,6 +54,13 @@ ResourceModel.init({
 
 ResourceModel.hasOne(ResourceTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'type'});
 // ResourceModel.belongsTo(CenterModel, {targetKey: 'id', foreignKey: 'center_id', as: 'center'});
+
+UserResourceModel.belongsToMany(ResourceModel, {
+    through: 'users_resources',
+    as: 'resources',
+    foreignKey: 'user_id',
+    otherKey: 'resource_id'
+});
 
 ResourceModel.sync({ force: false })
     .then(() => console.log("Tabla de tipos centros creada o ya existe."));

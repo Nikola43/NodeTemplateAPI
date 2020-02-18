@@ -35,3 +35,7 @@ UserResourceModel.init({
     tableName: 'users_resources',
     sequelize: dbConnection.getSequelize, // this bit is important
 });
+
+
+UserResourceModel.sync({ force: false })
+    .then(() => console.log("Tabla de users_incidences creada o ya existe."));

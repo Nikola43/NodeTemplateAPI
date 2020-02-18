@@ -8,7 +8,7 @@ import {LOGUtil} from "../utils/LOGUtil";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-export default class UsersResourcesController {
+class UsersResourcesController {
     getAll = async (req: Request, res: Response, next: any) => {
         try {
             const userResource = await UserResourceModel.findAll();
@@ -20,10 +20,10 @@ export default class UsersResourcesController {
         }
     };
 
-    getUserResourceById = async (req: Request, res: Response, next: any) => {
+    getById = async (req: Request, res: Response, next: any) => {
         try {
             const userResource = await UserResourceModel.findByPk(req.params.id);
-            console.log(req.params.id);
+            console.log(`HOLAA`);
 
             if (userResource) {
                 res.status(200).send(userResource);
@@ -37,7 +37,7 @@ export default class UsersResourcesController {
         }
     };
 
-    insertResource = async (req: Request, res: Response, next: any) => {
+    insert = async (req: Request, res: Response, next: any) => {
 
         // get userResource data from request
         const userId = req.body.user_id;
@@ -97,7 +97,7 @@ export default class UsersResourcesController {
         }
     };
 
-    updateResource = async (req: Request, res: Response, next: any) => {
+    update = async (req: Request, res: Response, next: any) => {
         // get userResourceID from request
         const userResourceId = req.params.id;
 
@@ -140,7 +140,7 @@ export default class UsersResourcesController {
         }
     };
 
-    deleteResource = async (req: Request, res: Response, next: any) => {
+    delete = async (req: Request, res: Response, next: any) => {
         // get userResourceID from request
         const userResourceId = req.params.id;
 
@@ -191,4 +191,29 @@ export default class UsersResourcesController {
     respondUpdateRequest = async (result: any, modelId: number, res: Response) => {
 
     };
+
+    getAllByUserId = async (req: Request, res: Response, next: any) => {
+        const userId = req.params.user_id;
+        // check if centerID are set
+        // if not are set, break execution
+        if (!userId) {
+            res.status(400).send(UserResourceErrors.USER_ID_EMPTY_ERROR);
+            return false;
+        }
+
+        try {
+            const data = await UserResourceModel.findAll({
+                where: {
+                    user_id: userId
+                }
+            });
+            res.status(200).send(data);
+        } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get all user resource - " + e.toString());
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+        }
+    };
 }
+const usersResourcesController = new UsersResourcesController();
+export default usersResourcesController;

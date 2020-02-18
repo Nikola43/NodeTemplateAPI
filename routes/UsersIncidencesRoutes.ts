@@ -21,6 +21,9 @@ export class UsersIncidencesRoutes {
 
         /* DELETE USER BY ID*/
         this.router.delete("/:id",[checkJwt], usersIncidencesController.delete);
+
+        /* DELETE USER BY ID*/
+        this.router.get("/:user_id",[checkJwt], usersIncidencesController.getAllByUserId);
     }
 }
 

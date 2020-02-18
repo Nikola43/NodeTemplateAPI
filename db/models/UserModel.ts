@@ -128,6 +128,13 @@ UserModel.hasMany(UserDeviceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 
 UserModel.hasMany(UserIncidenceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'UsersIncidences'});
 UserModel.hasMany(UserResourceModel, {sourceKey: 'id', foreignKey: 'user_id', as: 'UsersResources'});
 
+UserIncidenceModel.belongsToMany(UserModel, {
+    through: 'users_incidences',
+    as: 'users',
+    foreignKey: 'user_id',
+    otherKey: 'incidence_id'
+});
+
 UserModel.sync({ force: false })
     .then(() => console.log("Tabla de usuario creada o ya existe."));
 UserDeviceModel.sync({ force: false })

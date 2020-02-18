@@ -6,6 +6,8 @@ import {DeviceTypeModel} from "./typesModels/DeviceTypeModel";
 import {DeviceModel} from "./DeviceModel";
 import {LocationModel} from "./LocationModel";
 import {CenterModel} from "./CenterModel";
+import {UserIncidenceModel} from "./UserIncidenceModel";
+import {UserModel} from "./UserModel";
 
 export class IncidenceModel extends BaseModel {
     public user_id!: number;
@@ -103,6 +105,13 @@ IncidenceModel.init({
 
 IncidenceModel.hasOne(IncidenceTypeModel, {sourceKey: 'type_id', foreignKey: 'id', as: 'type'});
 IncidenceModel.hasOne(LocationModel, {sourceKey: 'location_id', foreignKey: 'id', as: 'location'});
+
+UserIncidenceModel.belongsToMany(UserModel, {
+    through: 'users_incidences',
+    as: 'incidences',
+    foreignKey: 'user_id',
+    otherKey: 'incidence_id'
+});
 
 IncidenceModel.sync({ force: false })
     .then(() => console.log("Tabla de tipos centros creada o ya existe."));

@@ -15,7 +15,7 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 class UsersIncidencesController extends BaseController {
-     getAll = async (req: Request, res: Response, next: any) => {
+    getAll = async (req: Request, res: Response, next: any) => {
         try {
             const userIncidence = await UserIncidenceModel.findAll();
             res.status(200).send(userIncidence);
@@ -26,97 +26,97 @@ class UsersIncidencesController extends BaseController {
         }
     };
 
-     getById = async (req: Request, res: Response, next: any) => {
+    getById = async (req: Request, res: Response, next: any) => {
 
-         const userId= req.params.user_id;
-         const incidenceId= req.params.incidence_id;
+        const userId = req.params.user_id;
+        const incidenceId = req.params.incidence_id;
 
-         // check if centerID are set
-         // if not are set, break execution
-         if (!userId) {
-             res.status(400).send(UserIncidenceErrors.USER_ID_EMPTY_ERROR);
-             return;
-         }
+        // check if centerID are set
+        // if not are set, break execution
+        if (!userId) {
+            res.status(400).send(UserIncidenceErrors.USER_ID_EMPTY_ERROR);
+            return;
+        }
 
-         if (!incidenceId) {
-             res.status(400).send(UserIncidenceErrors.INCIDENCE_ID_EMPTY_ERROR);
-             return;
-         }
-         try {
-             const data = await UserIncidenceModel.findOne({
-                  where: {
-                     user_id: {
-                         [Op.eq]: userId
-                     },
-                     incidence_id: {
-                         [Op.eq]: incidenceId
-                     },
-                     deletedAt: {
-                         [Op.is]: null
-                     }
-                 }
-             });
+        if (!incidenceId) {
+            res.status(400).send(UserIncidenceErrors.INCIDENCE_ID_EMPTY_ERROR);
+            return;
+        }
+        try {
+            const data = await UserIncidenceModel.findOne({
+                where: {
+                    user_id: {
+                        [Op.eq]: userId
+                    },
+                    incidence_id: {
+                        [Op.eq]: incidenceId
+                    },
+                    deletedAt: {
+                        [Op.is]: null
+                    }
+                }
+            });
 
-             // check if userIncidence already have center
-             // break execution
-             if (data) {
-                 res.status(200).send(data);
-                 return;
-             } else {
-                 res.status(404).send(GenericErrors.NOT_FOUND_ERROR);
-             }
-         } catch (e) {
-             console.log(e);
-             LOGUtil.saveLog("insert user incidence - " + e.toString());
-             res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
-         }
-
-     };
-
-
-     insert = async (req: Request, res: Response, next: any) => {
-         // create model from request body data
-         const data: UserIncidenceModel= req.body;
-
-         if (this.validateInsert(data, res)) {
-             const estaAsignaodo = await DBUtil.checkIfUserIsAsignedToAnIncidence(this, UserIncidenceModel, data.user_id);
-             if (estaAsignaodo) {
-                 res.status(409).send("ya esta asiganod");
-             } else {
-
-
-
-                 // insert
-                 const result = await DBUtil.insertModel(this, UserIncidenceModel, data);
-
-                 // respond request
-                 HttpComunicationUtil.respondInsertRequest(this, UserIncidenceModel, result, res);
-
-             }
-
-         } else {
-             //res.status(400).send("mal");
-
-         }
-
-         /*
-
-         // check if request is valid and if user doesn't exists
-         if (this.validateInsert(data, res)
-             && !await DBUtil.checkIfExistsByField(this, UserIncidenceModel, 'user_id', data.user_id) && !await DBUtil.checkIfExistsByField(this, UserIncidenceModel, 'incidence_id', data.incidence_id)) {
-
-             // insert
-             const result = await DBUtil.insertModel(this, UserIncidenceModel, data);
-
-             // respond request
-             HttpComunicationUtil.respondInsertRequest(this, UserIncidenceModel, result, res);
-         }
-         */
+            // check if userIncidence already have center
+            // break execution
+            if (data) {
+                res.status(200).send(data);
+                return;
+            } else {
+                res.status(404).send(GenericErrors.NOT_FOUND_ERROR);
+            }
+        } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("insert user incidence - " + e.toString());
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+        }
 
     };
-    update = async (req: Request, res: Response, next: any) => {};
 
-     delete = async (req: Request, res: Response, next: any) => {
+
+    insert = async (req: Request, res: Response, next: any) => {
+        // create model from request body data
+        const data: UserIncidenceModel = req.body;
+
+        if (this.validateInsert(data, res)) {
+            const estaAsignaodo = await DBUtil.checkIfUserIsAsignedToAnIncidence(this, UserIncidenceModel, data.user_id);
+            if (estaAsignaodo) {
+                res.status(409).send("ya esta asiganod");
+            } else {
+
+
+                // insert
+                const result = await DBUtil.insertModel(this, UserIncidenceModel, data);
+
+                // respond request
+                HttpComunicationUtil.respondInsertRequest(this, UserIncidenceModel, result, res);
+
+            }
+
+        } else {
+            //res.status(400).send("mal");
+
+        }
+
+        /*
+
+        // check if request is valid and if user doesn't exists
+        if (this.validateInsert(data, res)
+            && !await DBUtil.checkIfExistsByField(this, UserIncidenceModel, 'user_id', data.user_id) && !await DBUtil.checkIfExistsByField(this, UserIncidenceModel, 'incidence_id', data.incidence_id)) {
+
+            // insert
+            const result = await DBUtil.insertModel(this, UserIncidenceModel, data);
+
+            // respond request
+            HttpComunicationUtil.respondInsertRequest(this, UserIncidenceModel, result, res);
+        }
+        */
+
+    };
+    update = async (req: Request, res: Response, next: any) => {
+    };
+
+    delete = async (req: Request, res: Response, next: any) => {
         // get userIncidenceID from request
         const userIncidenceId = req.params.id;
 
@@ -166,6 +166,30 @@ class UsersIncidencesController extends BaseController {
         }
         return true;
     };
+
+    getAllByUserId = async (req: Request, res: Response, next: any) => {
+        const userId = req.params.user_id;
+        // check if centerID are set
+        // if not are set, break execution
+        if (!userId) {
+            res.status(400).send(UserIncidenceErrors.USER_ID_EMPTY_ERROR);
+            return false;
+        }
+        
+        try {
+            const userIncidence = await UserIncidenceModel.findAll({
+                where: {
+                    user_id: userId
+                }
+            });
+            res.status(200).send(userIncidence);
+        } catch (e) {
+            console.log(e);
+            LOGUtil.saveLog("get all user incidence - " + e.toString());
+            res.status(500).send(ServerErrors.INTERNAL_SERVER_ERROR);
+        }
+    };
 }
+
 const userIncidenceController = new UsersIncidencesController();
 export default userIncidenceController;

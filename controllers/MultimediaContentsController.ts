@@ -43,26 +43,11 @@ class MultimediaContentsController extends BaseController {
                 },
                 include: [
                     {
-                        model: MultimediaContentTypeModel, as: 'type',
-                        attributes: [ //Campos que se muestran en la relación
-                            ['type', 'name']
-                        ]
+                        model: MultimediaContentTypeModel, as: 'type', attributes: [ ['type', 'name'] ]
                     },
                     {
-                        model: LocationModel, as: 'location',
-                        attributes: [ //Campos que se muestran en la relación
-                            'id',
-                        ],
-                        include: [
-                            {
-                                model: PositionModel, as: 'position',
-                                attributes: [ //Campos que se muestran en la relación
-                                    'Id',
-                                    'Latitude',
-                                    'Longitude'
-                                ]
-                            },
-                        ]
+                        model: LocationModel, as: 'location', attributes: [ 'id' ],
+                        include: [ { model: PositionModel, as: 'position', attributes: [ 'Id', 'Latitude', 'Longitude' ] } ]
                     },
                 ]
             });

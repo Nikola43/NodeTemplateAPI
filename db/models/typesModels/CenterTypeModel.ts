@@ -1,7 +1,6 @@
 import {DataTypes} from 'sequelize';
 import dbConnection from "../../../managers/DBManager";
 import {BaseTypeModel} from "../baseModels/BaseTypeModel";
-import { CenterModel } from '../CenterModel';
 
 export class CenterTypeModel extends BaseTypeModel {
     public temporary!: number;

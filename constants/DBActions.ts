@@ -5,5 +5,6 @@ export default {
     GET_BY_FIELD: "GetByField",
     INSERT: "Insert",
     UPDATE: "Update",
-    DELETE: "Delete"
+    DELETE: "Delete",
+    LOGOUT: "Logout"
 };

@@ -63,6 +63,28 @@ export class HttpComunicationUtil {
         } catch (e) {
             ErrorUtil.handleError(res, e, controller.name + ' - ' + DBActions.UPDATE)
         }
+    };
+
+    static respondLogOutRequest = async (controller: any, model: any, queryResult: any, modelId: number, res: Response) => {
+        // check if model is updated
+        try {
+            // if it has one affected row
+            if (queryResult[0] === 1) {
+
+                // find updated data
+                const result = await model.findByPk(modelId);
+
+                // emit updated data
+                socketManager.emitSocketEvent(model.name, DBActions.LOGOUT, result);
+
+                // respond request
+                res.status(HttpStatus.OK).send(Messages.SUCCESS_REQUEST_MESSAGE);
+            } else {
+                res.status(HttpStatus.NOT_FOUND).send({error: model.name + " " + GenericErrors.NOT_FOUND_ERROR});
+            }
+        } catch (e) {
+            ErrorUtil.handleError(res, e, controller.name + ' - ' + DBActions.LOGOUT)
+        }
     }
 }
 

@@ -25,6 +25,7 @@ export class IndexRoutes {
 
         /* AUTH */
         this.router.post('/api/v1/login', AuthController.login);
+        this.router.post('/api/v1/logout', [checkJwt], AuthController.logout);
         this.router.post('/api/v1/signup', UserController.insert);
         this.router.post('/change-password', [checkJwt], UserController.changePassword);
     }

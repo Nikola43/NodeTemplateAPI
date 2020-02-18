@@ -92,22 +92,6 @@ class UsersController extends BaseController {
                             'name'
                         ]
                     },
-                    {
-                        model: IncidenceModel, as: 'incidence',
-                        attributes: [ //Campos que se muestran en la relación
-                            'name'
-                        ],
-                        include: [
-                            {
-                                model: ResourceModel, as: 'resource',
-                                attributes: [ //Campos que se muestran en la relación
-                                    'Id',
-                                    'Latitude',
-                                    'Longitude'
-                                ]
-                            },
-                        ]
-                    },
                 ],
                 rejectOnEmpty: true,
             });
